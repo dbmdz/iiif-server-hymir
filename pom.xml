@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>de.digitalcollections</groupId>
@@ -10,8 +9,41 @@
   <packaging>war</packaging>
   
   <name>IIIF: Hymir IIIF Server</name>
-
+  <description>Hymir is a Java based IIIF Server. It is based on "IIIF Image API Java Libraries" and "IIIF Presentation API Java Libraries" (Java implementations of the IIIF specifications, see https://github.com/dbmdz).</description>
+  <url>https://github.com/dbmdz/iiif-server-hymir</url>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://github.com/dbmdz/iiif-server-hymir/blob/master/LICENSE</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Ralf Eichinger</name>
+      <email>ralf.eichinger@gmail.com</email>
+      <id>datazuul</id>
+    </developer>
+  </developers>
+  <ciManagement>
+    <url>https://travis-ci.org/dbmdz/iiif-server-hymir</url>
+    <system>Travis CI</system>
+  </ciManagement>
+  <issueManagement>
+    <url>https://github.com/dbmdz/iiif-server-hymir/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
+  <scm>
+    <connection>https://github.com/dbmdz/iiif-server-hymir.git</connection>
+    <developerConnection>git@github.com:dbmdz/iiif-server-hymir.git</developerConnection>
+    <url>https://github.com/dbmdz/iiif-server-hymir</url>
+  </scm>
+  
   <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     <version.aspectjweaver>1.8.9</version.aspectjweaver>
     <version.iiif-image>2.0.1</version.iiif-image>
     <version.iiif-presentation>2.0.0</version.iiif-presentation>

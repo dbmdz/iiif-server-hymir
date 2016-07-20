@@ -1,5 +1,12 @@
 # Hymir IIIF Server
 
+[![Build Status](https://travis-ci.org/dbmdz/iiif-server-hymir.svg?branch=master)](https://travis-ci.org/dbmdz/iiif-server-hymir)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/release/dbmdz/iiif-server-hymir.svg?maxAge=2592000)](https://github.com/dbmdz/iiif-server-hymir/releases)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4791195661d84028945d5b384ce5324f)](https://www.codacy.com/app/ralf-eichinger/iiif-server-hymir?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dbmdz/iiif-server-hymir&amp;utm_campaign=Badge_Grade)
+[![codecov](https://codecov.io/gh/dbmdz/iiif-server-hymir/branch/master/graph/badge.svg)](https://codecov.io/gh/dbmdz/iiif-server-hymir)
+[![Maven Central](https://img.shields.io/maven-central/v/de.digitalcollections/iiif-server-hymir.svg?maxAge=2592000)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22iiif-server-hymir%22)
+
 Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries](https://github.com/dbmdz/iiif-image-api "IIIF Image API Java Libraries") and [IIIF Presentation API Java Libraries](https://github.com/dbmdz/iiif-presentation-api "IIIF Presentation API Java Libraries") (Java implementations of the [IIIF specifications](http://iiif.io/technical-details/ "IIIF specifications")).
 
 ## Features
@@ -8,8 +15,7 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
 - IIIF Presentation API 2.0.0 compliant (see <a href="http://iiif.io/api/presentation/2.0/">http://iiif.io/api/presentation/2.0/</a>). (implementation is work in progress)
 - Based on IIIF Image API Java Library and IIIF Presentation API Java Library.
 - On the fly image processing. No additional pregenerated (pyramid zoom) images are needed. No additional storage consumption.
-- Standalone mode: Ready to deploy standard java web application (WAR) for running as a standalone IIIF server.
-- Embedded mode: Embeddable Spring components: Spring MVC Controller, Spring Services for embedding IIIF functionality into existing Spring web applications
+- Ready to deploy standard java web application (WAR) for running as a standalone IIIF server.
 - Spring based modular, extendable, easy to maintain enterprise architecture.
 - Highly customizable image storage and identifier resolving: Access to images over project specific Resolver-plugin mechanism.
 - Support for Filesystem- and HTTP-Image-Repositories (own protocols can be added by providing specific resolver)
