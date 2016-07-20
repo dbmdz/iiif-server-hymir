@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+  <body>
+    <h1>
+      <th:block th:if="${errorCode != null}" th:text="|${errorCode}|">404</th:block>
+      <th:block th:unless="${errorCode != null}" th:text="#{error.title}">Error</th:block>
+      <small th:if="${timestamp}" th:text="|(${timestamp})|">13.12.2014 15:30:00.123></small>
+    </h1>
+    <p>
+      <span th:if="${errorCode != null and errorCode == '404'}">
+        <p>The requested page/ressource can not be found.</p>
+      </span>
+      <span th:unless="${errorCode != null and errorCode == '404'}" th:text="#{error.DEFAULT_MESSAGE}">Sorry...</span>
+    </p>
+  </body>
+</html>

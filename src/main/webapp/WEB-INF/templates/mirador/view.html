@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/mirador/css/mirador-combined.css}" />
+    <title>Mirador Viewer</title>
+    <style type="text/css">
+      body { padding: 0; margin: 0; overflow: hidden; font-size: 70%; }
+      #viewer { background: #333; width: 100%; height: 100%; position: fixed; }
+    </style>
+  </head>
+  <body>
+    <div style="margin:0px;">
+      <a th:href="@{/}"><img th:src="@{/images/hymir-logo-115x80.png}" height="20" style="margin:2px"/></a>
+      <h4 style="float:right;margin-top:2px;">Viewing "<span th:text="@{__${presentationUri}__}">...</span>/manifest" in Mirador 2.0.0</h4>
+    </div>
+
+    <div id="viewer"></div>
+
+    <script th:src="@{/vendor/mirador/mirador.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+      $(function () {
+      Mirador({
+      "id": "viewer",
+              "workspaceType": "singleObject",
+              "mainMenuSettings": {
+              "show": false
+              },
+              "layout": "1x1",
+              "data": [
+              {
+                /*<![CDATA[*/
+                "manifestUri": /*[[@{__${presentationUri}__/manifest}]]*/
+                /*]]>*/
+              }
+              ],
+              "windowObjects": [
+              {
+                /*<![CDATA[*/
+                "loadedManifest": /*[[@{__${presentationUri}__/manifest}]]*/,
+                /*]]>*/
+                /*<![CDATA[*/
+                "canvasID": /*[[@{__${presentationUri}__/canvas/p1}]]*/,
+                /*]]>*/
+                "viewType": "ImageView",
+                "layoutOptions": {
+                  "close": false,
+                  "slotRight": false,
+                  "slotLeft": false,
+                  "slotAbove": false,
+                  "slotBelow": false
+                },
+                "annotationLayer": false,
+                "annotationCreation": false,
+                "saveSession": false
+              }]
+      });
+      });
+    </script>
+  </body>
+</html>

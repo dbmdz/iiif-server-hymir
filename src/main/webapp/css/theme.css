@@ -1,0 +1,38 @@
+body {
+  padding-top: 75px;
+  padding-bottom: 30px;
+}
+
+.jumbotron {
+  text-align: center;
+}
+
+.navbar {
+  background-color: white;
+  border-bottom: solid 1px #e5e5e5;
+  height: 70px;
+}
+
+.openseadragon {
+  border: solid 1px #e5e5e5;
+}
+
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.theme-showcase > p > .btn {
+  margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+  width: auto;
+}
+
+.footer {
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+}

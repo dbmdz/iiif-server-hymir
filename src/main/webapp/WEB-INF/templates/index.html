@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html 
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorator="base">
+  <body>
+    <section layout:fragment="content">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Hymir IIIF Server</h1>
+        <p>Use below forms to view resources provided by this server.</p>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">IIIF Image API 2.0.0</h3>
+            </div>
+            <div class="panel-body">
+              <table class="table">
+                <tr>
+                  <td>
+                    <form class="form-inline" action="#" th:action="@{/iiif/image/view}" method="post">
+                      <h4>View image with OpenSeadragon</h4>
+                      <div class="form-group">
+                        /iiif/image/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /view.html
+                      </div>
+                      <button type="submit" class="btn btn-success pull-right">view</button>
+                    </form>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">IIIF Presentation API 2.0.0</h3>
+            </div>
+            <div class="panel-body">
+              <table class="table">
+                <tr>
+                  <td>
+                    <form class="form-inline" action="#" th:action="@{/iiif/presentation/view}" method="post">
+                      <h4>View object with Mirador</h4>
+                      <div class="form-group">
+                        /iiif/presentation/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /view.html
+                      </div>
+                      <button type="submit" class="btn btn-success pull-right">view</button>
+                    </form>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <form class="form-inline" action="#" th:action="@{/iiif/presentation/manifest}" method="get">
+                      <h4>View manifest.json</h4>
+                      <div class="form-group">
+                        /iiif/presentation/2.0.0/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /manifest
+                      </div>
+                      <button type="submit" class="btn btn-success pull-right">view</button>
+                    </form>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
