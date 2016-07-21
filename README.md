@@ -12,7 +12,7 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
 ## Features
 
 - IIIF Image API 2.0.0 compliant (see <a href="http://iiif.io/api/image/2.0/">http://iiif.io/api/image/2.0/</a>).
-- IIIF Presentation API 2.0.0 compliant (see <a href="http://iiif.io/api/presentation/2.0/">http://iiif.io/api/presentation/2.0/</a>). (implementation is work in progress)
+- IIIF Presentation API 2.0.0 compliant (see <a href="http://iiif.io/api/presentation/2.0/">http://iiif.io/api/presentation/2.0/</a>).
 - Based on IIIF Image API Java Library and IIIF Presentation API Java Library.
 - On the fly image processing. No additional pregenerated (pyramid zoom) images are needed. No additional storage consumption.
 - Ready to deploy standard java web application (WAR) for running as a standalone IIIF server.
