@@ -99,7 +99,7 @@ After application server unpacked Hymir-WAR, you can configure image resolving b
 $ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/iiif/image/config
 $ vi image-resolvingpatterns-PROD.properties
 ...
-# Example: bsb00046285_00001 -> file:/bsbzend/bsb0004/bsb00046285/images/150/bsb00046285_00001.jpg
+# Example: bsb00046285_00001 -> file:/var/local/bsb0004/bsb00046285/images/150/bsb00046285_00001.jpg
 ^(\\w{3})(\\d{4})(\\d{4})_(\\d{5})$=file:/var/local/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg
 ...
 ```
