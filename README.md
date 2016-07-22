@@ -88,20 +88,20 @@ Download (from GitHub-project page under "releases") and deploy WAR file into (A
 
 ## Configuration
 
-Based on unique resource identifiers the server tries to resolve identifier to a file path.
-The resolving rules are configurable with regular expressions.
+Based on unique resource identifiers the server tries to resolve identifiers to a "file:" or "http:" path.
+The resolving rules (one rule per line) are configurable with regular expressions in properties-files.
 
 ### Image resolving
 
 After application server unpacked Hymir-WAR, you can configure image resolving by defining your resolving-rules in file:
 
 ```
-$ cd $TOMCAT_HOME/webapps/<hymir-directory>
-$ mkdir -p WEB-INF/classes/de/digitalcollections/iiif/image/config
-$ cd WEB-INF/classes/de/digitalcollections/iiif/image/config
+$ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/iiif/image/config
 $ vi image-resolvingpatterns-PROD.properties
+...
 # Example: bsb00046285_00001 -> file:/bsbzend/bsb0004/bsb00046285/images/150/bsb00046285_00001.jpg
-#^(\\w{3})(\\d{4})(\\d{4})_(\\d{5})$=file:/var/local/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg
+^(\\w{3})(\\d{4})(\\d{4})_(\\d{5})$=file:/var/local/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg
+...
 ```
 
 ### Presentation manifest resolving
@@ -109,12 +109,12 @@ $ vi image-resolvingpatterns-PROD.properties
 After application server unpacked Hymir-WAR, you can configure manifest resolving by defining your resolving-rules in file:
 
 ```
-$ cd $TOMCAT_HOME/webapps/<hymir-directory>
-$ mkdir -p WEB-INF/classes/de/digitalcollections/iiif/presentation/config
-$ cd WEB-INF/classes/de/digitalcollections/iiif/presentation/config
+$ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/iiif/presentation/config
 $ vi presentation-resolvingpatterns-PROD.properties
+...
 # Example: bsb00046585 -> file:/var/local/bsb0004/bsb00046585/bsb00046585_manifest.json
-#^(\\w{3})(\\d{4})(\\d{4})$=file:/var/local/$1$2/$1$2$3/$1$2$3_manifest.json
+^(\\w{3})(\\d{4})(\\d{4})$=file:/var/local/$1$2/$1$2$3/$1$2$3_manifest.json
+...
 ```
 
 ## Usage
