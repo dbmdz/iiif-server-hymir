@@ -53,7 +53,6 @@ public class SpringConfigWeb extends WebMvcConfigurerAdapter {
     registry.addResourceHandler("/js/**").addResourceLocations("/js/");
     registry.addResourceHandler("/mirador/**").addResourceLocations("/mirador/");
     registry.addResourceHandler("/vendor/**").addResourceLocations("/vendor/");
-    registry.addResourceHandler("*").addResourceLocations("/index.html");
   }
 
   @Bean
