@@ -8,7 +8,7 @@
   <version>0-SNAPSHOT</version>
   <packaging>war</packaging>
   
-  <name>IIIF: Hymir IIIF Server</name>
+  <name>DigitalCollections: Hymir IIIF Server</name>
   <description>Hymir is a Java based IIIF Server. It is based on "IIIF Image API Java Libraries" and "IIIF Presentation API Java Libraries" (Java implementations of the IIIF specifications, see https://github.com/dbmdz).</description>
   <url>https://github.com/dbmdz/iiif-server-hymir</url>
   <licenses>
