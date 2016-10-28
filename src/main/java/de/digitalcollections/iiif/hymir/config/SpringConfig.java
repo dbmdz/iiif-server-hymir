@@ -20,7 +20,7 @@ import org.springframework.core.env.Environment;
   "de.digitalcollections.iiif.image.config",
   "de.digitalcollections.iiif.presentation.config"
 }) // scans all frontend, business and backend configs of Image API and Presentation API
-@Import({SpringConfigWeb.class})
+@Import({SpringConfigBackend.class, SpringConfigBusiness.class, SpringConfigWeb.class})
 public class SpringConfig implements EnvironmentAware {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SpringConfig.class);

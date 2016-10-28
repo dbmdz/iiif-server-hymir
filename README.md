@@ -96,26 +96,30 @@ The resolving rules (one rule per line) are configurable with regular expression
 After application server unpacked Hymir-WAR, you can configure image resolving by defining your resolving-rules in file:
 
 ```
-$ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/iiif/image/config
-$ vi image-resolvingpatterns-PROD.properties
+$ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/core/config
+$ vi multiPatternResolving-PROD.properties
 ...
-# Example: bsb00046285_00001 -> file:/var/local/bsb0004/bsb00046285/images/150/bsb00046285_00001.jpg
-^(\\w{3})(\\d{4})(\\d{4})_(\\d{5})$=file:/var/local/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg
+# Example: bsb00046285_00001_image -> file:/var/local/bsb0004/bsb00046285/images/150/bsb00046285_00001.jpg
+^(\\w{3})(\\d{4})(\\d{4})_(\\d{5})_image$=file:/var/local/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg
 ...
 ```
+
+Note: Property-key = image identifier + "_image"-extension.
 
 ### Presentation manifest resolving
 
 After application server unpacked Hymir-WAR, you can configure manifest resolving by defining your resolving-rules in file:
 
 ```
-$ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/iiif/presentation/config
-$ vi presentation-resolvingpatterns-PROD.properties
+$ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/core/config
+$ vi multiPatternResolving-PROD.properties
 ...
-# Example: bsb00046585 -> file:/var/local/bsb0004/bsb00046585/bsb00046585_manifest.json
-^(\\w{3})(\\d{4})(\\d{4})$=file:/var/local/$1$2/$1$2$3/$1$2$3_manifest.json
+# Example: bsb00046585_manifest.json -> file:/var/local/bsb0004/bsb00046585/bsb00046585_manifest.json
+^(\\w{3})(\\d{4})(\\d{4})_manifest.json$=file:/var/local/$1$2/$1$2$3/$1$2$3_manifest.json
 ...
 ```
+
+Note: Property-key = manifest identifier + "_manifest.json"-extension.
 
 ## Usage
 
