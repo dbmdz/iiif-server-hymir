@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/mirador/css/mirador-combined.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/mirador/2.1.1/css/mirador-combined.css}" />
     <title>Mirador Viewer</title>
     <style type="text/css">
       body { padding: 0; margin: 0; overflow: hidden; font-size: 70%; }
@@ -19,44 +19,45 @@
 
     <div id="viewer"></div>
 
-    <script th:src="@{/vendor/mirador/mirador.js}"></script>
+    <script th:src="@{/webjars/mirador/2.1.1/mirador.js}"></script>
     <script type="text/javascript" th:inline="javascript">
-      $(function () {
-      Mirador({
-      "id": "viewer",
-              "workspaceType": "singleObject",
-              "mainMenuSettings": {
-              "show": false
+      $(function(){
+        Mirador({
+          'buildPath': '/webjars/mirador/2.1.1/',
+          "id": "viewer",
+          "workspaceType": "singleObject",
+          "mainMenuSettings": {
+            "show": false
+          },
+          "layout": "1x1",
+          "data": [
+            {
+              /*<![CDATA[*/
+              "manifestUri": /*[[@{__${presentationUri}__/manifest}]]*/
+              /*]]>*/
+            }
+          ],
+          "windowObjects": [
+            {
+              /*<![CDATA[*/
+              "loadedManifest": /*[[@{__${presentationUri}__/manifest}]]*/,
+              /*]]>*/
+              /*<![CDATA[*/
+              "canvasID": /*[[@{__${presentationUri}__/canvas/p1}]]*/,
+              /*]]>*/
+              "viewType": "ImageView",
+              "layoutOptions": {
+                "close": false,
+                "slotRight": false,
+                "slotLeft": false,
+                "slotAbove": false,
+                "slotBelow": false
               },
-              "layout": "1x1",
-              "data": [
-              {
-                /*<![CDATA[*/
-                "manifestUri": /*[[@{__${presentationUri}__/manifest}]]*/
-                /*]]>*/
-              }
-              ],
-              "windowObjects": [
-              {
-                /*<![CDATA[*/
-                "loadedManifest": /*[[@{__${presentationUri}__/manifest}]]*/,
-                /*]]>*/
-                /*<![CDATA[*/
-                "canvasID": /*[[@{__${presentationUri}__/canvas/p1}]]*/,
-                /*]]>*/
-                "viewType": "ImageView",
-                "layoutOptions": {
-                  "close": false,
-                  "slotRight": false,
-                  "slotLeft": false,
-                  "slotAbove": false,
-                  "slotBelow": false
-                },
-                "annotationLayer": false,
-                "annotationCreation": false,
-                "saveSession": false
-              }]
-      });
+              "annotationLayer": false,
+              "annotationCreation": false,
+              "saveSession": false
+            }]
+        });
       });
     </script>
   </body>
