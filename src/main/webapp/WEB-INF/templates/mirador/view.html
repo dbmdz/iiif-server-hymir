@@ -19,13 +19,6 @@
     <section layout:fragment="content">
       <div class="row">
         <div class="col-md-12">
-          <div style="margin:0px;">
-            <h4 style="float:right;margin-top:2px;">Viewing "<span th:text="@{__${presentationUri}__}">...</span>/manifest" in Mirador 2.0.0</h4>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
           <div id="viewer"></div>
         </div>
       </div>
@@ -39,8 +32,26 @@
             'buildPath': '/webjars/mirador/2.1.1/',
             "id": "viewer",
             "workspaceType": "singleObject",
-            "mainMenuSettings": {
-              "show": false
+            'mainMenuSettings': {
+              'show': true,
+              'buttons': {
+                'bookmark': true,
+                'layout': true
+              },
+              'userLogo': {
+                'label': 'Mirador',
+                'attributes': { 'href': 'http://projectmirador.org/' }
+              },
+              "userButtons": [
+                {
+                  "label": "IIIF-Manifest",
+                  "iconClass": "fa fa-file-text",
+                  "attributes": {
+                    "class": "file",
+                    "href": /*[[@{__${manifestId}__}]]*/
+                  }
+                }
+              ]
             },
             "layout": "1x1",
             "data": [
