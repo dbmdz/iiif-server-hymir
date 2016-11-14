@@ -6,3 +6,4 @@ target
 .project
 .settings
 /target
+/src/main/resources/multiPatternResolving-local.yml

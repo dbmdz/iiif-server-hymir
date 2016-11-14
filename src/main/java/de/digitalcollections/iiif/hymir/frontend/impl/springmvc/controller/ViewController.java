@@ -1,7 +1,7 @@
 package de.digitalcollections.iiif.hymir.frontend.impl.springmvc.controller;
 
-import de.digitalcollections.iiif.image.frontend.impl.springmvc.controller.v2_0_0.IIIFImageApiController;
-import de.digitalcollections.iiif.presentation.frontend.impl.springmvc.controller.v2_0_0.IIIFPresentationApiController;
+import de.digitalcollections.iiif.image.frontend.impl.springmvc.controller.v2.IIIFImageApiController;
+import de.digitalcollections.iiif.presentation.frontend.impl.springmvc.controller.v2.IIIFPresentationApiController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +22,7 @@ public class ViewController {
 
   @RequestMapping(value = "/iiif/image/{identifier}/view.html", method = RequestMethod.GET)
   public String viewImageGet(@PathVariable String identifier, Model model) {
-    model.addAttribute("infoUrl", "/iiif/image/" + IIIFImageApiController.VERSION + "/" + identifier + "/info.json");
+    model.addAttribute("infoUrl", "/image/" + IIIFImageApiController.VERSION + "/" + identifier + "/info.json");
     return "openseadragon/view";
   }
 
@@ -34,7 +34,7 @@ public class ViewController {
   @RequestMapping(value = "/iiif/presentation/{identifier}/view.html", method = RequestMethod.GET)
   public String viewPresentationGet(@PathVariable String identifier, Model model) {
     model.
-            addAttribute("presentationUri", "/iiif/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
+            addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
     return "mirador/view";
   }
 
@@ -45,6 +45,6 @@ public class ViewController {
 
   @RequestMapping(value = "/iiif/presentation/manifest", method = RequestMethod.GET)
   public String viewPresentationManifest(@RequestParam String identifier) {
-    return "forward:/iiif/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier + "/manifest";
+    return "forward:/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier + "/manifest";
   }
 }
