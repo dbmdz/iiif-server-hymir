@@ -11,4 +11,15 @@
                 <jpda.listen>maven</jpda.listen>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-mvn jetty:run -DmultiPatternResolvingFile=... (debug)</actionName>
+            <displayName>mvn jetty:run -DmultiPatternResolvingFile=... (debug)</displayName>
+            <goals>
+                <goal>jetty:run</goal>
+            </goals>
+            <properties>
+                <jpda.listen>maven</jpda.listen>
+                <multiPatternResolvingFile>/multiPatternResolving-local.yml</multiPatternResolvingFile>
+            </properties>
+        </action>
     </actions>
