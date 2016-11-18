@@ -5,7 +5,7 @@
 
   <groupId>de.digitalcollections</groupId>
   <artifactId>iiif-server-hymir</artifactId>
-  <version>0-SNAPSHOT</version>
+  <version>2.1.4-SNAPSHOT</version>
   <packaging>war</packaging>
   
   <name>DigitalCollections: Hymir IIIF Server</name>
@@ -45,9 +45,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <version.aspectjweaver>1.8.9</version.aspectjweaver>
-    <version.iiif-image>2.2.1</version.iiif-image>
+    <version.iiif-image>2.2.5-SNAPSHOT</version.iiif-image>
     <version.iiif-mirador>2.1.1</version.iiif-mirador>
-    <version.iiif-presentation>3.2.1</version.iiif-presentation>
+    <version.iiif-presentation>3.2.4-SNAPSHOT</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.jetty-maven-plugin>9.3.10.v20160621</version.jetty-maven-plugin>
     <version.maven-compiler-plugin>3.3</version.maven-compiler-plugin>
@@ -149,7 +149,6 @@
       <version>${version.iiif-mirador}</version>
     </dependency>
   </dependencies>
-
 
   <build>
     <finalName>hymir-${project.version}</finalName>
@@ -266,6 +265,28 @@
       </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+  
+  <repositories>
+    <repository>
+      <id>ossrh-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
   
   <reporting>
     <plugins>
