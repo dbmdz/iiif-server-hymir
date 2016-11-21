@@ -22,4 +22,12 @@
                 <multiPatternResolvingFile>/multiPatternResolving-local.yml</multiPatternResolvingFile>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-mvn clean deploy -U</actionName>
+            <displayName>mvn clean deploy -U</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>deploy</goal>
+            </goals>
+        </action>
     </actions>
