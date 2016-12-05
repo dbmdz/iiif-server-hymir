@@ -20,30 +20,30 @@ public class ViewController {
     return "index";
   }
 
-  @RequestMapping(value = "/iiif/image/{identifier}/view.html", method = RequestMethod.GET)
+  @RequestMapping(value = "/image/{identifier}/view.html", method = RequestMethod.GET)
   public String viewImageGet(@PathVariable String identifier, Model model) {
     model.addAttribute("infoUrl", "/image/" + IIIFImageApiController.VERSION + "/" + identifier + "/info.json");
     return "openseadragon/view";
   }
 
-  @RequestMapping(value = "/iiif/image/view", method = RequestMethod.POST)
+  @RequestMapping(value = "/image/view", method = RequestMethod.POST)
   public String viewImagePost(@RequestParam String identifier) {
-    return "redirect:/iiif/image/" + identifier + "/view.html";
+    return "redirect:/image/" + identifier + "/view.html";
   }
 
-  @RequestMapping(value = "/iiif/presentation/{identifier}/view.html", method = RequestMethod.GET)
+  @RequestMapping(value = "/presentation/{identifier}/view.html", method = RequestMethod.GET)
   public String viewPresentationGet(@PathVariable String identifier, Model model) {
     model.
             addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
     return "mirador/view";
   }
 
-  @RequestMapping(value = "/iiif/presentation/view", method = RequestMethod.POST)
+  @RequestMapping(value = "/presentation/view", method = RequestMethod.POST)
   public String viewPresentationPost(@RequestParam String identifier, Model model) {
-    return "redirect:/iiif/presentation/" + identifier + "/view.html";
+    return "redirect:/presentation/" + identifier + "/view.html";
   }
 
-  @RequestMapping(value = "/iiif/presentation/manifest", method = RequestMethod.GET)
+  @RequestMapping(value = "/presentation/manifest", method = RequestMethod.GET)
   public String viewPresentationManifest(@RequestParam String identifier) {
     return "forward:/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier + "/manifest";
   }

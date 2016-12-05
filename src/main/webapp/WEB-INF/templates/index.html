@@ -21,10 +21,10 @@
               <table class="table">
                 <tr>
                   <td>
-                    <form class="form-inline" action="#" th:action="@{/iiif/image/view}" method="post">
+                    <form class="form-inline" action="#" th:action="@{/image/view}" method="post">
                       <h4>View image with OpenSeadragon</h4>
                       <div class="form-group">
-                        /iiif/image/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /view.html
+                        /image/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /view.html
                       </div>
                       <button type="submit" class="btn btn-success pull-right">view</button>
                     </form>
@@ -43,10 +43,10 @@
               <table class="table">
                 <tr>
                   <td>
-                    <form class="form-inline" action="#" th:action="@{/iiif/presentation/view}" method="post">
+                    <form class="form-inline" action="#" th:action="@{/presentation/view}" method="post">
                       <h4>View object with Mirador</h4>
                       <div class="form-group">
-                        /iiif/presentation/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /view.html
+                        /presentation/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /view.html
                       </div>
                       <button type="submit" class="btn btn-success pull-right">view</button>
                     </form>
@@ -54,7 +54,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <form class="form-inline" action="#" th:action="@{/iiif/presentation/manifest}" method="get">
+                    <form class="form-inline" action="#" th:action="@{/presentation/manifest}" method="get">
                       <h4>View manifest.json</h4>
                       <div class="form-group">
                         /presentation/v2/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /manifest
