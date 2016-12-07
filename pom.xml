@@ -59,6 +59,7 @@
     <version.slf4j>1.7.21</version.slf4j>
     <version.spring-framework>4.2.5.RELEASE</version.spring-framework>
     <version.thymeleaf>2.1.3.RELEASE</version.thymeleaf>
+    <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.thymeleaf-extras-data-attribute>1.3</version.thymeleaf-extras-data-attribute>
     <version.thymeleaf-layout-dialect>1.2.9</version.thymeleaf-layout-dialect>
     <version.versions-maven-plugin>2.2</version.versions-maven-plugin>
@@ -147,6 +148,11 @@
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf-spring4</artifactId>
       <version>${version.thymeleaf}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.thymeleaf.extras</groupId>
+      <artifactId>thymeleaf-extras-conditionalcomments</artifactId>
+      <version>${version.thymeleaf-extras-conditionalcomments}</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
@@ -279,6 +285,7 @@
           <classesDirectory>${project.build.directory}/classes</classesDirectory>
           <scanIntervalSeconds>2</scanIntervalSeconds>
           <webApp>
+            <contextPath>/iiif</contextPath>
             <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
             <resourceBases>
               <resourceBase>src/main/webapp</resourceBase>
