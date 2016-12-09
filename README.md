@@ -89,37 +89,53 @@ Download (from GitHub-project page under "releases") and deploy WAR file into (A
 ## Configuration
 
 Based on unique resource identifiers the server tries to resolve identifiers to a "file:" or "http:" path.
-The resolving rules (one rule per line) are configurable with regular expressions in properties-files.
+The resolving rules (one rule per line) are configurable with regular expressions in YML-files.
 
-### Image resolving
+### Image and presentation manifest resolving
 
-After application server unpacked Hymir-WAR, you can configure image resolving by defining your resolving-rules in file:
+After application server unpacked Hymir-WAR, you can configure file (image and presentation manifest) resolving
 
-```
-$ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/core/config
-$ vi multiPatternResolving-PROD.properties
-...
-# Example: bsb00046285_00001_image -> file:/var/local/bsb0004/bsb00046285/images/150/bsb00046285_00001.jpg
-^(\\w{3})(\\d{4})(\\d{4})_(\\d{5})_image$=file:/var/local/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg
-...
-```
-
-Note: Property-key = image identifier + "_image"-extension.
-
-### Presentation manifest resolving
-
-After application server unpacked Hymir-WAR, you can configure manifest resolving by defining your resolving-rules in file:
+* in unpacked configuraton-file on classpath:
 
 ```
 $ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/core/config
-$ vi multiPatternResolving-PROD.properties
-...
-# Example: bsb00046585_manifest.json -> file:/var/local/bsb0004/bsb00046585/bsb00046585_manifest.json
-^(\\w{3})(\\d{4})(\\d{4})_manifest.json$=file:/var/local/$1$2/$1$2$3/$1$2$3_manifest.json
-...
+$ vi multiPatternResolving-PROD.yml
 ```
 
-Note: Property-key = manifest identifier + "_manifest.json"-extension.
+* or alternatively by pointing Hymir to the location of the file (outside of classpath) using environment variable "multiPatternResolvingFile":
+
+```
+$ cd $TOMCAT_HOME
+$ vi bin/setenv.sh
+export JAVA_OPTS="$JAVA_OPTS -DmultiPatternResolvingFile=file:/etc/hymir/multiPatternResolving-PROD.yml"
+```
+
+Example file "multiPatternResolving-PROD.yml":
+
+```
+...
+# This configuration file defines a list of patterns with one ore more substitutions.
+# These are used for resolving IDs to a concrete URI, e.g. on the file system, the
+# classpath or even a remote HTTP endpoint.
+# You can specify multiple substitutions, the resolver will try to match them against
+# the desired MIME type and return all that matches
+# The repository will then verify which of these URIs are actually readable and return
+# the first matching substitution.
+# In the example below, we have two MIME types (tiff/jpeg) and for JPEG two resolutions
+# in decreasing order of quality, so that the higher-resolution image will be chosen
+# if it is available.
+- pattern: bsb(\d{8})_(\d{5})
+  substitutions:
+    - 'file:/var/local/bsb$1/images/original/bsb$1_$2.tif'
+    - 'file:/var/local/bsb$1/images/300/bsb$1_$2.jpg'
+    - 'file:/var/local/bsb$1/images/150/bsb$1_$2.jpg'
+
+# A simpler example with just a single substitution pattern (for resolving IIIF-manifests)
+- pattern: bsb(\d{8})
+  substitutions:
+    - 'file:/var/local/bsb$1/manifest/bsb$1.json'
+...
+```
 
 ## Usage
 

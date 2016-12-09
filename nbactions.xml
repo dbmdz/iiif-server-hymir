@@ -13,13 +13,13 @@
         </action>
         <action>
             <actionName>CUSTOM-mvn jetty:run -DmultiPatternResolvingFile=... (debug)</actionName>
-            <displayName>mvn jetty:run -DmultiPatternResolvingFile=... (debug)</displayName>
+            <displayName>mvn jetty:run (with file:///etc/hymir/multiPatternResolving-local.yml) (debug)</displayName>
             <goals>
                 <goal>jetty:run</goal>
             </goals>
             <properties>
                 <jpda.listen>maven</jpda.listen>
-                <multiPatternResolvingFile>/multiPatternResolving-local.yml</multiPatternResolvingFile>
+                <multiPatternResolvingFile>file:/etc/hymir/multiPatternResolving-local.yml</multiPatternResolvingFile>
             </properties>
         </action>
         <action>

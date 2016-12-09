@@ -14,7 +14,7 @@
     - 'file:/var/local/bsb$1/images/300/bsb$1_$2.jpg'
     - 'file:/var/local/bsb$1/images/150/bsb$1_$2.jpg'
 
-# A simpler example with just a single substitution pattern
+# A simpler example with just a single substitution pattern (for resolving IIIF-manifests)
 - pattern: bsb(\d{8})
   substitutions:
     - 'file:/var/local/bsb$1/manifest/bsb$1.json'
