@@ -86,6 +86,21 @@ More formats (including TIFF) will be supported soon by using Java Image I/O for
 
 Download (from GitHub-project page under "releases") and deploy WAR file into (Apache Tomcat) application server.
 
+### Using the TurboJPEG backend
+By default, a Java-based image processing backend is used. If you want better
+performance, it is recommended to use the native image processing backend
+that is based on TurboJPEG. For this, you will have to install a shared library
+into `/usr/lib` that the Java code can then load.
+
+If you are running Debian Jessie, you can use the Debian packages provided
+on the [Releases](https://github.com/dbmdz/iiif-image-api/releases) page.
+
+For other distributions, you can use the `install_turbojpeg_jni.sh` script in
+the repository root. Note that you will need a recent (>=1.8) JDK, a C compiler
+and  `libtool` and `nasm` installed. Just run the script as root on the target
+machine that runs the application and your image requests should be
+significantly faster.
+
 ## Configuration
 
 Based on unique resource identifiers the server tries to resolve identifiers to a "file:" or "http:" path.
