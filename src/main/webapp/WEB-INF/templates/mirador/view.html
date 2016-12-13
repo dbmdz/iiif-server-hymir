@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
 <html
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorator="base">
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+        layout:decorator="base">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -25,7 +25,21 @@
     <th:block layout:fragment="morejs">
       <script th:src="@{/webjars/mirador/2.1.2/mirador.min.js}"></script>
       <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function getParams() {
+          var params={};
+          window.location.search
+              .replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str,key,value) {
+                    params[key] = value;
+                  }
+              );
+          return params
+        }
+        /*]]>*/
+
         $(function(){
+          var requestParams = getParams();
+          var canvasUri = requestParams.canvas || /*[[@{__${presentationUri}__/canvas/p1}]]*/;
           Mirador({
             'buildPath': /*[[@{/webjars/mirador/2.1.2/}]]*/,
             "id": "viewer",
@@ -66,7 +80,7 @@
                 "loadedManifest": /*[[@{__${presentationUri}__/manifest}]]*/,
                 /*]]>*/
                 /*<![CDATA[*/
-                "canvasID": /*[[@{__${presentationUri}__/canvas/p1}]]*/,
+                "canvasID": canvasUri,
                 /*]]>*/
                 "viewType": "ImageView",
                 "layoutOptions": {
