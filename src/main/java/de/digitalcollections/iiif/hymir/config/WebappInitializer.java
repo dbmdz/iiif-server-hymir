@@ -1,5 +1,6 @@
 package de.digitalcollections.iiif.hymir.config;
 
+import ch.qos.logback.ext.spring.web.LogbackConfigListener;
 import com.twelvemonkeys.servlet.image.IIOProviderContextListener;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -33,6 +34,7 @@ public class WebappInitializer extends AbstractAnnotationConfigDispatcherServlet
   public void onStartup(ServletContext servletContext) throws ServletException {
     super.onStartup(servletContext);
     servletContext.addListener(new IIOProviderContextListener());
+    servletContext.addListener(new LogbackConfigListener());
 
     String contextPath = servletContext.getContextPath();
     LOGGER.info("*** Deployed under context path '{}'", contextPath);
