@@ -50,6 +50,7 @@
     <version.iiif-presentation>3.2.4-SNAPSHOT</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.jetty-maven-plugin>9.3.10.v20160621</version.jetty-maven-plugin>
+    <version.logback-ext-spring>0.1.4</version.logback-ext-spring>
     <version.maven-compiler-plugin>3.3</version.maven-compiler-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.maven-javadoc-plugin>2.10.4</version.maven-javadoc-plugin>
@@ -75,11 +76,6 @@
       <groupId>com.github.mxab.thymeleaf.extras</groupId>
       <artifactId>thymeleaf-extras-data-attribute</artifactId>
       <version>${version.thymeleaf-extras-data-attribute}</version>
-    </dependency>
-    <dependency>
-      <groupId>nz.net.ultraq.thymeleaf</groupId>
-      <artifactId>thymeleaf-layout-dialect</artifactId>
-      <version>${version.thymeleaf-layout-dialect}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections</groupId>
@@ -118,10 +114,20 @@
       <scope>compile</scope> <!-- not runtime, because of IIIFPresentationApiController.VERSION-->
     </dependency>
     <dependency>
+      <groupId>nz.net.ultraq.thymeleaf</groupId>
+      <artifactId>thymeleaf-layout-dialect</artifactId>
+      <version>${version.thymeleaf-layout-dialect}</version>
+    </dependency>
+    <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
       <version>${version.aspectjweaver}</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.logback-extensions</groupId>
+      <artifactId>logback-ext-spring</artifactId>
+      <version>${version.logback-ext-spring}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
