@@ -40,3 +40,14 @@ body {
 .toc .toc-link {
   font-size: 0.6em;
 }
+
+#viewer {
+  background: #333;
+  width: 100%;
+  height: calc(100vh - 160px);
+  position: relative;
+}
+
+.window-manifest-title {
+  height: 1.25em;
+}
