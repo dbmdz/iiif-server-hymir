@@ -39,7 +39,7 @@
     <script th:inline="javascript">
       /*<![CDATA[*/
       var url = /*[[@{/webjars/jquery/1.11.3/jquery.min.js}]]*/;
-      window.jQuery || document.write('<script src="' + url  + '"><\/script>');
+              window.jQuery || document.write('<script src="' + url + '"><\/script>');
       /*]]>*/
     </script>
     <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
@@ -67,10 +67,13 @@
         ...
       </section>
 
-      <footer class="footer">
-        <p>visit us on <a href="https://github.com/dbmdz">GitHub</a></p>
-      </footer>
     </div> <!-- /container -->
+
+    <footer class="footer">
+      <div class="container">
+        <p>visit us on <a href="https://github.com/dbmdz">GitHub</a></p>
+      </div>
+    </footer>
 
   <th:block layout:fragment="morejs"> </th:block>
 </body>
