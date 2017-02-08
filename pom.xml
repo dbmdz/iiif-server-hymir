@@ -66,6 +66,7 @@
     <version.versions-maven-plugin>2.2</version.versions-maven-plugin>
     <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
     <version.webjar-html5shiv>3.7.3</version.webjar-html5shiv>
+    <version.webjar-ie10-viewport-bug-workaround>1.0.3</version.webjar-ie10-viewport-bug-workaround>
     <version.webjar-jquery>1.11.3</version.webjar-jquery>
     <version.webjar-openseadragon>2.2.1</version.webjar-openseadragon>
     <version.webjar-respond>1.4.2</version.webjar-respond>
@@ -190,6 +191,11 @@
       <groupId>org.webjars</groupId>
       <artifactId>respond</artifactId>
       <version>${version.webjar-respond}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.bower</groupId>
+      <artifactId>ie10-viewport-bug-workaround</artifactId>
+      <version>${version.webjar-ie10-viewport-bug-workaround}</version>
     </dependency>
   </dependencies>
 
