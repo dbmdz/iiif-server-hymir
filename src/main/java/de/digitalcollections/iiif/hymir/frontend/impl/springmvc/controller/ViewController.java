@@ -47,4 +47,9 @@ public class ViewController {
   public String viewPresentationManifest(@RequestParam String identifier) {
     return "forward:/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier + "/manifest";
   }
+
+  @RequestMapping(value = "/presentation/collection", method = RequestMethod.GET)
+  public String viewPresentationCollection(@RequestParam String name) {
+    return "forward:/presentation/" + IIIFPresentationApiController.VERSION + "/collection/" + name;
+  }
 }

@@ -55,9 +55,20 @@
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/presentation/manifest}" method="get">
-                      <h4>View manifest.json</h4>
+                      <h4>View manifest as JSON</h4>
                       <div class="form-group">
                         /presentation/v2/ <input type="text" class="form-control" placeholder="identifier" name="identifier" /> /manifest
+                      </div>
+                      <button type="submit" class="btn btn-success pull-right">view</button>
+                    </form>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <form class="form-inline" action="#" th:action="@{/presentation/collection}" method="get">
+                      <h4>View collection as JSON</h4>
+                      <div class="form-group">
+                        /presentation/v2/collection/ <input type="text" class="form-control" placeholder="name" name="name" />
                       </div>
                       <button type="submit" class="btn btn-success pull-right">view</button>
                     </form>
