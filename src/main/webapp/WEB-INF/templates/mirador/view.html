@@ -23,22 +23,9 @@
 
     <th:block layout:fragment="morejs">
       <script th:src="@{/webjars/mirador/2.2.0/mirador.min.js}"></script>
+      <script th:src="@{/js/viewFromUrl.js}"></script>
       <script type="text/javascript" th:inline="javascript">
-        /*<![CDATA[*/
-        function getParams() {
-          var params={};
-          window.location.search
-              .replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str,key,value) {
-                    params[key] = value;
-                  }
-              );
-          return params
-        }
-        /*]]>*/
-
         $(function(){
-          var requestParams = getParams();
-          var canvasUri = requestParams.canvas || /*[[@{__${presentationUri}__/canvas/p1}]]*/;
           Mirador({
             'id': 'viewer',
             'buildPath': /*[[@{/webjars/mirador/2.2.0/}]]*/,
