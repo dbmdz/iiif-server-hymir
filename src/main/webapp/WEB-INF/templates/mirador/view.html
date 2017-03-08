@@ -40,69 +40,51 @@
           var requestParams = getParams();
           var canvasUri = requestParams.canvas || /*[[@{__${presentationUri}__/canvas/p1}]]*/;
           Mirador({
+            'id': 'viewer',
             'buildPath': /*[[@{/webjars/mirador/2.2.0/}]]*/,
-            "id": "viewer",
-            "workspaceType": "singleObject",
+            'workspaceType': 'bookReading',
+            'layout': '1x1',
             'mainMenuSettings': {
               'show': true,
               'buttons': {
                 'layout': true
               },
-              'userLogo': {
-                'label': 'Mirador',
-                'attributes': { 'href': 'http://projectmirador.org/' }
-              },
-              "userButtons": [
-                {
-                  "label": "IIIF-Manifest",
-                  "iconClass": "fa fa-file-text",
-                  "attributes": {
-                    "class": "file",
-                    "href": /*[[@{__${presentationUri}__/manifest}]]*/,
-                    "target": "_blank"
-                  }
+              "userButtons": [{
+                "label": "IIIF-Manifest",
+                "iconClass": "fa fa-file-text",
+                "attributes": {
+                  "class": "file",
+                  "href": /*[[@{__${presentationUri}__/manifest}]]*/,
+                  "target": "_blank"
                 }
-              ]
-            },
-            "layout": "1x1",
-            "data": [
-              {
-                /*<![CDATA[*/
-                "manifestUri": /*[[@{__${presentationUri}__/manifest}]]*/
-                /*]]>*/
-              }
-            ],
-            "windowObjects": [
-              {
-                /*<![CDATA[*/
-                "loadedManifest": /*[[@{__${presentationUri}__/manifest}]]*/,
-                /*]]>*/
-                /*<![CDATA[*/
-                "canvasID": canvasUri,
-                /*]]>*/
-                "viewType": "ImageView",
-                "layoutOptions": {
-                  "close": false,
-                  "slotRight": false,
-                  "slotLeft": false,
-                  "slotAbove": false,
-                  "slotBelow": false
-                },
-                "sidePanelOptions": {
-                  "toc" : true,
-                  "annotations" : false
-                },
-                "annotationLayer": false,
-                "annotationCreation": false,
-                "annotationState": 'annoOff',
-                "saveSession": false
               }]
-            /*,
-            "annotationEndpoint": {
-              "name": 'Local Storage Endpoint',
-              "module": 'LocalStorageEndpoint'
+            },
+            'showAddFromURLBox': true,
+            'saveSession': false,
+            'data': [{
+              /*<![CDATA[*/
+              'manifestUri': /*[[@{__${presentationUri}__/manifest}]]*/
+              /*]]>*/
+            }],
+            'windowObjects': [{
+              /*<![CDATA[*/
+              'loadedManifest': /*[[@{__${presentationUri}__/manifest}]]*/,
+              /*]]>*/
+              'viewType': 'ImageView',
+              'layoutOptions': {
+                'close': false
+              },
+              'annotationLayer': false,
+              'annotationCreation': false,
+              'saveSession': false,
+              'displayLayout': true,
+              'bottomPanel': true,
+              'sidePanel': true
+            }],
+            'annotationEndpoint': {
+              'name': 'Local Storage',
+              'module': 'LocalStorageEndpoint'
             }
-            */
           });
         });
       </script>
