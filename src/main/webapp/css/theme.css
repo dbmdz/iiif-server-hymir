@@ -24,7 +24,7 @@ footer {
 .navbar {
   background-color: white;
   border-bottom: solid 1px #e5e5e5;
-  height: 50px;
+  min-height: 45px;
 }
 
 .navbar-brand.logo img {
