@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ViewController {
 
   @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-  public String viewHomepage() {
+  public String viewHomepage(Model model) {
+    model.addAttribute("menu", "home");
     return "index";
   }
 
