@@ -3,6 +3,20 @@ body {
   padding-bottom: 30px;
 }
 
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 40px;
+  background-color: #f5f5f5;
+
+  border-top: solid 1px #AAA;
+  color: #777;
+  padding-top: 10px;
+  text-align: center;
+}
+
 .jumbotron {
   text-align: center;
 }
@@ -34,12 +48,6 @@ body {
 
 .theme-showcase .navbar .container {
   width: auto;
-}
-
-.footer {
-    padding-top: 19px;
-    color: #777;
-    border-top: 1px solid #e5e5e5;
 }
 
 .toc .toc-link {
