@@ -5,9 +5,14 @@ var UpdateUrlFromView = {
     var this_ = this;
     var origFunc = Mirador.Viewer.prototype.setupViewer;
     Mirador.Viewer.prototype.setupViewer = function() {
-      if (window.location.hash) {
-        var windowObj = this_.parseHash(window.location.hash);
-        this.data.unshift({'manifestUri': windowObj.loadedManifest});
+      if (window.location.search) {
+        var params = this_.parseRequestParams(window.location.search);
+        this.data.unshift({'manifestUri': params.manifest});
+        var windowObj = {
+          viewType: params.view || 'ImageView',
+          loadedManifest: params.manifest,
+          canvasID: params.canvas
+        };
         this.state['currentConfig'].windowObjects = [windowObj];
       }
       this.eventEmitter.subscribe('slotsUpdated', this_.onSlotsUpdated);
@@ -16,22 +21,22 @@ var UpdateUrlFromView = {
     }
   },
 
-  parseHash: function(hash) {
-    var parts = hash.substr(1).split(';');
-    var config = {
-      viewType: parts[0],
-      loadedManifest: parts[1]
-    };
-    if (parts.length > 2) {
-      config.canvasID = parts[2];
+  parseRequestParams: function(qstr) {
+    var query = {};
+    var a = (qstr[0] === '?' ? qstr.substr(1) : qstr).split('&');
+    for (var i = 0; i < a.length; i++) {
+      var b = a[i].split('=');
+      query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
     }
-    return config;
+    return query;
   },
 
   onSlotsUpdated: function(_, data) {
     this.updateUrl = data.slots.length === 1;
     if (!this.updateUrl) {
-      window.location.hash = '';
+      window.history.replaceState({}, null, "?");
+    } else {
+      console.log('Activated URL update');
     }
   },
 
@@ -39,11 +44,13 @@ var UpdateUrlFromView = {
     if (!this.updateUrl || !data.viewType) {
       return;
     }
-    var hash = '#' + data.viewType + ';' + data.loadedManifest;
+    var newParams = new URLSearchParams();
+    newParams.set('view', data.viewType);
+    newParams.set('manifest', data.loadedManifest);
     if (data.canvasID) {
-      hash += ';' + data.canvasID;
+      newParams.set('canvas', data.canvasID);
     }
-    window.location.hash = hash;
+    window.history.replaceState({}, null, "?" + newParams.toString());
   }
 }
 
