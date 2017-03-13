@@ -72,3 +72,7 @@ footer {
 .overlay * {
   box-sizing: border-box !important;
 }
+
+.navbar .navbar-right {
+    margin-right: 0;
+}
