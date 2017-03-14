@@ -1,6 +1,5 @@
 body {
   padding-top: 55px;
-  padding-bottom: 30px;
 }
 
 footer {
@@ -74,5 +73,13 @@ footer {
 }
 
 .navbar .navbar-right {
-    margin-right: 0;
+  margin-right: 0;
+}
+
+.panel .table {
+  margin-bottom: 0;
+}
+
+.panel-body {
+  padding: 15px;
 }
