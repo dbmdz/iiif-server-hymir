@@ -45,9 +45,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <version.aspectjweaver>1.8.9</version.aspectjweaver>
-    <version.iiif-image>2.2.5-SNAPSHOT</version.iiif-image>
+    <version.iiif-image>2.2.5</version.iiif-image>
     <version.iiif-mirador>2.2.0</version.iiif-mirador>
-    <version.iiif-presentation>3.2.4-SNAPSHOT</version.iiif-presentation>
+    <version.iiif-presentation>3.2.4</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.jetty-maven-plugin>9.3.10.v20160621</version.jetty-maven-plugin>
     <version.logback-ext-spring>0.1.4</version.logback-ext-spring>
