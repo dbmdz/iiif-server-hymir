@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/mirador/2.2.0/css/mirador-combined.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/mirador/2.3.0/css/mirador-combined.css}" />
     <style type="text/css">
       body { font-size: 14px; }
       body > div.container { width: 100% !important; }
@@ -22,14 +22,14 @@
     </section>
 
     <th:block layout:fragment="morejs">
-      <script th:src="@{/webjars/mirador/2.2.0/mirador.min.js}"></script>
+      <script th:src="@{/webjars/mirador/2.3.0/mirador.min.js}"></script>
       <script th:src="@{/js/viewFromUrl.js}"></script>
       <script th:src="@{/js/keyboardNavigation.js}"></script>
       <script type="text/javascript" th:inline="javascript">
         $(function(){
           Mirador({
             'id': 'viewer',
-            'buildPath': /*[[@{/webjars/mirador/2.2.0/}]]*/,
+            'buildPath': /*[[@{/webjars/mirador/2.3.0/}]]*/,
             'workspaceType': 'bookReading',
             'layout': '1x1',
             'mainMenuSettings': {
