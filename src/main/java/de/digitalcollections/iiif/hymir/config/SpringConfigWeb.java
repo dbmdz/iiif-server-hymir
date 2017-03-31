@@ -1,6 +1,7 @@
 package de.digitalcollections.iiif.hymir.config;
 
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
+import de.digitalcollections.commons.springmvc.interceptors.RequestProcessingTimeInterceptor;
 import java.util.Locale;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +25,10 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
-@Configuration
+@Configuration(value = "SpringConfigWebHymir")
 @ComponentScan(basePackages = {
-  "de.digitalcollections.iiif.hymir.frontend.impl.springmvc.controller"
+  "de.digitalcollections.iiif.hymir.frontend.impl.springmvc.controller",
+  "de.digitalcollections.commons.springmvc.interceptors" // because of RequestProcessingTimeInterceptor being also an advice...
 })
 @EnableAspectJAutoProxy
 @EnableWebMvc
@@ -95,6 +97,9 @@ public class SpringConfigWeb extends WebMvcConfigurerAdapter {
     LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
     localeChangeInterceptor.setParamName("language");
     registry.addInterceptor(localeChangeInterceptor);
+
+    RequestProcessingTimeInterceptor requestProcessingTimeInterceptor = new RequestProcessingTimeInterceptor();
+    registry.addInterceptor(requestProcessingTimeInterceptor);
   }
 
   @Bean(name = "localeResolver")

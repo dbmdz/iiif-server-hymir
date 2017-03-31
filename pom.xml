@@ -45,6 +45,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <version.aspectjweaver>1.8.9</version.aspectjweaver>
+    <version.digitalcollections-commons-springmvc>1.2.1-SNAPSHOT</version.digitalcollections-commons-springmvc>
     <version.iiif-image>2.2.5</version.iiif-image>
     <version.iiif-mirador>2.3.0</version.iiif-mirador>
     <version.iiif-presentation>3.2.4</version.iiif-presentation>
@@ -113,6 +114,11 @@
       <artifactId>iiif-presentation-frontend-impl-springmvc</artifactId>
       <version>${version.iiif-presentation}</version>
       <scope>compile</scope> <!-- not runtime, because of IIIFPresentationApiController.VERSION-->
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections.commons</groupId>
+      <artifactId>digitalcollections-commons-springmvc</artifactId>
+      <version>${version.digitalcollections-commons-springmvc}</version>
     </dependency>
     <dependency>
       <groupId>nz.net.ultraq.thymeleaf</groupId>
