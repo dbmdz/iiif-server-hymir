@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+        layout:decorator="base">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/mirador/2.3.0/css/mirador-combined.css}" />
+    <style type="text/css">
+      body { font-size: 14px; }
+      body > div.container { width: 100% !important; }
+    </style>
+  </head>
+  <body>
+    <section layout:fragment="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div id="viewer"></div>
+        </div>
+      </div>
+    </section>
+
+    <th:block layout:fragment="morejs">
+      <script th:src="@{/webjars/mirador/2.3.0/mirador.min.js}"></script>
+      <script th:src="@{/js/viewFromUrl.js}"></script>
+      <script th:src="@{/js/keyboardNavigation.js}"></script>
+      <script type="text/javascript" th:inline="javascript">
+        $(function(){
+          Mirador({
+            'id': 'viewer',
+            'buildPath': /*[[@{/webjars/mirador/2.3.0/}]]*/,
+            'workspaceType': 'bookReading',
+            'layout': '1x1',
+            'mainMenuSettings': {
+              'show': true,
+              'buttons': {
+                'layout': true
+              },
+              "userButtons": [{
+                "label": "IIIF-Manifest",
+                "iconClass": "fa fa-file-text",
+                "attributes": {
+                  "class": "file",
+                  "href": /*[[${manifestId}]]*/,
+                  "target": "_blank"
+                }
+              }]
+            },
+            'showAddFromURLBox': true,
+            'saveSession': false,
+            'data': [{
+              /*<![CDATA[*/
+              'manifestUri': /*[[${manifestId}]]*/
+              /*]]>*/
+            }],
+            'windowObjects': [{
+              /*<![CDATA[*/
+              'loadedManifest': /*[[${manifestId}]]*/,
+              'canvasID' : /*[[${canvasId}]]*/,
+              /*]]>*/
+              'viewType': 'ImageView',
+              'layoutOptions': {
+                'close': false
+              },
+              'annotationLayer': false,
+              'annotationCreation': false,
+              'saveSession': false,
+              'displayLayout': true,
+              'bottomPanel': true,
+              'sidePanel': true
+            }],
+            'annotationEndpoint': {
+              'name': 'Local Storage',
+              'module': 'LocalStorageEndpoint'
+            }
+          });
+        });
+      </script>
+    </th:block>
+  </body>
+</html>
