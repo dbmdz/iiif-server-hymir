@@ -24,6 +24,11 @@
       <email>ralf.eichinger@gmail.com</email>
       <id>datazuul</id>
     </developer>
+    <developer>
+      <name>Matthias Lindinger</name>
+      <email>matthias.lindinger@bsb-muenchen.de</email>
+      <id>morpheus-87</id>
+    </developer>
   </developers>
   <ciManagement>
     <url>https://travis-ci.org/dbmdz/iiif-server-hymir</url>
