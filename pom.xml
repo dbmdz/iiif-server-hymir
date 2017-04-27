@@ -51,7 +51,7 @@
 
     <version.aspectjweaver>1.8.9</version.aspectjweaver>
     <version.digitalcollections-commons-springmvc>1.2.1-SNAPSHOT</version.digitalcollections-commons-springmvc>
-    <version.iiif-image>2.2.5</version.iiif-image>
+    <version.iiif-image>2.2.6-SNAPSHOT</version.iiif-image>
     <version.iiif-mirador>2.4.0</version.iiif-mirador>
     <version.iiif-presentation>3.2.5-SNAPSHOT</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
