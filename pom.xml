@@ -56,7 +56,9 @@
     <version.iiif-presentation>3.2.5-SNAPSHOT</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.jetty-maven-plugin>9.3.10.v20160621</version.jetty-maven-plugin>
+    <version.logback>1.1.11</version.logback>
     <version.logback-ext-spring>0.1.4</version.logback-ext-spring>
+    <version.logstash-logback-encoder>4.7</version.logstash-logback-encoder>
     <version.maven-compiler-plugin>3.3</version.maven-compiler-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.maven-javadoc-plugin>2.10.4</version.maven-javadoc-plugin>
@@ -79,6 +81,16 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${version.logback}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>${version.logback}</version>
+    </dependency>
     <dependency>
       <groupId>com.github.mxab.thymeleaf.extras</groupId>
       <artifactId>thymeleaf-extras-data-attribute</artifactId>
@@ -124,6 +136,11 @@
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>digitalcollections-commons-springmvc</artifactId>
       <version>${version.digitalcollections-commons-springmvc}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>${version.logstash-logback-encoder}</version>
     </dependency>
     <dependency>
       <groupId>nz.net.ultraq.thymeleaf</groupId>

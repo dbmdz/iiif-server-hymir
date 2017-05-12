@@ -8,10 +8,9 @@ import de.digitalcollections.iiif.presentation.model.api.exceptions.InvalidDataE
 import de.digitalcollections.iiif.presentation.model.api.exceptions.NotFoundException;
 import de.digitalcollections.iiif.presentation.model.api.v2.Canvas;
 import javax.servlet.http.HttpServletRequest;
-import net.logstash.logback.marker.LogstashMarker;
-import static net.logstash.logback.marker.Markers.append;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,32 +79,35 @@ public class ViewController {
    * @param model mvc model
    * @param request request
    * @return canvas specific view
-   * @throws de.digitalcollections.iiif.presentation.model.api.exceptions.NotFoundException
-   * @throws de.digitalcollections.iiif.presentation.model.api.exceptions.InvalidDataException
+   * @throws de.digitalcollections.iiif.presentation.model.api.exceptions.NotFoundException if no manifest found
+   * @throws de.digitalcollections.iiif.presentation.model.api.exceptions.InvalidDataException if manifest can't be read
    */
   @RequestMapping(value = "/presentation/{version}/{objectIdentifier}/canvas/{canvasName}/view",
           method = RequestMethod.GET)
   public String viewCanvasGet(@PathVariable String version, @PathVariable String objectIdentifier, @PathVariable String canvasName, Model model, HttpServletRequest request)
           throws NotFoundException, InvalidDataException {
-    LogstashMarker marker = HttpLoggingUtilities.makeRequestLoggingMarker(request)
-            .and(append("manifestId", objectIdentifier).and(append("canvasName", canvasName)));
+    HttpLoggingUtilities.addRequestClientInfoToMDC(request);
+    MDC.put("manifestId", objectIdentifier);
+    MDC.put("canvasName", canvasName);
     try {
       String url = request.getRequestURL().toString();
       String canvasId = url.substring(0, url.indexOf("/view"));
       String manifestId = url.substring(0, url.indexOf("/canvas")) + "/manifest";
 
       Canvas canvas = presentationService.getCanvas(objectIdentifier, canvasId);
-      LOGGER.info(marker, "Serving Canvas for {}", canvasId);
+      LOGGER.info("Serving Canvas for {}", canvasId);
 
       model.addAttribute("manifestId", manifestId);
       model.addAttribute("canvasId", canvasId);
 
     } catch (NotFoundException e) {
-      LOGGER.info(marker, "Did not find manifest for {}", objectIdentifier);
+      LOGGER.info("Did not find manifest for {}", objectIdentifier);
       throw e;
     } catch (InvalidDataException e) {
-      LOGGER.error(marker, "Bad data for {}", objectIdentifier);
+      LOGGER.error("Bad data for {}", objectIdentifier);
       throw e;
+    } finally {
+      MDC.clear();
     }
 
     return "mirador/viewCanvas";
