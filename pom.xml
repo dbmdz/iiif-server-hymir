@@ -52,7 +52,7 @@
     <version.aspectjweaver>1.8.9</version.aspectjweaver>
     <version.digitalcollections-commons-springmvc>1.2.2-SNAPSHOT</version.digitalcollections-commons-springmvc>
     <version.iiif-image>2.2.6-SNAPSHOT</version.iiif-image>
-    <version.iiif-mirador>2.4.0</version.iiif-mirador>
+    <version.iiif-mirador>2.5.0-SNAPSHOT</version.iiif-mirador>
     <version.iiif-presentation>3.2.5-SNAPSHOT</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.jetty-maven-plugin>9.3.10.v20160621</version.jetty-maven-plugin>
@@ -206,8 +206,8 @@
       <version>${version.webjar-jquery}</version>
     </dependency>
     <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>mirador</artifactId>
+      <groupId>de.digitalcollections</groupId>
+      <artifactId>mirador-dev</artifactId>
       <version>${version.iiif-mirador}</version>
     </dependency>
     <dependency>
