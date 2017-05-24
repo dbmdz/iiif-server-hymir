@@ -90,19 +90,21 @@ public class ViewController {
     HttpLoggingUtilities.addRequestClientInfoToMDC(request);
     MDC.put("manifestId", objectIdentifier);
     MDC.put("canvasName", canvasName);
-    try {
-      String url = getOriginalUri(request).toString();
-      String canvasId = url.substring(0, url.indexOf("/view"));
-      String manifestId = url.substring(0, url.indexOf("/canvas")) + "/manifest";
 
-      Canvas canvas = presentationService.getCanvas(objectIdentifier, canvasId);
+    String url = getOriginalUri(request).toString();
+    String canvasId = url.substring(0, url.indexOf("/view"));
+    String manifestId = url.substring(0, url.indexOf("/canvas")) + "/manifest";
+
+    try {
+
+      presentationService.getCanvas(objectIdentifier, canvasId);
       LOGGER.info("Serving Canvas for {}", canvasId);
 
       model.addAttribute("manifestId", manifestId);
       model.addAttribute("canvasId", canvasId);
 
     } catch (NotFoundException e) {
-      LOGGER.info("Did not find manifest for {}", objectIdentifier);
+      LOGGER.info("Did not find canvas for {}", canvasId);
       throw e;
     } catch (InvalidDataException e) {
       LOGGER.error("Bad data for {}", objectIdentifier);
