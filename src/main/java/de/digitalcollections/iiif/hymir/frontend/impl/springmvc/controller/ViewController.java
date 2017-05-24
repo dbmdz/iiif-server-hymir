@@ -7,6 +7,7 @@ import de.digitalcollections.iiif.presentation.frontend.impl.springmvc.controlle
 import de.digitalcollections.iiif.presentation.model.api.exceptions.InvalidDataException;
 import de.digitalcollections.iiif.presentation.model.api.exceptions.NotFoundException;
 import de.digitalcollections.iiif.presentation.model.api.v2.Canvas;
+import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +91,7 @@ public class ViewController {
     MDC.put("manifestId", objectIdentifier);
     MDC.put("canvasName", canvasName);
     try {
-      String url = request.getRequestURL().toString();
+      String url = getOriginalUri(request).toString();
       String canvasId = url.substring(0, url.indexOf("/view"));
       String manifestId = url.substring(0, url.indexOf("/canvas")) + "/manifest";
 
@@ -111,5 +112,16 @@ public class ViewController {
     }
 
     return "mirador/viewCanvas";
+  }
+
+  private URI getOriginalUri(HttpServletRequest request) {
+    String requestUrl = request.getRequestURL().toString();
+    String incomingScheme = URI.create(requestUrl).getScheme();
+    String originalScheme = request.getHeader("X-Forwarded-Proto");
+    if (originalScheme != null && !incomingScheme.equals(originalScheme)) {
+      return URI.create(requestUrl.replaceFirst("^" + incomingScheme, originalScheme));
+    } else {
+      return URI.create(requestUrl);
+    }
   }
 }
