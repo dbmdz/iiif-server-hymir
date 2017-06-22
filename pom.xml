@@ -50,7 +50,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <version.aspectjweaver>1.8.9</version.aspectjweaver>
-    <version.digitalcollections-commons-springmvc>1.2.2-SNAPSHOT</version.digitalcollections-commons-springmvc>
+    <version.digitalcollections-commons-springmvc>1.2.2</version.digitalcollections-commons-springmvc>
     <version.iiif-image>2.2.6-SNAPSHOT</version.iiif-image>
     <version.iiif-mirador>2.5.0-SNAPSHOT</version.iiif-mirador>
     <version.iiif-presentation>3.2.5-SNAPSHOT</version.iiif-presentation>
