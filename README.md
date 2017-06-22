@@ -106,6 +106,22 @@ significantly faster.
 Based on unique resource identifiers the server tries to resolve identifiers to a "file:" or "http:" path.
 The resolving rules (one rule per line) are configurable with regular expressions in YML-files.
 
+### Logging
+
+The default logging file is configured as `/local/iiif/log/iiif/iiifServer.log`.
+To configure another file path you can set it using the environment variable IIIF_SERVER_LOGFILE (e.g. in Tomcat using JAVA_OPTS).
+
+Example Tomcat config:
+
+```sh
+$ cd $TOMCAT_HOME/bin
+$ vi setenv.sh
+#!/bin/sh
+...
+export JAVA_OPTS="$JAVA_OPTS -DIIIF_SERVER_LOGFILE=/var/log/iiif/iiifServer.log"
+...
+```
+
 ### Image and presentation manifest resolving
 
 After application server unpacked Hymir-WAR, you can configure file (image and presentation manifest) resolving
@@ -120,8 +136,8 @@ $ vi multiPatternResolving-PROD.yml
 * or alternatively by pointing Hymir to the location of the file (outside of classpath) using environment variable "multiPatternResolvingFile":
 
 ```
-$ cd $TOMCAT_HOME
-$ vi bin/setenv.sh
+$ cd $TOMCAT_HOME/bin
+$ vi setenv.sh
 export JAVA_OPTS="$JAVA_OPTS -DmultiPatternResolvingFile=file:/etc/hymir/multiPatternResolving-PROD.yml"
 ```
 
