@@ -176,4 +176,4 @@ Access Hymir GUI (e.g. http://localhost:8080/).
 ## Users
 
 - Bavarian State Library, Project Bavarikon: <a href="http://www.bavarikon.de/">http://www.bavarikon.de/</a>
-- Bavarian State Library, Project digiPress: <a href="https://digipress2.digitale-sammlungen.de/">https://digipress2.digitale-sammlungen.de/</a>
+- Bavarian State Library, Project digiPress: <a href="https://digipress.digitale-sammlungen.de/">https://digipress.digitale-sammlungen.de/</a>
