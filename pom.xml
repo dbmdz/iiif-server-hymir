@@ -53,7 +53,7 @@
     <version.digitalcollections-commons-springmvc>1.2.2</version.digitalcollections-commons-springmvc>
     <version.iiif-image>2.2.6-SNAPSHOT</version.iiif-image>
     <version.iiif-mirador>2.5.0-SNAPSHOT</version.iiif-mirador>
-    <version.iiif-presentation>3.2.5-SNAPSHOT</version.iiif-presentation>
+    <version.iiif-presentation>3.2.5</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.jetty-maven-plugin>9.3.10.v20160621</version.jetty-maven-plugin>
     <version.logback>1.1.11</version.logback>
