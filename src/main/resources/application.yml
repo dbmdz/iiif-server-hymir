@@ -1,0 +1,15 @@
+endpoints:
+  hypermedia:
+    enabled: true
+
+management:
+  port: 9001
+  security:
+    enabled: true
+#    roles: SUPERUSER
+
+security:
+  user:
+    name: admin
+    password: secret
+
