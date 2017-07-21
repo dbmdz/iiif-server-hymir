@@ -1,0 +1,58 @@
+endpoints:
+  hypermedia:
+    enabled: true
+
+info:
+  app:
+    encoding: @project.build.sourceEncoding@
+    java:
+      source: @maven.compiler.source@
+      target: @maven.compiler.target@
+    project:
+      name: '@project.name@'
+      groupId: @project.groupId@
+      artifactId: @project.artifactId@
+      version: @project.version@
+
+management:
+  port: 9001
+#  security:
+#    enabled: true
+#    roles: SUPERUSER
+
+security:
+  basic:
+    enabled: false
+  headers:
+    cache: false
+    # disables pragma no-cache header
+
+server:
+  port: 9000
+  server-header: "Hymir IIIF Server v@project.version@"
+
+spring:
+  profiles:
+    active: PROD
+
+---
+
+spring:
+  profiles: local
+
+management:
+  security:
+    enabled: false
+---
+
+spring:
+  profiles: PROD
+
+management:
+  security:
+    enabled: true
+
+security:
+  user:
+    name: admin
+    password: secret

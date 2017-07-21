@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- see https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html#_profile_specific_configuration -->
+  <springProfile name="PROD">
+    <appender name="default" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>./hymir.log</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>hymir.%d{yyyy-MM-dd}.log</fileNamePattern>
+      </rollingPolicy>
+      <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>hymir.%d{yyyy-MM}.%i.log.gz</fileNamePattern>
+        <maxFileSize>100MB</maxFileSize>
+        <maxHistory>90</maxHistory>
+        <totalSizeCap>5GB</totalSizeCap>
+      </rollingPolicy>
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <!--<customFields>{"service":"hymir-server", "group":"rest", "instance":"${instance.name:-default}"}</customFields>-->
+      </encoder>
+    </appender>
+  </springProfile>
+  
+  <springProfile name="local">
+    <appender name="default" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>[%d{ISO8601} %5p] %40.40c:%4L [%-8t] - %m%n</pattern>
+      </encoder>
+    </appender>
+  </springProfile>
+
+  <logger name="de.digitalcollections.iiif.presentation.backend" level="error" />
+  <logger name="de.digitalcollections.iiif.presentation.business" level="error" />
+  <logger name="de.digitalcollections.core" level="error" />
+
+  <root level="info">
+    <appender-ref ref="default" />
+  </root>
+
+</configuration>

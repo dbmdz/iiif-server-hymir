@@ -15,7 +15,7 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
 - IIIF Presentation API 2.0.0 compliant (see <a href="http://iiif.io/api/presentation/2.0/">http://iiif.io/api/presentation/2.0/</a>).
 - Based on IIIF Image API Java Library and IIIF Presentation API Java Library.
 - On the fly image processing. No additional pregenerated (pyramid zoom) images are needed. No additional storage consumption.
-- Ready to deploy standard java web application (WAR) for running as a standalone IIIF server.
+- Can simply be run as a standalone IIIF server from the JAR, no application server necessary
 - Spring based modular, extendable, easy to maintain enterprise architecture.
 - Highly customizable image storage and identifier resolving: Access to images over project specific Resolver-plugin mechanism.
 - Support for Filesystem- and HTTP-Image-Repositories (own protocols can be added by providing specific resolver)
@@ -46,7 +46,7 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
   <tr>
     <td></td>
     <td>yes</td>
-    <td>libjpeg8</a>
+    <td>turbojpeg</a>
     <td>yes</td>
   </tr>
   <tr>
@@ -80,11 +80,11 @@ More formats (including TIFF) will be supported soon by using Java Image I/O for
 ## Prerequisites
 
 - Server with minimum 4GB RAM.
-- Java 8 and Java Webapplication Server (e.g. Tomcat 8)
+- Java 8
 
 ## Installation
 
-Download (from GitHub-project page under "releases") and deploy WAR file into (Apache Tomcat) application server.
+Download from GitHub-project page under "releases" and run the JAR with `java -jar`
 
 ### Using the TurboJPEG backend
 By default, a Java-based image processing backend is used. If you want better
@@ -124,22 +124,7 @@ export JAVA_OPTS="$JAVA_OPTS -DIIIF_SERVER_LOGFILE=/var/log/iiif/iiifServer.log"
 Based on unique resource identifiers the server tries to resolve identifiers to a "file:" or "http:" path.
 The resolving rules (one rule per line) are configurable with regular expressions in YML-files.
 
-After application server unpacked Hymir-WAR, you can configure file (image and presentation manifest) resolving
-
-* in unpacked configuraton-file on classpath:
-
-```
-$ cd $TOMCAT_HOME/webapps/<hymir-directory>/WEB-INF/classes/de/digitalcollections/core/config
-$ vi multiPatternResolving-PROD.yml
-```
-
-* or alternatively by pointing Hymir to the location of the file (outside of classpath) using environment variable "multiPatternResolvingFile":
-
-```
-$ cd $TOMCAT_HOME/bin
-$ vi setenv.sh
-export JAVA_OPTS="$JAVA_OPTS -DmultiPatternResolvingFile=file:/etc/hymir/multiPatternResolving-PROD.yml"
-```
+You can pass the path to your custom resolving rules with the `--multiPatternResolvingFile=/path/to/rules.yml` option.
 
 Example file "multiPatternResolving-PROD.yml":
 
@@ -170,8 +155,19 @@ Example file "multiPatternResolving-PROD.yml":
 
 ## Usage
 
-Start application server.
-Access Hymir GUI (e.g. http://localhost:8080/).
+Run the application with `java -jar hymir-<version>-exec.jar`
+
+Example:
+
+```sh
+$ java -jar hymir-3.0.0-SNAPSHOT-exec.jar --spring.profiles.active=local
+```
+
+Access Hymir GUI (e.g. http://localhost:9000/).
+
+## Administration
+
+Monitoring endpoints under http://localhost:9001 (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
 
 ## Users
 
