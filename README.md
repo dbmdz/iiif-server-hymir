@@ -167,7 +167,7 @@ Access Hymir GUI (e.g. http://localhost:9000/).
 
 ## Administration
 
-Monitoring endpoints under http://localhost:9001 (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
+Monitoring endpoints under http://localhost:9001/actuator (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
 
 ## Users
 
