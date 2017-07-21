@@ -139,8 +139,19 @@ Example file "multiPatternResolving-PROD.yml":
 
 ## Usage
 
-Run the application with `java -jar hymir.jar`
-Access Hymir GUI (e.g. http://localhost:8080/).
+Run the application with `java -jar hymir-<version>-exec.jar`
+
+Example:
+
+```sh
+$ java -jar hymir-3.0.0-SNAPSHOT-exec.jar --spring.profiles.active=local
+```
+
+Access Hymir GUI (e.g. http://localhost:9000/).
+
+## Administration
+
+Monitoring endpoints under http://localhost:9001 (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
 
 ## Users
 

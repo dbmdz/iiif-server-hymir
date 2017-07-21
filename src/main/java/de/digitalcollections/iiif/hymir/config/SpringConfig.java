@@ -17,8 +17,7 @@ import org.springframework.core.env.Environment;
 @Configuration
 @ComponentScan(basePackages = {
   "de.digitalcollections.iiif.image.config",
-  "de.digitalcollections.iiif.presentation.config",
-  "de.digitalcollections.iiif.hymir.config"
+  "de.digitalcollections.iiif.presentation.config"
 }) // scans all frontend, business and backend configs of Image API and Presentation API
 public class SpringConfig implements EnvironmentAware {
 

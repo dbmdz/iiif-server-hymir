@@ -56,36 +56,69 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <version.aspectjweaver>1.8.9</version.aspectjweaver>
-    <version.iiif-image>2.2.6-SNAPSHOT</version.iiif-image>
-    <version.iiif-mirador>2.5.0-SNAPSHOT</version.iiif-mirador>
-    <version.iiif-presentation>3.2.5-SNAPSHOT</version.iiif-presentation>
+    <version.iiif-image>2.2.6</version.iiif-image>
+    <version.iiif-presentation>3.2.5</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
-    <version.jetty-maven-plugin>9.3.10.v20160621</version.jetty-maven-plugin>
-    <version.logback>1.1.11</version.logback>
-    <version.logback-ext-spring>0.1.4</version.logback-ext-spring>
     <version.logstash-logback-encoder>4.7</version.logstash-logback-encoder>
+    <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
+    <version.webjar-html5shiv>3.7.3</version.webjar-html5shiv>
+    <version.webjar-ie10-viewport-bug-workaround>1.0.3</version.webjar-ie10-viewport-bug-workaround>
+    <version.webjar-jquery>1.11.3</version.webjar-jquery>
+    <version.webjar-mirador>2.5.1</version.webjar-mirador>
+    <version.webjar-openseadragon>2.2.1</version.webjar-openseadragon>
+    <version.webjar-respond>1.4.2</version.webjar-respond>
+    
+    <!-- plugins -->
     <version.maven-compiler-plugin>3.3</version.maven-compiler-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.maven-javadoc-plugin>2.10.4</version.maven-javadoc-plugin>
     <version.maven-source-plugin>3.0.1</version.maven-source-plugin>
     <version.maven-surefire-plugin>2.19.1</version.maven-surefire-plugin>
     <version.nexus-staging-maven-plugin>1.6.7</version.nexus-staging-maven-plugin>
-    <version.slf4j>1.7.21</version.slf4j>
-    <version.thymeleaf>2.1.3.RELEASE</version.thymeleaf>
-    <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
-    <version.thymeleaf-extras-data-attribute>1.3</version.thymeleaf-extras-data-attribute>
-    <version.thymeleaf-layout-dialect>1.2.9</version.thymeleaf-layout-dialect>
-    <version.versions-maven-plugin>2.2</version.versions-maven-plugin>
-    <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
-    <version.webjar-html5shiv>3.7.3</version.webjar-html5shiv>
-    <version.webjar-ie10-viewport-bug-workaround>1.0.3</version.webjar-ie10-viewport-bug-workaround>
-    <version.webjar-jquery>1.11.3</version.webjar-jquery>
-    <version.webjar-openseadragon>2.2.1</version.webjar-openseadragon>
-    <version.webjar-respond>1.4.2</version.webjar-respond>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>de.digitalcollections</groupId>
+      <artifactId>iiif-image-backend-impl</artifactId>
+      <version>${version.iiif-image}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections</groupId>
+      <artifactId>iiif-image-business-impl</artifactId>
+      <version>${version.iiif-image}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections</groupId>
+      <artifactId>iiif-image-frontend-impl-springmvc</artifactId>
+      <version>${version.iiif-image}</version>
+      <scope>compile</scope>  <!-- not runtime, because of twelvemonkeys IIOProviderContextListener in WebappInitializer and IIIFImageApiController.VERSION -->
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections</groupId>
+      <artifactId>iiif-presentation-backend-impl</artifactId>
+      <version>${version.iiif-presentation}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections</groupId>
+      <artifactId>iiif-presentation-business-impl</artifactId>
+      <version>${version.iiif-presentation}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections</groupId>
+      <artifactId>iiif-presentation-frontend-impl-springmvc</artifactId>
+      <version>${version.iiif-presentation}</version>
+      <scope>compile</scope>  <!-- not runtime, because of IIIFPresentationApiController.VERSION -->
+    </dependency>
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>${version.logstash-logback-encoder}</version>
+    </dependency>    
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
@@ -105,105 +138,16 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>hal-browser</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>${version.logback}</version>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-core</artifactId>
-      <version>${version.logback}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.mxab.thymeleaf.extras</groupId>
-      <artifactId>thymeleaf-extras-data-attribute</artifactId>
-      <version>${version.thymeleaf-extras-data-attribute}</version>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-image-backend-impl</artifactId>
-      <version>${version.iiif-image}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-image-business-impl</artifactId>
-      <version>${version.iiif-image}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-image-frontend-impl-springmvc</artifactId>
-      <version>${version.iiif-image}</version>
-      <scope>compile</scope> <!-- not runtime, because of twelvemonkeys IIOProviderContextListener in WebappInitializer and IIIFImageApiController.VERSION-->
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-presentation-backend-impl</artifactId>
-      <version>${version.iiif-presentation}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-presentation-business-impl</artifactId>
-      <version>${version.iiif-presentation}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-presentation-frontend-impl-springmvc</artifactId>
-      <version>${version.iiif-presentation}</version>
-      <scope>compile</scope> <!-- not runtime, because of IIIFPresentationApiController.VERSION-->
-    </dependency>
-    <dependency>
-      <groupId>net.logstash.logback</groupId>
-      <artifactId>logstash-logback-encoder</artifactId>
-      <version>${version.logstash-logback-encoder}</version>
-    </dependency>
-    <dependency>
-      <groupId>nz.net.ultraq.thymeleaf</groupId>
-      <artifactId>thymeleaf-layout-dialect</artifactId>
-      <version>${version.thymeleaf-layout-dialect}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.aspectj</groupId>
-      <artifactId>aspectjweaver</artifactId>
-      <version>${version.aspectjweaver}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.logback-extensions</groupId>
-      <artifactId>logback-ext-spring</artifactId>
-      <version>${version.logback-ext-spring}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${version.slf4j}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.thymeleaf</groupId>
-      <artifactId>thymeleaf</artifactId>
-      <version>${version.thymeleaf}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.thymeleaf</groupId>
-      <artifactId>thymeleaf-spring4</artifactId>
-      <version>${version.thymeleaf}</version>
     </dependency>
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
       <artifactId>thymeleaf-extras-conditionalcomments</artifactId>
-      <version>${version.thymeleaf-extras-conditionalcomments}</version>
-    </dependency>
+    </dependency>  
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>bootstrap</artifactId>
@@ -217,6 +161,10 @@
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
+      <artifactId>hal-browser</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
       <artifactId>html5shiv</artifactId>
       <version>${version.webjar-html5shiv}</version>
     </dependency>
@@ -226,9 +174,9 @@
       <version>${version.webjar-jquery}</version>
     </dependency>
     <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>mirador-dev</artifactId>
-      <version>${version.iiif-mirador}</version>
+      <groupId>org.webjars</groupId>
+      <artifactId>mirador</artifactId>
+      <version>${version.webjar-mirador}</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
@@ -256,14 +204,25 @@
       </resource>
       <resource>
         <directory>src/main/resources</directory>
+        <filtering>true</filtering>
       </resource>
     </resources>
 
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <delimiters>
+            <delimiter>@</delimiter>
+          </delimiters>
+          <useDefaultDelimiters>false</useDefaultDelimiters>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>1.5.4.RELEASE</version>
         <executions>
           <execution>
             <goals>
@@ -320,7 +279,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
-        <version>${version.versions-maven-plugin}</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
