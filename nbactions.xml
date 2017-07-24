@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
   <action>
-    <actionName>CUSTOM-mvn jetty:run</actionName>
-    <displayName>mvn jetty:run</displayName>
-    <goals>
-      <goal>jetty:run</goal>
-    </goals>
-    <properties>
-      <skipTests>true</skipTests>
-      <jpda.listen>maven</jpda.listen>
-    </properties>
-  </action>
-  <action>
-    <actionName>CUSTOM-mvn jetty:run -DmultiPatternResolvingFile=... (debug)</actionName>
-    <displayName>mvn jetty:run (with file:///etc/hymir/multiPatternResolving-local.yml) (debug)</displayName>
-    <goals>
-      <goal>jetty:run</goal>
-    </goals>
-    <properties>
-      <jpda.listen>maven</jpda.listen>
-      <multiPatternResolvingFile>file:/etc/hymir/multiPatternResolving-local.yml</multiPatternResolvingFile>
-    </properties>
-  </action>
-  <action>
     <actionName>CUSTOM-mvn clean deploy -U</actionName>
     <displayName>mvn clean deploy -U</displayName>
     <goals>
@@ -39,11 +17,13 @@
     </goals>
   </action>
   <action>
-            <actionName>CUSTOM-mvn clean package</actionName>
-            <displayName>mvn clean package</displayName>
-            <goals>
-                <goal>clean</goal>
-                <goal>package</goal>
-            </goals>
-        </action>
+    <actionName>CUSTOM-mvn clean package</actionName>
+    <displayName>mvn clean package</displayName>
+    <goals>
+      <goal>clean</goal>
+      <goal>package</goal>
+    </goals>
+  </action>
+  
+  
 </actions>
