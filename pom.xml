@@ -12,7 +12,7 @@
   <name>DigitalCollections: Hymir IIIF Server</name>
   <groupId>de.digitalcollections</groupId>
   <artifactId>iiif-server-hymir</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <description>Hymir is a Java based IIIF Server. It is based on "IIIF Image API Java Libraries" and "IIIF Presentation API Java Libraries" (Java implementations of the IIIF specifications, see https://github.com/dbmdz).</description>
@@ -57,7 +57,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <version.iiif-image>2.2.6</version.iiif-image>
-    <version.iiif-presentation>3.2.5</version.iiif-presentation>
+    <version.iiif-presentation>3.2.6</version.iiif-presentation>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.logstash-logback-encoder>4.7</version.logstash-logback-encoder>
     <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
