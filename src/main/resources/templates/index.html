@@ -15,7 +15,7 @@
         <div class="col-sm-6">
           <div class="panel panel-primary">
             <div class="panel-heading">
-              <h3 class="panel-title">IIIF Image API 2.0.0</h3>
+              <h3 class="panel-title">IIIF Image API 2.1</h3>
             </div>
             <div class="panel-body">
               <table class="table">
@@ -37,7 +37,7 @@
         <div class="col-sm-6">
           <div class="panel panel-primary">
             <div class="panel-heading">
-              <h3 class="panel-title">IIIF Presentation API 2.0.0</h3>
+              <h3 class="panel-title">IIIF Presentation API 2.1</h3>
             </div>
             <div class="panel-body">
               <table class="table">
@@ -79,6 +79,9 @@
           </div>
         </div>
       </div>
+
+      <!-- Pre-load Mirador into the browser cache to reduce waiting time when opening viewer page -->
+      <script async="true" defer="true" th:src="@{/webjars/mirador/2.5.1/mirador.min.js}"></script>
     </section>
   </body>
 </html>

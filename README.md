@@ -11,8 +11,8 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
 
 ## Features
 
-- IIIF Image API 2.0.0 compliant (see <a href="http://iiif.io/api/image/2.0/">http://iiif.io/api/image/2.0/</a>).
-- IIIF Presentation API 2.0.0 compliant (see <a href="http://iiif.io/api/presentation/2.0/">http://iiif.io/api/presentation/2.0/</a>).
+- IIIF Image API 2.1 compliant (see <a href="http://iiif.io/api/image/2.1/">http://iiif.io/api/image/2.1/</a>).
+- IIIF Presentation API 2.1 compliant (see <a href="http://iiif.io/api/presentation/2.1/">http://iiif.io/api/presentation/2.1/</a>).
 - Based on IIIF Image API Java Library and IIIF Presentation API Java Library.
 - On the fly image processing. No additional pregenerated (pyramid zoom) images are needed. No additional storage consumption.
 - Can simply be run as a standalone IIIF server from the JAR, no application server necessary
@@ -22,10 +22,10 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
 - Highly customizable manifest generation: implement your own mapping from project specific structure metadata to standard Manifest object.
 - Configurable, pluggable Image processing engines: Choose one of
     - Java Image I/O API (javax.imageio) (see <a href="http://docs.oracle.com/javase/8/docs/api/javax/imageio/package-summary.html#package.description">Image IO package description</a>)
-    - Independent JPEG Group library "libjpeg8" (see <a href="http://ijg.org/">http://ijg.org/</a>)
+    - Native JPEG library "libjpeg-turbo" (see <http://www.libjpeg-turbo.org/>)
     - ... more to come (or implement your own as pluggable library)
 - Embedded IIIF Image Viewer (for out of the box viewing of served images): OpenSeadragon 2.2.1 (see "Usage" below)
-- Embedded IIIF Presentation Viewer: Mirador 2.4.0 (see "Usage" below)
+- Embedded IIIF Presentation Viewer: Mirador 2.5.1 (see "Usage" below)
 - Direct Manifest access (see "Usage" below)
 
 ### Supported image formats
@@ -47,6 +47,12 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
     <td></td>
     <td>yes</td>
     <td>turbojpeg</a>
+    <td>yes</td>
+  </tr>
+  <tr>
+    <td><a href="https://www.iso.org/standard/34342.html">TIFF</a></td>
+    <td>yes</td>
+    <td>Java Image I/O</a>
     <td>yes</td>
   </tr>
   <tr>
@@ -75,7 +81,6 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
   </tr>
 </table>
 
-More formats (including TIFF) will be supported soon by using Java Image I/O format plugins from <a href="http://haraldk.github.io/TwelveMonkeys/">TwelveMonkeys ImageIO</a>.
 
 ## Prerequisites
 
@@ -84,7 +89,33 @@ More formats (including TIFF) will be supported soon by using Java Image I/O for
 
 ## Installation
 
-Download from GitHub-project page under "releases" and run the JAR with `java -jar`
+Download "hymir-[version]-exec.jar" from GitHub-project page under "releases".
+
+## Usage
+
+Run the downloaded application with `java -jar hymir-<version>-exec.jar`
+
+- Example with Logstash-JSON-logging to ./hymir.log:
+
+```sh
+$ java -jar hymir-3.0.1-exec.jar
+```
+
+- Example with logging to console:
+
+```sh
+$ java -jar hymir-3.0.1-exec.jar --spring.profiles.active=local
+```
+
+- Example with logging to console and custom file resolving rules:
+
+```sh
+$ java -jar hymir-3.0.1-exec.jar --spring.profiles.active=local --rules=file:/etc/hymir/rules.yml
+```
+
+Access Hymir GUI (e.g. http://localhost:9000/).
+
+## Configuration
 
 ### Using the TurboJPEG backend
 By default, a Java-based image processing backend is used. If you want better
@@ -105,28 +136,21 @@ significantly faster.
 
 ### Logging
 
-The default logging file is configured as `/local/iiif/log/iiif/iiifServer.log`.
-To configure another file path you can set it using the environment variable IIIF_SERVER_LOGFILE (e.g. in Tomcat using JAVA_OPTS).
+(Configured in logback-spring.xml)
 
-Example Tomcat config:
+The default logging file is configured as `./hymir.log` in Logstash-JSON-format.
 
-```sh
-$ cd $TOMCAT_HOME/bin
-$ vi setenv.sh
-#!/bin/sh
-...
-export JAVA_OPTS="$JAVA_OPTS -DIIIF_SERVER_LOGFILE=/var/log/iiif/iiifServer.log"
-...
-```
+If you want human readable logging to console use "--spring.profiles.active=local" on start command line.
+
 
 ### Image and presentation manifest resolving
 
 Based on unique resource identifiers the server tries to resolve identifiers to a "file:" or "http:" path.
 The resolving rules (one rule per line) are configurable with regular expressions in YML-files.
 
-You can pass the path to your custom resolving rules with the `--multiPatternResolvingFile=/path/to/rules.yml` option.
+You can pass the path to your custom resolving rules with the `--rules=/path/to/rules.yml` option.
 
-Example file "multiPatternResolving-PROD.yml":
+Example file "rules.yml":
 
 ```
 ...
@@ -140,30 +164,18 @@ Example file "multiPatternResolving-PROD.yml":
 # In the example below, we have two MIME types (tiff/jpeg) and for JPEG two resolutions
 # in decreasing order of quality, so that the higher-resolution image will be chosen
 # if it is available.
-- pattern: bsb(\d{8})_(\d{5})
+- pattern: ^bsb(\d{8})_(\d{5})$
   substitutions:
     - 'file:/var/local/bsb$1/images/original/bsb$1_$2.tif'
     - 'file:/var/local/bsb$1/images/300/bsb$1_$2.jpg'
     - 'file:/var/local/bsb$1/images/150/bsb$1_$2.jpg'
 
 # A simpler example with just a single substitution pattern (for resolving IIIF-manifests)
-- pattern: bsb(\d{8})
+- pattern: ^bsb(\d{8})$
   substitutions:
     - 'file:/var/local/bsb$1/manifest/bsb$1.json'
 ...
 ```
-
-## Usage
-
-Run the application with `java -jar hymir-<version>-exec.jar`
-
-Example:
-
-```sh
-$ java -jar hymir-3.0.0-SNAPSHOT-exec.jar --spring.profiles.active=local
-```
-
-Access Hymir GUI (e.g. http://localhost:9000/).
 
 ## Administration
 
