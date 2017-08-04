@@ -15,24 +15,18 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 @SpringBootApplication
-public class Application { // implements InitializingBean {
+public class Application {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
-
-//  @Value("${rules}")
-//  private String rulesPath;
 
   public static void main(String[] args) {
     processArguments(args);
     SpringApplicationBuilder builder = new SpringApplicationBuilder(Application.class);
     builder.banner(hymirBanner());
     builder.run(args);
-//    SpringApplication.run(Application.class, args);
   }
 
   private static Banner hymirBanner() {
-//    System.setProperty("banner.image.invert", "true");
-//    Resource resource = new ClassPathResource("static/images/hymir-logo-115x80_bw_rgb_low.png");
     Resource resource = new ClassPathResource("banner.txt");
     return new ResourceBanner(resource);
   }
