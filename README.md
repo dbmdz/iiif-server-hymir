@@ -89,7 +89,7 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
 
 ## Installation
 
-Download "hymir-[version]-exec.jar" from GitHub-project page under "releases".
+Download `hymir-<version>-exec.jar` from the GitHub [releases](https://github.com/dbmdz/iiif-server-hymir/releases) page.
 
 ## Usage
 
@@ -124,7 +124,7 @@ that is based on TurboJPEG. For this, you will have to install a shared library
 into `/usr/lib` that the Java code can then load.
 
 If you are running Debian Jessie, you can use the Debian packages provided
-on the [Releases](https://github.com/dbmdz/iiif-image-api/releases) page.
+on the [IIIF Image API releases](https://github.com/dbmdz/iiif-image-api/releases) page.
 
 For other distributions, you can use the `install_turbojpeg_jni.sh` script in
 the repository root. Note that you will need a recent (>=1.8) JDK, a C compiler
@@ -152,8 +152,7 @@ You can pass the path to your custom resolving rules with the `--rules=/path/to/
 
 Example file "rules.yml":
 
-```
-...
+```yaml
 # This configuration file defines a list of patterns with one ore more substitutions.
 # These are used for resolving IDs to a concrete URI, e.g. on the file system, the
 # classpath or even a remote HTTP endpoint.
@@ -174,7 +173,6 @@ Example file "rules.yml":
 - pattern: ^bsb(\d{8})$
   substitutions:
     - 'file:/var/local/bsb$1/manifest/bsb$1.json'
-...
 ```
 
 ## Administration
