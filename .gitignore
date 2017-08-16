@@ -1,6 +1,7 @@
 .idea
 *iml
 *log
+*log.gz
 target
 .classpath
 .project
