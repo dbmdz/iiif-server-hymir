@@ -14,9 +14,9 @@
     <title>Hymir IIIF Server</title>
 
     <!-- Bootstrap core CSS -->
-    <link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css}" rel="stylesheet"/>
     <!-- Bootstrap theme -->
-    <link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/bootstrap/3.3.7/dist/css/bootstrap-theme.min.css}" rel="stylesheet"/>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link th:href="@{/webjars/ie10-viewport-bug-workaround/1.0.3/dist/ie10-viewport-bug-workaround.min.css}" rel="stylesheet"/>
 
@@ -26,7 +26,7 @@
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script th:src="@{/webjars/html5shiv/3.7.3/html5shiv.min.js}"></script>
-      <script th:src="@{/webjars/respond/1.4.2/dest/respond.min.js}"></script>
+      <script th:src="@{/webjars/respond.js/1.4.2/dest/respond.min.js}"></script>
     <![endif]-->
   </head>
 
@@ -37,11 +37,11 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script th:inline="javascript">
       /*<![CDATA[*/
-      var url = /*[[@{/webjars/jquery/1.11.3/jquery.min.js}]]*/;
+      var url = /*[[@{/webjars/jquery/1.11.3/dist/jquery.min.js}]]*/;
               window.jQuery || document.write('<script src="' + url + '"><\/script>');
       /*]]>*/
     </script>
-    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script th:src="@{/webjars/ie10-viewport-bug-workaround/1.0.3/dist/ie10-viewport-bug-workaround.min.js}"></script>
 

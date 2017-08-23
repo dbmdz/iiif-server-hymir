@@ -162,6 +162,25 @@
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
+      <artifactId>hal-browser</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>html5shiv</artifactId>
+      <version>${version.webjar-html5shiv}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>mirador</artifactId>
+      <version>${version.webjar-mirador}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.bower</groupId>
+      <artifactId>ie10-viewport-bug-workaround</artifactId>
+      <version>${version.webjar-ie10-viewport-bug-workaround}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
       <artifactId>bootstrap</artifactId>
       <version>${version.webjar-bootstrap}</version>
       <exclusions>
@@ -172,38 +191,19 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>hal-browser</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>html5shiv</artifactId>
-      <version>${version.webjar-html5shiv}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
+      <groupId>org.webjars.npm</groupId>
       <artifactId>jquery</artifactId>
       <version>${version.webjar-jquery}</version>
     </dependency>
     <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>mirador</artifactId>
-      <version>${version.webjar-mirador}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
+      <groupId>org.webjars.npm</groupId>
       <artifactId>openseadragon</artifactId>
       <version>${version.webjar-openseadragon}</version>
     </dependency>
     <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>respond</artifactId>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>respond.js</artifactId>
       <version>${version.webjar-respond}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.bower</groupId>
-      <artifactId>ie10-viewport-bug-workaround</artifactId>
-      <version>${version.webjar-ie10-viewport-bug-workaround}</version>
     </dependency>
   </dependencies>
 
