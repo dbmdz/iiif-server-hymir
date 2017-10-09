@@ -25,6 +25,14 @@
     </goals>
   </action>
   <action>
+    <actionName>CUSTOM-mvn clean install</actionName>
+    <displayName>mvn clean install</displayName>
+    <goals>
+      <goal>clean</goal>
+      <goal>install</goal>
+    </goals>
+  </action>
+  <action>
     <actionName>run</actionName>
     <packagings>
       <packaging>jar</packaging>
@@ -67,6 +75,15 @@
       <exec.executable>java</exec.executable>
     </properties>
   </action>
-  
-  
+  <action>
+    <actionName>CUSTOM-mvn clean install -DskipTests=true</actionName>
+    <displayName>mvn clean install -DskipTests=true</displayName>
+    <goals>
+      <goal>clean</goal>
+      <goal>install</goal>
+    </goals>
+    <properties>
+      <skipTests>true</skipTests>
+    </properties>
+  </action>
 </actions>

@@ -32,24 +32,24 @@ public class Application {
   }
 
   private static void processArguments(String[] args) {
-    Cli cli = null;
+    Cli cli;
     try {
       cli = new Cli(new PrintWriter(System.out), args);
+      if (cli.hasExitStatus()) {
+        System.exit(cli.getExitStatus());
+      }
+      if (cli.hasRulesPath()) {
+        System.setProperty("multiPatternResolvingFile", cli.getRulesPath());
+      }
+      if (cli.hasSpringProfiles()) {
+        System.setProperty("spring.profiles.active", cli.getSpringProfiles());
+      }
     } catch (CliException e) {
       LOGGER.error(e.getMessage());
       System.exit(ExitStatus.ERROR);
     } catch (ParseException e) {
       LOGGER.error("Could not parse command line arguments", e);
       System.exit(ExitStatus.ERROR);
-    }
-    if (cli.hasExitStatus()) {
-      System.exit(cli.getExitStatus());
-    }
-    if (cli.hasRulesPath()) {
-      System.setProperty("multiPatternResolvingFile", cli.getRulesPath());
-    }
-    if (cli.hasSpringProfiles()) {
-      System.setProperty("spring.profiles.active", cli.getSpringProfiles());
     }
   }
 

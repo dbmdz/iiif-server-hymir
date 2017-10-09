@@ -56,12 +56,19 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <version.assertj>3.8.0</version.assertj>
+    <version.assertj-core>3.8.0</version.assertj-core>
     <version.commons-cli>1.4</version.commons-cli>
+    <version.commons-lang3>3.4</version.commons-lang3>
+    <version.dc-commons-server>1.2.5-SNAPSHOT</version.dc-commons-server>
+    <version.dc-core-backend-file>2.0.0</version.dc-core-backend-file>
+    <version.dc-core-business>2.0.0-SNAPSHOT</version.dc-core-business>
+    <version.iiif-apis>0.2.0-SNAPSHOT</version.iiif-apis>
     <version.iiif-image>2.3.0-SNAPSHOT</version.iiif-image>
     <version.iiif-presentation>3.3.0-SNAPSHOT</version.iiif-presentation>
+    <version.imgscalr-lib>4.2</version.imgscalr-lib>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.logstash-logback-encoder>4.7</version.logstash-logback-encoder>
+    <version.twelvemonkeys>3.3.2</version.twelvemonkeys>
     <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
     <version.webjar-html5shiv>3.7.3</version.webjar-html5shiv>
     <version.webjar-ie10-viewport-bug-workaround>1.0.3</version.webjar-ie10-viewport-bug-workaround>
@@ -87,45 +94,59 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-core</artifactId>
+      <version>${version.twelvemonkeys}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-jpeg</artifactId>
+      <version>${version.twelvemonkeys}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-tiff</artifactId>
+      <version>${version.twelvemonkeys}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.servlet</groupId>
+      <artifactId>servlet</artifactId>
+      <version>${version.twelvemonkeys}</version>
+    </dependency>
+    <dependency>
       <groupId>commons-cli</groupId>
       <artifactId>commons-cli</artifactId>
       <version>${version.commons-cli}</version>
     </dependency>
     <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-image-backend-impl</artifactId>
-      <version>${version.iiif-image}</version>
+      <groupId>de.digitalcollections.commons</groupId>
+      <artifactId>dc-commons-server</artifactId>
+      <version>${version.dc-commons-server}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections.core</groupId>
+      <artifactId>dc-core-backend-file</artifactId>
+      <version>${version.dc-core-backend-file}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-image-business-impl</artifactId>
-      <version>${version.iiif-image}</version>
-      <scope>runtime</scope>
+      <groupId>de.digitalcollections.core</groupId>
+      <artifactId>dc-core-business</artifactId>
+      <version>${version.dc-core-business}</version>
     </dependency>
     <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-image-frontend-impl-springmvc</artifactId>
-      <version>${version.iiif-image}</version>
-      <scope>compile</scope>  <!-- not runtime, because of twelvemonkeys IIOProviderContextListener in WebappInitializer and IIIFImageApiController.VERSION -->
+      <groupId>de.digitalcollections.iiif</groupId>
+      <artifactId>iiif-apis</artifactId>
+      <version>${version.iiif-apis}</version>
     </dependency>
     <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-presentation-backend-impl</artifactId>
-      <version>${version.iiif-presentation}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-presentation-business-impl</artifactId>
-      <version>${version.iiif-presentation}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections</groupId>
-      <artifactId>iiif-presentation-frontend-impl-springmvc</artifactId>
-      <version>${version.iiif-presentation}</version>
-      <scope>compile</scope>  <!-- not runtime, because of IIIFPresentationApiController.VERSION -->
+      <groupId>javax.cache</groupId>
+      <artifactId>cache-api</artifactId>
     </dependency>
     <dependency>
       <groupId>net.logstash.logback</groupId>
@@ -133,9 +154,27 @@
       <version>${version.logstash-logback-encoder}</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${version.commons-lang3}</version>
+    </dependency>
+    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>${version.assertj}</version>
+      <version>${version.assertj-core}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.imgscalr</groupId>
+      <artifactId>imgscalr-lib</artifactId>
+      <version>${version.imgscalr-lib}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -248,11 +287,15 @@
 
     <resources>
       <resource>
-        <directory>src/main/webapp</directory>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+        <includes>
+          <include>application.yml</include>
+        </includes>
       </resource>
     </resources>
 
@@ -306,7 +349,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${version.maven-javadoc-plugin}</version>
@@ -318,7 +361,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

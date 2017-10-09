@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="default" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>[%d{ISO8601} %5p] %40.40c:%4L [%-8t] - %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="de.digitalcollections.iiif.hymir.presentation.backend" level="error" />
+  <logger name="de.digitalcollections.iiif.hymir.presentation.business" level="error" />
+  <logger name="de.digitalcollections.core" level="error" />
+
+  <root level="info">
+    <appender-ref ref="default" />
+  </root>
+
+</configuration>

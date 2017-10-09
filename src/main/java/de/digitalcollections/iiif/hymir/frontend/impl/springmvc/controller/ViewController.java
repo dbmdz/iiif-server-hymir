@@ -1,12 +1,11 @@
 package de.digitalcollections.iiif.hymir.frontend.impl.springmvc.controller;
 
 import de.digitalcollections.commons.server.HttpLoggingUtilities;
-import de.digitalcollections.iiif.image.frontend.impl.springmvc.controller.v2.IIIFImageApiController;
-import de.digitalcollections.iiif.presentation.business.api.v2.PresentationService;
-import de.digitalcollections.iiif.presentation.frontend.impl.springmvc.controller.v2.IIIFPresentationApiController;
-import de.digitalcollections.iiif.presentation.model.api.exceptions.InvalidDataException;
-import de.digitalcollections.iiif.presentation.model.api.exceptions.NotFoundException;
-import de.digitalcollections.iiif.presentation.model.api.v2.Canvas;
+import de.digitalcollections.iiif.hymir.image.frontend.impl.springmvc.controller.v2.IIIFImageApiController;
+import de.digitalcollections.iiif.hymir.model.api.exception.InvalidDataException;
+import de.digitalcollections.iiif.hymir.model.api.exception.ResolvingException;
+import de.digitalcollections.iiif.hymir.presentation.business.api.v2.PresentationService;
+import de.digitalcollections.iiif.hymir.presentation.frontend.impl.springmvc.controller.v2.IIIFPresentationApiController;
 import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -39,8 +38,7 @@ public class ViewController {
 
   @RequestMapping(value = "/image/{identifier}/view.html", method = RequestMethod.GET)
   public String viewImageGet(@PathVariable String identifier, Model model) {
-    model.
-            addAttribute("infoUrl", "/image/" + IIIFImageApiController.VERSION + "/" + identifier + "/info.json");
+    model.addAttribute("infoUrl", "/image/" + IIIFImageApiController.VERSION + "/" + identifier + "/info.json");
     return "openseadragon/view";
   }
 
@@ -51,8 +49,7 @@ public class ViewController {
 
   @RequestMapping(value = "/presentation/{identifier}/view.html", method = RequestMethod.GET)
   public String viewPresentationGet(@PathVariable String identifier, Model model) {
-    model.
-            addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
+    model.addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
     return "mirador/view";
   }
 
@@ -80,13 +77,12 @@ public class ViewController {
    * @param model mvc model
    * @param request request
    * @return canvas specific view
-   * @throws de.digitalcollections.iiif.presentation.model.api.exceptions.NotFoundException if no manifest found
-   * @throws de.digitalcollections.iiif.presentation.model.api.exceptions.InvalidDataException if manifest can't be read
+   * @throws ResolvingException if no manifest found
+   * @throws InvalidDataException if manifest can't be read
    */
-  @RequestMapping(value = "/presentation/{version}/{objectIdentifier}/canvas/{canvasName}/view",
-          method = RequestMethod.GET)
+  @RequestMapping(value = "/presentation/{version}/{objectIdentifier}/canvas/{canvasName}/view", method = RequestMethod.GET)
   public String viewCanvasGet(@PathVariable String version, @PathVariable String objectIdentifier, @PathVariable String canvasName, Model model, HttpServletRequest request)
-          throws NotFoundException, InvalidDataException {
+          throws ResolvingException, InvalidDataException {
     HttpLoggingUtilities.addRequestClientInfoToMDC(request);
     MDC.put("manifestId", objectIdentifier);
     MDC.put("canvasName", canvasName);
@@ -103,7 +99,7 @@ public class ViewController {
       model.addAttribute("manifestId", manifestId);
       model.addAttribute("canvasId", canvasId);
 
-    } catch (NotFoundException e) {
+    } catch (ResolvingException e) {
       LOGGER.info("Did not find canvas for {}", canvasId);
       throw e;
     } catch (InvalidDataException e) {
