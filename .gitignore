@@ -8,3 +8,11 @@ target
 .settings
 /target
 /src/main/resources/multiPatternResolving-local.yml
+libjpeg-turbo/aclocal.m4
+libjpeg-turbo/autom4te.cache/
+libjpeg-turbo/config.guess
+libjpeg-turbo/config.h.in~
+libjpeg-turbo/config.sub
+libjpeg-turbo/configure
+libjpeg-turbo/java/Makefile.in
+libjpeg-turbo/ltmain.sh
