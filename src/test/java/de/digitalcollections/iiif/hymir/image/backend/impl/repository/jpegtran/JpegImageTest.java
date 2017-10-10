@@ -1,7 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.backend.impl.repository.jpegtran;
 
-import de.digitalcollections.iiif.hymir.image.backend.impl.repository.jpegtran.v2.JpegImage;
 import de.digitalcollections.iiif.hymir.image.JniTest;
+import de.digitalcollections.iiif.hymir.image.backend.impl.repository.jpegtran.v2.JpegImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -117,7 +117,7 @@ public class JpegImageTest {
   }
 
   @Test
-  public void TestCropFullWidth() throws Exception {
+  public void testCropFullWidth() throws Exception {
     JpegImage croppedImage = image.crop(0, 0, 480, 240).transform();
     assertThat(croppedImage.getWidth()).isEqualTo(480);
     assertThat(croppedImage.getHeight()).isEqualTo(240);
