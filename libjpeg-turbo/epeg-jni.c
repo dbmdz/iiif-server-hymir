@@ -7,12 +7,12 @@
 #include "Epeg.h"
 
 /*
- * Class:     de_digitalcollections_iiif_image_backend_impl_repository_jpegtran_v2_EpegScaler
+ * Class:     de_digitalcollections_iiif_hymir_image_backend_impl_repository_jpegtran_v2_EpegScaler
  * Method:    downScaleJpegImage
  * Signature: ([BIII)[B
  */
 JNIEXPORT jbyteArray JNICALL
-Java_de_digitalcollections_iiif_image_backend_impl_repository_jpegtran_v2_EpegScaler_downScaleJpegImage(
+Java_de_digitalcollections_iiif_hymir_image_backend_impl_repository_jpegtran_v2_EpegScaler_downScaleJpegImage(
         JNIEnv* env, jclass cls, jbyteArray inData, jint width, jint height, jint quality) {
 
     // Acquire JVM input lock
