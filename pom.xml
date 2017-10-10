@@ -66,6 +66,7 @@
     <version.iiif-image>2.3.0-SNAPSHOT</version.iiif-image>
     <version.iiif-presentation>3.3.0-SNAPSHOT</version.iiif-presentation>
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
+    <version.jackson>2.9.0</version.jackson>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.logstash-logback-encoder>4.7</version.logstash-logback-encoder>
     <version.twelvemonkeys>3.3.2</version.twelvemonkeys>
@@ -94,6 +95,31 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-parameter-names</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+    <dependency>
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
     </dependency>
@@ -101,7 +127,6 @@
       <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-core</artifactId>
       <version>${version.twelvemonkeys}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>

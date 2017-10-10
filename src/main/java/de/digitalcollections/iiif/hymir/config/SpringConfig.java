@@ -1,5 +1,7 @@
 package de.digitalcollections.iiif.hymir.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import java.util.Arrays;
 import java.util.Iterator;
 import javax.imageio.ImageIO;
@@ -10,6 +12,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 
@@ -31,6 +34,13 @@ public class SpringConfig implements EnvironmentAware {
     messageSource.setCacheSeconds(5);
     messageSource.setDefaultEncoding("UTF-8");
     return messageSource;
+  }
+
+  @Bean
+  @Primary
+  public ObjectMapper objectMapper() {
+    ObjectMapper objectMapper = new IiifObjectMapper();
+    return objectMapper;
   }
 
   @Override
