@@ -4,8 +4,8 @@ import com.twelvemonkeys.imageio.stream.ByteArrayImageInputStream;
 import de.digitalcollections.iiif.hymir.Application;
 import de.digitalcollections.iiif.hymir.image.backend.impl.repository.imageio.v2.JAIImage;
 import de.digitalcollections.iiif.hymir.image.backend.impl.repository.jpegtran.v2.JpegTranImage;
-import de.digitalcollections.iiif.hymir.model.api.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.Image;
+import de.digitalcollections.iiif.hymir.model.api.exception.UnsupportedFormatException;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.IOException;
@@ -82,8 +82,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(header().string("Link", "<http://iiif.io/api/image/2/context.json>; "
-                                       + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
-                                       + "type=\"application/ld+json\""))
+                    + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
+                    + "type=\"application/ld+json\""))
             .andExpect(jsonPath("$.width").value(989))
             .andExpect(jsonPath("$.height").value(1584))
             .andExpect(jsonPath("$.@context").value("http://iiif.io/api/image/2/context.json"))
