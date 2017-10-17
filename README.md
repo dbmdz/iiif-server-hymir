@@ -175,6 +175,40 @@ Example file "rules.yml":
     - 'file:/var/local/bsb$1/manifest/bsb$1.json'
 ```
 
+Use Case:
+
+In the simplest case you just want to serve images of a directory, supporting just the image API.
+Let's assume you have a bunch of jpg-files residing in the directory "/home/hans/my_images".
+The files are named "image_001.jpg", "image_002.jpg", ...
+
+You could take the filename as identifier. The rules.yml then is just:
+
+```yaml
+- pattern: ^(.*)$
+  substitutions:
+    - 'file:/home/hans/my_images/$1'
+```
+
+An image API url example:
+
+```
+http://localhost:9000/iiif/image/v2/image_001.jpg/full/full/0/default.jpg
+```
+
+To make it more safe (avoid serving of other files) and shorter, you could decide to shorten the identifier and concatenate the file extension in the rule:
+
+```yaml
+- pattern: ^(.*)$
+  substitutions:
+    - 'file:/home/hans/my_images/$1.jpg'
+```
+
+An image API url example:
+
+```
+http://localhost:9000/iiif/image/v2/image_001/full/full/0/default.jpg
+```
+
 ## Administration
 
 Monitoring endpoints under http://localhost:9001/actuator (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
