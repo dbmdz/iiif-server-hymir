@@ -62,7 +62,10 @@ public class ImageServiceImpl implements ImageService {
         return image;
       } catch (InvalidParametersException e) {
         throw e;
+      } catch (UnsupportedOperationException e) {
+        // try it with next repository
       } catch (Throwable repoNotWorking) {
+        // try it with next repository
       }
     }
     throw new UnsupportedFormatException();
@@ -96,6 +99,34 @@ public class ImageServiceImpl implements ImageService {
     // now do processing:
     if (regionParameters != null && (image.getWidth() != regionParameters.getWidth()
             || image.getHeight() != regionParameters.getHeight())) {
+      if ("square".equals(regionParameters.getProcessType())) {
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
+        int x;
+        int y;
+        int targetWidth;
+        int targetHeight;
+        if (imageHeight < imageWidth) {
+          x = (int) Math.round((image.getWidth() - image.getHeight()) / 2);
+          y = 0;
+          targetWidth = imageHeight;
+          targetHeight = imageHeight;
+        } else if (imageHeight > imageWidth) {
+          x = 0;
+          y = (int) Math.round((imageHeight - imageWidth) / 2);
+          targetWidth = imageWidth;
+          targetHeight = imageWidth;
+        } else {
+          x = 0;
+          y = 0;
+          targetWidth = imageWidth;
+          targetHeight = imageHeight;
+        }
+        regionParameters.setHorizontalOffset(x);
+        regionParameters.setVerticalOffset(y);
+        regionParameters.setWidth(targetWidth);
+        regionParameters.setHeight(targetHeight);
+      }
       image = image.crop(regionParameters);
     }
 

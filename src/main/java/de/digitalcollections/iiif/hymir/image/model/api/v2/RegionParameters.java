@@ -29,4 +29,8 @@ public interface RegionParameters {
 
   void setAbsolute(boolean absolute);
 
+  String getProcessType();
+
+  void setProcessType(String processType);
+
 }

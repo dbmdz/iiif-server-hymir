@@ -81,21 +81,28 @@ public class IiifParameterParserServiceImpl implements IiifParameterParserServic
     }
     float[] dimensions;
     RegionParameters params = new RegionParametersImpl();
-    if (region.startsWith("pct:")) {
-      region = region.substring("pct:".length());
-      dimensions = parseFloatValues(region, 4);
-      params.setAbsolute(false);
-      for (int i = 0; i < dimensions.length; i++) {
-        dimensions[i] = dimensions[i] / 100;
-      }
+
+    if ("square".equals(region)) {
+      params.setProcessType("square");
     } else {
-      dimensions = parseFloatValues(region, 4);
-      params.setAbsolute(true);
+      params.setProcessType("givenRectangle");
+
+      if (region.startsWith("pct:")) {
+        region = region.substring("pct:".length());
+        dimensions = parseFloatValues(region, 4);
+        params.setAbsolute(false);
+        for (int i = 0; i < dimensions.length; i++) {
+          dimensions[i] = dimensions[i] / 100;
+        }
+      } else {
+        dimensions = parseFloatValues(region, 4);
+        params.setAbsolute(true);
+      }
+      params.setHorizontalOffset(dimensions[0]);
+      params.setVerticalOffset(dimensions[1]);
+      params.setWidth(dimensions[2]);
+      params.setHeight(dimensions[3]);
     }
-    params.setHorizontalOffset(dimensions[0]);
-    params.setVerticalOffset(dimensions[1]);
-    params.setWidth(dimensions[2]);
-    params.setHeight(dimensions[3]);
     return params;
   }
 

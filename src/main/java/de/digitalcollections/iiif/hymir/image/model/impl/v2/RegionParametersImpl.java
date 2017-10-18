@@ -10,6 +10,7 @@ public class RegionParametersImpl implements RegionParameters {
   private float horizontalOffset;
   private float verticalOffset;
   private float width;
+  private String processType;
 
   public RegionParametersImpl() {
   }
@@ -96,4 +97,13 @@ public class RegionParametersImpl implements RegionParameters {
     this.width = width;
   }
 
+  @Override
+  public String getProcessType() {
+    return processType;
+  }
+
+  @Override
+  public void setProcessType(String processType) {
+    this.processType = processType;
+  }
 }

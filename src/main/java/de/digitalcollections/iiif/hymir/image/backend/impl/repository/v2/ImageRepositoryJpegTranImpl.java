@@ -31,7 +31,12 @@ public class ImageRepositoryJpegTranImpl extends AbstractImageRepositoryImpl imp
     if ((imageData[0] & 0xFF) != 0xFF || (imageData[1] & 0xFF) != 0xD8) {
       throw new UnsupportedFormatException("Not a JPEG file");
     }
-    return new JpegTranImage(imageData);
+    Image image = new JpegTranImage(imageData);
+    int minDimension = Math.min(image.getHeight(), image.getHeight());
+    if ("square".equals(regionParameters.getProcessType()) && minDimension % 8 != 0) {
+      throw new UnsupportedOperationException("Minimal image dimension not dividable by 8");
+    }
+    return image;
   }
 
   @Override

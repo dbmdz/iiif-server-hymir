@@ -231,6 +231,36 @@ public class IIIFImageApiControllerTest {
     Assert.assertEquals(1651, image.getWidth());
   }
 
+  @Test
+  public void testCropWithSquareLargerWidth() throws Exception {
+    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square-width/square/full/0/native.jpg"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+    Image image = loadImage(imgData, true);
+    Assert.assertEquals(219, image.getHeight());
+    Assert.assertEquals(219, image.getWidth());
+  }
+
+  @Test
+  public void testCropWithSquareLargerHeight() throws Exception {
+    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square-height/square/full/0/native.jpg"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+    Image image = loadImage(imgData, true);
+    Assert.assertEquals(249, image.getHeight());
+    Assert.assertEquals(249, image.getWidth());
+  }
+
+  @Test
+  public void testCropWithSquareAlreadySquare() throws Exception {
+    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square/square/full/0/native.jpg"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+    Image image = loadImage(imgData, true);
+    Assert.assertEquals(350, image.getHeight());
+    Assert.assertEquals(350, image.getWidth());
+  }
+
   /* 4.4 Quality */
   @Test
   public void testGrayscaling() throws Exception {

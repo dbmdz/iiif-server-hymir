@@ -6,3 +6,9 @@
   substitutions: ['classpath\:/mockdata/mock-page-00044843.jpg']
 - pattern: spec:/ial\?file\#with\[special\]ch@arac%ters
   substitutions: ['classpath\:mockdata/mock-page-106245331.jpg']
+- pattern: square
+  substitutions: ['classpath\:mockdata/mock-square.jpg']
+- pattern: square-width
+  substitutions: ['classpath\:mockdata/mock-square-width.jpg']
+- pattern: square-height
+  substitutions: ['classpath\:mockdata/mock-square-height.jpg']
