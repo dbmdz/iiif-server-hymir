@@ -44,6 +44,7 @@ public class ImageServiceImpl implements ImageService {
         ImageInfo info = repo.getImageInfo(identifier);
         return info;
       } catch (Throwable repoNotWorking) {
+        // try it with next repository
       }
     }
     throw new UnsupportedFormatException();

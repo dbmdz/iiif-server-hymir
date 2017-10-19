@@ -1,7 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.model.impl.v2;
 
-import de.digitalcollections.iiif.hymir.model.api.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.ResizeParameters;
+import de.digitalcollections.iiif.hymir.model.api.exception.InvalidParametersException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ResizeParametersImpl implements ResizeParameters {

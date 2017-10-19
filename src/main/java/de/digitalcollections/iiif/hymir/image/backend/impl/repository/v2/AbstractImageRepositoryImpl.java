@@ -1,13 +1,13 @@
 package de.digitalcollections.iiif.hymir.image.backend.impl.repository.v2;
 
 import de.digitalcollections.iiif.hymir.image.backend.api.repository.v2.ImageRepository;
-import de.digitalcollections.iiif.hymir.model.api.exception.InvalidParametersException;
-import de.digitalcollections.iiif.hymir.model.api.exception.ResolvingException;
-import de.digitalcollections.iiif.hymir.model.api.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.Image;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.ImageInfo;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.RegionParameters;
 import de.digitalcollections.iiif.hymir.image.model.impl.v2.ImageInfoImpl;
+import de.digitalcollections.iiif.hymir.model.api.exception.InvalidParametersException;
+import de.digitalcollections.iiif.hymir.model.api.exception.ResolvingException;
+import de.digitalcollections.iiif.hymir.model.api.exception.UnsupportedFormatException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;

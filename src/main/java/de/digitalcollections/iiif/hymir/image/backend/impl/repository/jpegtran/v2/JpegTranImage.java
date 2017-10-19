@@ -2,11 +2,11 @@ package de.digitalcollections.iiif.hymir.image.backend.impl.repository.jpegtran.
 
 import de.digitalcollections.iiif.hymir.image.model.api.enums.ImageBitDepth;
 import de.digitalcollections.iiif.hymir.image.model.api.enums.ImageFormat;
-import de.digitalcollections.iiif.hymir.model.api.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.Image;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.RegionParameters;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.ResizeParameters;
 import de.digitalcollections.iiif.hymir.image.model.api.v2.TransformationException;
+import de.digitalcollections.iiif.hymir.model.api.exception.InvalidParametersException;
 import java.io.IOException;
 import org.libjpegturbo.turbojpeg.TJException;
 import org.slf4j.Logger;

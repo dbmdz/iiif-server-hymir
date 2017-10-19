@@ -55,24 +55,6 @@ public class ImageDataRepositoryImpl {
     return getImageData(imageUri);
   }
 
-  InputStream getImageStream(String identifier) throws ResolvingException, ResourceIOException {
-    Resource resource = getImageResource(identifier);
-    URI imageUri = resource.getUri();
-    LOGGER.debug("URI for {} is {}", identifier, imageUri.toString());
-    return resourceService.getInputStream(resource);
-  }
-
-  public Resource getImageResource(String identifier) throws ResolvingException {
-    Resource resource;
-    try {
-      resource = resourceService.get(identifier, ResourcePersistenceType.REFERENCED, MimeType.MIME_IMAGE);
-    } catch (ResourceIOException ex) {
-      LOGGER.warn("Error getting image for identifier " + identifier, ex);
-      throw new ResolvingException("No image for identifier " + identifier);
-    }
-    return resource;
-  }
-
   private byte[] getImageData(URI imageUri) throws ResolvingException {
     String location = imageUri.toString();
     LOGGER.debug("Trying to get image data from: " + location);
@@ -101,4 +83,23 @@ public class ImageDataRepositoryImpl {
       throw new ResolvingException("No image data for location " + location);
     }
   }
+
+  InputStream getImageStream(String identifier) throws ResolvingException, ResourceIOException {
+    Resource resource = getImageResource(identifier);
+    URI imageUri = resource.getUri();
+    LOGGER.debug("URI for {} is {}", identifier, imageUri.toString());
+    return resourceService.getInputStream(resource);
+  }
+
+  public Resource getImageResource(String identifier) throws ResolvingException {
+    Resource resource;
+    try {
+      resource = resourceService.get(identifier, ResourcePersistenceType.REFERENCED, MimeType.MIME_IMAGE);
+    } catch (ResourceIOException ex) {
+      LOGGER.warn("Error getting image for identifier " + identifier, ex);
+      throw new ResolvingException("No image for identifier " + identifier);
+    }
+    return resource;
+  }
+
 }
