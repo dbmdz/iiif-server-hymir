@@ -6,7 +6,7 @@ JAVA_HOME=$(readlink -f `which javac` | sed "s:/bin/javac::")
 apt-get update
 apt-get -y install autoconf build-essential nasm libtool ruby ruby-dev
 gem install fpm
-cd ./libjpeg-turbo
+cd /local/work/libjpeg-turbo
 mkdir -p ./build
 cd ./build
 JNI_CFLAGS="-I$JAVA_HOME/include -I/usr/include -I$JAVA_HOME/include/linux" ../configure --with-java
