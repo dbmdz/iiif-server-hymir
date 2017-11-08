@@ -19,6 +19,7 @@ public class LibraryLoader {
    *
    * @param name name of the library to load
    * @throws IOException if the library cannot be extracted from a jar file into a temporary file
+   * @throws UnsupportedOperationException if the library is not installed in the system
    */
   public static void loadLibrary(String name) throws IOException {
     try {
@@ -26,6 +27,9 @@ public class LibraryLoader {
     } catch (UnsatisfiedLinkError e) {
       String filename = System.mapLibraryName(name);
       InputStream in = LibraryLoader.class.getClassLoader().getResourceAsStream(filename);
+      if(in == null){
+        throw new UnsupportedOperationException("Library " + name + " not found.");
+      }
       int pos = filename.lastIndexOf('.');
       File file = File.createTempFile(filename.substring(0, pos), filename.substring(pos));
       file.deleteOnExit();
