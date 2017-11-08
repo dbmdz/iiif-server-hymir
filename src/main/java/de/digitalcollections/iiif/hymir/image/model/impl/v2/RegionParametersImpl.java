@@ -25,9 +25,8 @@ public class RegionParametersImpl implements RegionParameters {
 
   /**
    * Make the parameters absolute by supplying the dimensions of the image the operation is applied to.
-   * @param imageWidth
-   * @param imageHeight
-   * @throws InvalidParametersException
+   * @param imageWidth the width of the image
+   * @param imageHeight the height of the image
    */
   @Override
   public void makeAbsolute(int imageWidth, int imageHeight) throws InvalidParametersException {
