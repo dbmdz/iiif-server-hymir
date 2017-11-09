@@ -35,43 +35,23 @@
       <script type="text/javascript" th:inline="javascript">
         $(function(){
           Mirador({
-            'id': 'viewer',
-            'buildPath': /*[[@{/webjars/mirador/2.6.0/}]]*/,
-            'workspaceType': 'bookReading',
-            'layout': '1x1',
-            'mainMenuSettings': {
-              'show': true,
-              'buttons': {
-                'layout': true
-              }
-            },
-            'showAddFromURLBox': true,
-            'saveSession': false,
-            'data': [{
-              /*<![CDATA[*/
-              'manifestUri': /*[[${manifestId}]]*/
-              /*]]>*/
-            }],
-            'windowObjects': [{
-              /*<![CDATA[*/
-              'loadedManifest': /*[[${manifestId}]]*/,
-              'canvasID' : /*[[${canvasId}]]*/,
-              /*]]>*/
-              'viewType': 'ImageView',
-              'layoutOptions': {
-                'close': false
-              },
-              'annotationLayer': false,
-              'annotationCreation': false,
-              'saveSession': false,
-              'displayLayout': true,
-              'bottomPanel': true,
-              'sidePanel': true
-            }],
             'annotationEndpoint': {
               'name': 'Local Storage',
               'module': 'LocalStorageEndpoint'
-            }
+            },
+            'buildPath': /*[[@{/webjars/mirador/2.6.0/}]]*/,
+            'data': [{
+              /*<![CDATA[*/
+              'manifestUri': /*[[@{__${presentationUri}__/manifest}]]*/
+              /*]]>*/
+            }],
+            'id': 'viewer',
+            'windowObjects': [{
+              /*<![CDATA[*/
+              'loadedManifest': /*[[@{__${presentationUri}__/manifest}]]*/,
+              'canvasID' : /*[[${canvasId}]]*/,
+              /*]]>*/
+            }]
           });
         });
       </script>

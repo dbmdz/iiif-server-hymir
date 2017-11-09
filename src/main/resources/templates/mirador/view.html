@@ -35,42 +35,22 @@
       <script type="text/javascript" th:inline="javascript">
         $(function(){
           Mirador({
-            'id': 'viewer',
-            'buildPath': /*[[@{/webjars/mirador/2.6.0/}]]*/,
-            'workspaceType': 'bookReading',
-            'layout': '1x1',
-            'mainMenuSettings': {
-              'show': true,
-              'buttons': {
-                'layout': true
-              }
+            'annotationEndpoint': {
+              'name': 'Local Storage',
+              'module': 'LocalStorageEndpoint'
             },
-            'showAddFromURLBox': true,
-            'saveSession': false,
+            'buildPath': /*[[@{/webjars/mirador/2.6.0/}]]*/,
             'data': [{
               /*<![CDATA[*/
               'manifestUri': /*[[@{__${presentationUri}__/manifest}]]*/
               /*]]>*/
             }],
+            'id': 'viewer',
             'windowObjects': [{
               /*<![CDATA[*/
-              'loadedManifest': /*[[@{__${presentationUri}__/manifest}]]*/,
+              'loadedManifest': /*[[@{__${presentationUri}__/manifest}]]*/
               /*]]>*/
-              'viewType': 'ImageView',
-              'layoutOptions': {
-                'close': false
-              },
-              'annotationLayer': false,
-              'annotationCreation': false,
-              'saveSession': false,
-              'displayLayout': true,
-              'bottomPanel': true,
-              'sidePanel': true
-            }],
-            'annotationEndpoint': {
-              'name': 'Local Storage',
-              'module': 'LocalStorageEndpoint'
-            }
+            }]
           });
         });
       </script>
