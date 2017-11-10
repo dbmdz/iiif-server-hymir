@@ -1,3 +1,4 @@
+# local/default
 endpoints:
   hypermedia:
     enabled: true
@@ -15,10 +16,10 @@ info:
       version: @project.version@
 
 management:
+  context-path: '/monitoring'
   port: 9001
-#  security:
-#    enabled: true
-#    roles: SUPERUSER
+  security:
+    enabled: false
 
 security:
   basic:
@@ -29,25 +30,18 @@ security:
 
 server:
   port: 9000
-  server-header: "Hymir IIIF Server v@project.version@"
+  server-header: "@project.name@ v@project.version@"
 
 spring:
   profiles:
-    active: PROD
+    active: local
+  thymeleaf:
+    cache: false
+    mode: HTML
 
 ---
 
-spring:
-  profiles: local
-
-management:
-  security:
-    enabled: false
----
-
-spring:
-  profiles: PROD
-
+# PROD
 management:
   security:
     enabled: true
@@ -56,3 +50,8 @@ security:
   user:
     name: admin
     password: secret
+
+spring:
+  profiles: PROD
+  thymeleaf:
+    cache: true

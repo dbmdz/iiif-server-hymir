@@ -58,7 +58,7 @@ public class IIIFImageApiControllerTest {
   }
 
   @Test
-  public void getFedoraInfo() throws Exception {
+  public void testImageInfoSizes() throws Exception {
     mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/info.json"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -67,7 +67,7 @@ public class IIIFImageApiControllerTest {
   }
 
   @Test
-  public void getJsonLd() throws Exception {
+  public void testImageInfoContentType() throws Exception {
     mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/info.json")
             .header("Referer", "http://localhost/foobar")
             .header("Accept", "application/ld+json"))
@@ -77,7 +77,7 @@ public class IIIFImageApiControllerTest {
 
   /* 5. Information Request */
   @Test
-  public void getZendInfo() throws Exception {
+  public void testImageInfo() throws Exception {
     mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/http-bsb/info.json").header("Host", "localhost"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))

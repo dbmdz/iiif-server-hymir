@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.4.RELEASE</version>
+    <version>1.5.8.RELEASE</version>
   </parent>
 
   <name>DigitalCollections: Hymir IIIF Server</name>
@@ -27,13 +27,23 @@
   <developers>
     <developer>
       <name>Ralf Eichinger</name>
-      <email>ralf.eichinger@gmail.com</email>
+      <email>ralf.eichinger@bsb-muenchen.de</email>
       <id>datazuul</id>
+    </developer>
+    <developer>
+      <name>Johannes Baiter</name>
+      <email>johannes.baiter@bsb-muenchen.de</email>
+      <id>jbaiter</id>
     </developer>
     <developer>
       <name>Matthias Lindinger</name>
       <email>matthias.lindinger@bsb-muenchen.de</email>
       <id>morpheus-87</id>
+    </developer>
+    <developer>
+      <name>Marcus Bitzl</name>
+      <email>marcus.bitzl@bsb-muenchen.de</email>
+      <id>bitzl</id>
     </developer>
   </developers>
   <ciManagement>
@@ -67,6 +77,9 @@
     <version.jackson>2.9.0</version.jackson>
     <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
     <version.logstash-logback-encoder>4.7</version.logstash-logback-encoder>
+    <version.prometheus-spring-boot-starter>1.0.2</version.prometheus-spring-boot-starter>
+    <version.thymeleaf>3.0.7.RELEASE</version.thymeleaf>
+    <version.thymeleaf-layout-dialect>2.2.2</version.thymeleaf-layout-dialect>
     <version.twelvemonkeys>3.3.2</version.twelvemonkeys>
     <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
     <version.webjar-html5shiv>3.7.3</version.webjar-html5shiv>
@@ -83,7 +96,7 @@
     <version.webjar-respond>1.4.2</version.webjar-respond>
 
     <!-- plugins -->
-    <version.maven-compiler-plugin>3.3</version.maven-compiler-plugin>
+    <version.maven-compiler-plugin>3.7.0</version.maven-compiler-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.maven-javadoc-plugin>2.10.4</version.maven-javadoc-plugin>
     <version.maven-source-plugin>3.0.1</version.maven-source-plugin>
@@ -120,6 +133,11 @@
     <dependency>
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.moelholm</groupId>
+      <artifactId>prometheus-spring-boot-starter</artifactId>
+      <version>${version.prometheus-spring-boot-starter}</version>
     </dependency>
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
@@ -177,6 +195,11 @@
       <version>${version.logstash-logback-encoder}</version>
     </dependency>
     <dependency>
+      <groupId>nz.net.ultraq.thymeleaf</groupId>
+      <artifactId>thymeleaf-layout-dialect</artifactId>
+      <version>${version.thymeleaf-layout-dialect}</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>${version.commons-lang3}</version>
@@ -223,6 +246,16 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf</artifactId>
+      <version>${version.thymeleaf}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf-spring4</artifactId>
+      <version>${version.thymeleaf}</version>
     </dependency>
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
@@ -348,8 +381,6 @@
           <classifier>exec</classifier>
         </configuration>
       </plugin>
-
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -357,6 +388,8 @@
         <configuration>
           <showDeprecation>true</showDeprecation>
           <encoding>${project.build.sourceEncoding}</encoding>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
         </configuration>
       </plugin>
       <plugin>
