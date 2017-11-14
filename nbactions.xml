@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
   <action>
-    <actionName>CUSTOM-mvn clean deploy -U</actionName>
-    <displayName>mvn clean deploy -U</displayName>
+    <actionName>CUSTOM-mvn clean deploy -U -DskipTests=true</actionName>
+    <displayName>mvn clean deploy -U -DskipTests=true</displayName>
     <goals>
       <goal>clean</goal>
       <goal>deploy</goal>
     </goals>
+    <properties>
+      <skipTests>true</skipTests>
+    </properties>
   </action>
   <action>
     <actionName>CUSTOM-mvn clean install -U</actionName>

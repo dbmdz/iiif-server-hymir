@@ -124,7 +124,7 @@ that is based on TurboJPEG. For this, you will have to install a shared library
 into `/usr/lib` that the Java code can then load.
 
 If you are running Debian Jessie, you can use the Debian packages provided
-on the [IIIF Image API releases](https://github.com/dbmdz/iiif-image-api/releases) page.
+on the [Hymir releases](https://github.com/dbmdz/iiif-server-hymir/releases) page.
 
 For other distributions, you can use the `install_turbojpeg_jni.sh` script in
 the repository root. Note that you will need a recent (>=1.8) JDK, a C compiler
@@ -192,7 +192,7 @@ You could take the filename as identifier. The rules.yml then is just:
 An image API url example:
 
 ```
-http://localhost:9000/iiif/image/v2/image_001.jpg/full/full/0/default.jpg
+http://localhost:9000/image/v2/image_001.jpg/full/full/0/default.jpg
 ```
 
 To make it more safe (avoid serving of other files) and shorter, you could decide to shorten the identifier and concatenate the file extension in the rule:
@@ -206,12 +206,12 @@ To make it more safe (avoid serving of other files) and shorter, you could decid
 An image API url example:
 
 ```
-http://localhost:9000/iiif/image/v2/image_001/full/full/0/default.jpg
+http://localhost:9000/image/v2/image_001/full/full/0/default.jpg
 ```
 
 ## Administration
 
-Monitoring endpoints under http://localhost:9001/actuator (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
+Monitoring endpoints under http://localhost:9001/monitoring (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
 
 ## Users
 
