@@ -69,7 +69,7 @@
     <version.assertj-core>3.8.0</version.assertj-core>
     <version.commons-cli>1.4</version.commons-cli>
     <version.commons-lang3>3.4</version.commons-lang3>
-    <version.dc-commons-server>1.2.5-SNAPSHOT</version.dc-commons-server>
+    <version.dc-commons-server>1.2.5</version.dc-commons-server>
     <version.dc-core-backend-file>2.0.0</version.dc-core-backend-file>
     <version.dc-core-business>2.0.0</version.dc-core-business>
     <version.iiif-apis>0.2.1</version.iiif-apis>
