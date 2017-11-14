@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,12 @@ public class ViewController {
   @Autowired
   private PresentationService presentationService;
 
+  @Value("${custom.versions.mirador.core}")
+  private String miradorVersion;
+
+  @Value("${custom.versions.openseadragon}")
+  private String osdVersion;
+
   @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
   public String viewHomepage(Model model) {
     model.addAttribute("menu", "home");
@@ -39,6 +46,7 @@ public class ViewController {
   @RequestMapping(value = "/image/{identifier}/view.html", method = RequestMethod.GET)
   public String viewImageGet(@PathVariable String identifier, Model model) {
     model.addAttribute("infoUrl", "/image/" + IIIFImageApiController.VERSION + "/" + identifier + "/info.json");
+    model.addAttribute("osdVersion", osdVersion);
     return "openseadragon/view";
   }
 
@@ -49,6 +57,7 @@ public class ViewController {
 
   @RequestMapping(value = "/presentation/{identifier}/view.html", method = RequestMethod.GET)
   public String viewPresentationGet(@PathVariable String identifier, Model model) {
+    model.addAttribute("miradorVersion", miradorVersion);
     model.addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
     return "mirador/view";
   }
@@ -109,6 +118,7 @@ public class ViewController {
       MDC.clear();
     }
 
+    model.addAttribute("miradorVersion", miradorVersion);
     return "mirador/viewCanvas";
   }
 

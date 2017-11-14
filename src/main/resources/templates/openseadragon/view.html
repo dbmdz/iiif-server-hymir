@@ -6,18 +6,18 @@
     <section layout:fragment="content">
       <main>
         <div class="panel panel-primary">
-          <div class="panel-heading">Viewing "<span th:text="@{__${infoUrl}__}">...</span>" in OpenSeadragon 2.3.1</div>
+          <div class="panel-heading">Viewing "<span th:text="@{__${infoUrl}__}">...</span>" in OpenSeadragon <span th:text="${osdVersion}">osd version</span></div>
           <div class="panel-body">
             <div id="preview" class="openseadragon" style="height: 600px;"></div>
           </div>
         </div>
 
-        <script th:src="@{/webjars/openseadragon/2.3.1/build/openseadragon/openseadragon.min.js}"></script>
+        <script th:src="@{/webjars/openseadragon/__${osdVersion}__/build/openseadragon/openseadragon.min.js}"></script>
         <script type="application/javascript" th:inline="javascript">
           var viewer = OpenSeadragon({
           id: "preview",
           /*<![CDATA[*/
-          prefixUrl: /*[[@{/webjars/openseadragon/2.3.1/build/openseadragon/images/}]]*/,
+          prefixUrl: /*[[@{/webjars/openseadragon/__${osdVersion}__/build/openseadragon/images/}]]*/,
           /*]]>*/
           tileWidth: 64,
           /*<![CDATA[*/
