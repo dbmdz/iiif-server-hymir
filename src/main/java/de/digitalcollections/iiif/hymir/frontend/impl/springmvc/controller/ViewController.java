@@ -133,13 +133,13 @@ public class ViewController {
   }
 
   private Map<String, Object> getIIIFVersions() {
-    Map<String, Object> result = null;
+    Map<String, Object> versions = null;
     Yaml yaml = new Yaml();
-    try (InputStream in = ViewController.class.getResourceAsStream("/iiif-versions.yml")) {
-      result = (Map<String, Object>) yaml.load(in);
+    try (InputStream in = this.getClass().getResourceAsStream("/iiif-versions.yml")) {
+      versions = (Map<String, Object>) yaml.load(in);
     } catch (IOException exception) {
       throw new IllegalStateException(exception);
     }
-    return result;
+    return versions;
   }
 }
