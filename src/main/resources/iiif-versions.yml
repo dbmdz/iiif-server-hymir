@@ -1,7 +1,7 @@
---- 
-mirador: 
+---
+mirador:
   core: 2.6.0
-  plugins: 
+  plugins:
     canvasLink: 1.1.1
     imageCropper: 2.2.1
     keyboardNavigation: 1.1.0
