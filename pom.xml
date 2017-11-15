@@ -336,6 +336,10 @@
       <artifactId>respond.js</artifactId>
       <version>${version.webjar-respond}</version>
     </dependency>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

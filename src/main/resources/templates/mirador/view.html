@@ -6,10 +6,10 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/mirador/__${miradorVersion}__/css/mirador-combined.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/dbmdz__mirador-canvaslink/1.1.1/canvasLink.min.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/dbmdz__mirador-imagecropper/2.2.1/imageCropper.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/dbmdz__mirador-manifestbutton/1.1.1/manifestButton.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/mirador/${iiifVersions.mirador.core}/css/mirador-combined.css|}" />
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-canvaslink/${iiifVersions.mirador.plugins.canvasLink}/canvasLink.min.css|}" />
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-imagecropper/${iiifVersions.mirador.plugins.imageCropper}/imageCropper.css|}" />
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-manifestbutton/${iiifVersions.mirador.plugins.manifestButton}/manifestButton.min.css|}" />
     <style type="text/css">
       body { font-size: 14px; }
       body > div.container { width: 100% !important; }
@@ -25,13 +25,13 @@
     </section>
 
     <th:block layout:fragment="morejs">
-      <script th:src="@{/webjars/mirador/__${miradorVersion}__/mirador.min.js}"></script>
-      <script th:src="@{/webjars/dbmdz__mirador-canvaslink/1.1.1/canvasLink.min.js}"></script>
-      <script th:src="@{/webjars/dbmdz__mirador-imagecropper/2.2.1/imageCropper.js}"></script>
-      <script th:src="@{/webjars/dbmdz__mirador-keyboardnavigation/1.1.0/keyboardNavigation.min.js}"></script>
-      <script th:src="@{/webjars/dbmdz__mirador-manifestbutton/1.1.1/manifestButton.min.js}"></script>
-      <script th:src="@{/webjars/dbmdz__mirador-physicalruler/1.3.1/physicalRuler.js}"></script>
-      <script th:src="@{/webjars/dbmdz__mirador-viewfromurl/1.1.0/viewFromUrl.min.js}"></script>
+      <script th:src="@{/webjars/mirador/__${iiifVersions.mirador.core}__/mirador.min.js}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-canvaslink/${iiifVersions.mirador.plugins.canvasLink}/canvasLink.min.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-imagecropper/${iiifVersions.mirador.plugins.imageCropper}/imageCropper.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-keyboardnavigation/${iiifVersions.mirador.plugins.keyboardNavigation}/keyboardNavigation.min.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-manifestbutton/${iiifVersions.mirador.plugins.manifestButton}/manifestButton.min.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-physicalruler/${iiifVersions.mirador.plugins.physicalRuler}/physicalRuler.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-viewfromurl/${iiifVersions.mirador.plugins.viewFromUrl}/viewFromUrl.min.js|}"></script>
       <script type="text/javascript" th:inline="javascript">
         $(function(){
           Mirador({
@@ -39,7 +39,7 @@
               'name': 'Local Storage',
               'module': 'LocalStorageEndpoint'
             },
-            'buildPath': /*[[@{/webjars/mirador/__${miradorVersion}__/}]]*/,
+            'buildPath': /*[[@{/webjars/mirador/__${iiifVersions.mirador.core}__/}]]*/,
             'data': [{
               /*<![CDATA[*/
               'manifestUri': /*[[@{__${presentationUri}__/manifest}]]*/
