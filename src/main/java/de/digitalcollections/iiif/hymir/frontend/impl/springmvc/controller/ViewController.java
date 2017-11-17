@@ -6,8 +6,6 @@ import de.digitalcollections.iiif.hymir.model.api.exception.InvalidDataException
 import de.digitalcollections.iiif.hymir.model.api.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.v2.PresentationService;
 import de.digitalcollections.iiif.hymir.presentation.frontend.impl.springmvc.controller.v2.IIIFPresentationApiController;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -15,13 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * Controller for serving different view pages.
@@ -34,7 +32,9 @@ public class ViewController {
   @Autowired
   private PresentationService presentationService;
 
-  private Map<String, Object> iiifVersions = getIIIFVersions();
+  @Autowired
+  @Value("#{iiifVersions}")
+  private Map<String, Object> iiifVersions;
 
   @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
   public String viewHomepage(Model model) {
@@ -130,16 +130,5 @@ public class ViewController {
     } else {
       return URI.create(requestUrl);
     }
-  }
-
-  private Map<String, Object> getIIIFVersions() {
-    Map<String, Object> versions = null;
-    Yaml yaml = new Yaml();
-    try (InputStream in = this.getClass().getResourceAsStream("/iiif-versions.yml")) {
-      versions = (Map<String, Object>) yaml.load(in);
-    } catch (IOException exception) {
-      throw new IllegalStateException(exception);
-    }
-    return versions;
   }
 }
