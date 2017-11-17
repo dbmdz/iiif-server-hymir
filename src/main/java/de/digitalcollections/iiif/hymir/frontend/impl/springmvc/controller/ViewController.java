@@ -34,7 +34,7 @@ public class ViewController {
 
   @Autowired
   @Value("#{iiifVersions}")
-  private Map<String, Object> iiifVersions;
+  private Map<String, String> iiifVersions;
 
   @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
   public String viewHomepage(Model model) {
