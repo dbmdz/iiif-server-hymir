@@ -122,10 +122,16 @@ public class IiifParameterParserServiceImpl implements IiifParameterParserServic
     return params;
   }
 
+  /**
+   * see specification http://iiif.io/api/image/2.1/#size
+   * @param size part of the url representing size param
+   * @return parsed value
+   * @throws InvalidParametersException if unknown param value
+   */
   @Override
   public ResizeParameters parseIiifSize(String size) throws InvalidParametersException {
     assert size != null;
-    if ("full".equals(size)) {
+    if ("full".equals(size) || "max".equals(size)) {
       // The extracted region is not scaled, and is returned at its full size.
       return null; // indicates no resizing
     }
