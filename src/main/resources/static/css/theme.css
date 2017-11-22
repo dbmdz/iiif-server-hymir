@@ -68,6 +68,24 @@ footer {
   box-sizing: border-box !important;
 }
 
+#viewer .metadata-listing .metadata-item {
+  padding-top: 5px;
+}
+
+#viewer .metadata-listing .metadata-label,
+#viewer .metadata-listing .metadata-value {
+  display: inline;
+}
+
+#viewer .metadata-listing .metadata-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+#viewer .metadata-listing img {
+  display: block;
+}
+
 .navbar .navbar-right {
   margin-right: 0;
 }
