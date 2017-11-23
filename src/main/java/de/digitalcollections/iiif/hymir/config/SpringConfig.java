@@ -17,7 +17,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment;
 
 @Configuration
-public class SpringConfig implements EnvironmentAware {
+public class SpringConfig {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SpringConfig.class);
 
@@ -41,21 +41,5 @@ public class SpringConfig implements EnvironmentAware {
   public ObjectMapper objectMapper() {
     ObjectMapper objectMapper = new IiifObjectMapper();
     return objectMapper;
-  }
-
-  @Override
-  public void setEnvironment(Environment environment) {
-    String[] activeProfiles = environment.getActiveProfiles();
-    String activeProfilesStr = Arrays.toString(activeProfiles);
-    LOGGER.info("##### Active Profiles: " + activeProfilesStr);
-
-    Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("JPEG");
-    while (readers.hasNext()) {
-      LOGGER.info("##### ImageIO reader: " + readers.next());
-    }
-    readers = ImageIO.getImageReadersByFormatName("TIFF");
-    while (readers.hasNext()) {
-      LOGGER.info("##### ImageIO reader: " + readers.next());
-    }
   }
 }

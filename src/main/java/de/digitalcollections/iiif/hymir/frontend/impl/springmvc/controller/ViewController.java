@@ -100,7 +100,6 @@ public class ViewController {
     String manifestId = url.substring(0, url.indexOf("/canvas")) + "/manifest";
 
     try {
-
       presentationService.getCanvas(objectIdentifier, canvasId);
       LOGGER.info("Serving Canvas for {}", canvasId);
 

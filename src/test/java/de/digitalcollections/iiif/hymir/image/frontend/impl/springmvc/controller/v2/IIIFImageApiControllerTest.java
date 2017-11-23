@@ -2,12 +2,10 @@ package de.digitalcollections.iiif.hymir.image.frontend.impl.springmvc.controlle
 
 import com.twelvemonkeys.imageio.stream.ByteArrayImageInputStream;
 import de.digitalcollections.iiif.hymir.Application;
-import de.digitalcollections.iiif.hymir.image.backend.impl.repository.imageio.v2.JAIImage;
-import de.digitalcollections.iiif.hymir.image.backend.impl.repository.jpegtran.v2.JpegTranImage;
-import de.digitalcollections.iiif.hymir.image.model.api.v2.Image;
 import de.digitalcollections.iiif.hymir.model.api.exception.UnsupportedFormatException;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -29,10 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -90,8 +85,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(jsonPath("$.@id").value("http://localhost/image/" + IIIFImageApiController.VERSION + "/http-bsb"))
             .andExpect(jsonPath("$.protocol").value("http://iiif.io/api/image"))
             .andExpect(jsonPath("$.profile[0]").value("http://iiif.io/api/image/2/level2.json"))
-            .andExpect(jsonPath("$.tiles.length()").value(3))
-            .andExpect(jsonPath("$.tiles[0].width").value(128));
+            .andExpect(jsonPath("$.tiles.length()").value(1))
+            .andExpect(jsonPath("$.tiles[0].width").value(512));
   }
 
   @Test
@@ -101,26 +96,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(MockMvcResultMatchers.redirectedUrl("/image/" + IIIFImageApiController.VERSION + "/abcdef/info.json"));
   }
 
-  private Image loadImage(byte[] imageData, boolean useFast) throws IOException, UnsupportedFormatException {
-    Image image;
-    if (!useFast) {
-      try {
-        return new JAIImage(imageData);
-      } catch (de.digitalcollections.iiif.hymir.model.api.exception.UnsupportedFormatException ex) {
-        throw new UnsupportedFormatException(ex.getMessage());
-      }
-    } else {
-      try {
-        image = new JpegTranImage(imageData);
-      } catch (Throwable e) {
-        try {
-          image = new JAIImage(imageData);
-        } catch (de.digitalcollections.iiif.hymir.model.api.exception.UnsupportedFormatException ex) {
-          throw new UnsupportedFormatException(ex.getMessage());
-        }
-      }
-      return image;
-    }
+  private BufferedImage loadImage(byte[] imageData) throws IOException, UnsupportedFormatException {
+    return ImageIO.read(new ByteArrayInputStream(imageData));
   }
 
   @Test
@@ -129,7 +106,7 @@ public class IIIFImageApiControllerTest {
             .perform(get("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/bitonal.png").header("Referer", "http://localhost/foobar"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    BufferedImage image = ((JAIImage) loadImage(imgData, false)).getImage();
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(BufferedImage.TYPE_BYTE_BINARY, image.getType());
   }
 
@@ -200,7 +177,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/20,20,50,50/full/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(50, image.getHeight());
     Assert.assertEquals(50, image.getWidth());
   }
@@ -216,9 +193,9 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,10,10,10/full/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
-    Assert.assertEquals(256, image.getHeight());
-    Assert.assertEquals(207, image.getWidth());
+    BufferedImage image = loadImage(imgData);
+    Assert.assertEquals(255, image.getHeight());
+    Assert.assertEquals(206, image.getWidth());
   }
 
   @Test
@@ -226,8 +203,8 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:20,20,100,10/full/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
-    Assert.assertEquals(256, image.getHeight());
+    BufferedImage image = loadImage(imgData);
+    Assert.assertEquals(255, image.getHeight());
     Assert.assertEquals(1651, image.getWidth());
   }
 
@@ -236,7 +213,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square-width/square/full/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(219, image.getHeight());
     Assert.assertEquals(219, image.getWidth());
   }
@@ -246,7 +223,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square-height/square/full/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(249, image.getHeight());
     Assert.assertEquals(249, image.getWidth());
   }
@@ -256,7 +233,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square/square/full/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(350, image.getHeight());
     Assert.assertEquals(350, image.getWidth());
   }
@@ -267,7 +244,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/gray.jpg").header("Referer", "http://localhost/foobar"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    BufferedImage image = ((JAIImage) loadImage(imgData, false)).getImage();
+    BufferedImage image = loadImage(imgData);
     Raster ras = image.getRaster();
     Assert.assertEquals(1, ras.getNumDataElements());
     Assert.assertEquals(BufferedImage.TYPE_BYTE_GRAY, image.getType());
@@ -281,11 +258,10 @@ public class IIIFImageApiControllerTest {
     byte[] imgDataMirror = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/!0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image regularImage = loadImage(imgDataRegular, true);
-    Image mirroredImage = loadImage(imgDataMirror, true);
+    BufferedImage regularImage = loadImage(imgDataRegular);
+    BufferedImage mirroredImage = loadImage(imgDataMirror);
     Assert.assertEquals(regularImage.getWidth(), mirroredImage.getWidth());
     Assert.assertEquals(regularImage.getHeight(), mirroredImage.getHeight());
-    Assert.assertThat(regularImage.toByteArray(), Matchers.not(Matchers.equalTo((mirroredImage.toByteArray()))));
   }
 
   /* 4.3 Rotation */
@@ -294,7 +270,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(750, image.getHeight());
     Assert.assertEquals(1024, image.getWidth());
   }
@@ -304,7 +280,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/!500,500/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertThat(image.getWidth(), Matchers.lessThanOrEqualTo(500));
     Assert.assertThat(image.getHeight(), Matchers.lessThanOrEqualTo(500));
   }
@@ -314,7 +290,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/,200/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(200, image.getHeight());
   }
 
@@ -324,7 +300,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(200, image.getWidth());
   }
 
@@ -333,15 +309,9 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/pct:50/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertEquals(1032, image.getWidth());
-    Assert.assertEquals(1277, image.getHeight());
-  }
-
-  @Test
-  public void testScaleWithZeroSize() throws Exception {
-    mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/!500,0/0/native.jpg"))
-            .andExpect(status().is(400));
+    Assert.assertEquals(1276, image.getHeight());
   }
 
   @Test
@@ -349,7 +319,7 @@ public class IIIFImageApiControllerTest {
     byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/500,/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-    Image image = loadImage(imgData, true);
+    BufferedImage image = loadImage(imgData);
     Assert.assertTrue(image.getWidth() != image.getHeight());
   }
 
