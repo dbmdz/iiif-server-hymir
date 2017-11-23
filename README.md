@@ -13,17 +13,12 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
 
 - IIIF Image API 2.1 compliant (see <a href="http://iiif.io/api/image/2.1/">http://iiif.io/api/image/2.1/</a>).
 - IIIF Presentation API 2.1 compliant (see <a href="http://iiif.io/api/presentation/2.1/">http://iiif.io/api/presentation/2.1/</a>).
-- Based on IIIF Image API Java Library and IIIF Presentation API Java Library.
 - On the fly image processing. No additional pregenerated (pyramid zoom) images are needed. No additional storage consumption.
 - Can simply be run as a standalone IIIF server from the JAR, no application server necessary
 - Spring based modular, extendable, easy to maintain enterprise architecture.
 - Highly customizable image storage and identifier resolving: Access to images over project specific Resolver-plugin mechanism.
 - Support for Filesystem- and HTTP-Image-Repositories (own protocols can be added by providing specific resolver)
 - Highly customizable manifest generation: implement your own mapping from project specific structure metadata to standard Manifest object.
-- Configurable, pluggable Image processing engines: Choose one of
-    - Java Image I/O API (javax.imageio) (see <a href="http://docs.oracle.com/javase/8/docs/api/javax/imageio/package-summary.html#package.description">Image IO package description</a>)
-    - Native JPEG library "libjpeg-turbo" (see <http://www.libjpeg-turbo.org/>)
-    - ... more to come (or implement your own as pluggable library)
 - Embedded IIIF Image Viewer (for out of the box viewing of served images): OpenSeadragon 2.3.1 (see "Usage" below)
 - Embedded IIIF Presentation Viewer: Mirador 2.6.0 (see "Usage" below)
 - Direct Manifest access (see "Usage" below)
