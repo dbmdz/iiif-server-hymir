@@ -1,27 +1,18 @@
 language: java
 jdk:
 - oraclejdk8
-addons:
   apt:
     packages:
-      - yasm
-      - autoconf
-      - automake
-      - libtool
+      - libturbojpeg
 
 before_script:
 - if [ ! -z "$TRAVIS_TAG" ]; then mvn versions:set -DnewVersion=$TRAVIS_TAG; fi
-- sudo bash ./install_turbojpeg_jni.sh
 
 script:
 - mvn clean install
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-
-before_deploy:
-- docker pull williamyeh/java8
-- docker run -v $PWD:/local/work williamyeh/java8 /bin/bash -x /local/work/.build_jessie_pkg.sh
 
 deploy:
   provider: releases
