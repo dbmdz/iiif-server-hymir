@@ -68,12 +68,12 @@ public class ViewController {
 
   @RequestMapping(value = "/presentation/manifest", method = RequestMethod.GET)
   public String viewPresentationManifest(@RequestParam String identifier) {
-    return "forward:/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier + "/manifest";
+    return "redirect:/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier + "/manifest";
   }
 
   @RequestMapping(value = "/presentation/collection", method = RequestMethod.GET)
   public String viewPresentationCollection(@RequestParam String name) {
-    return "forward:/presentation/" + IIIFPresentationApiController.VERSION + "/collection/" + name;
+    return "redirect:/presentation/" + IIIFPresentationApiController.VERSION + "/collection/" + name;
   }
 
   /**
