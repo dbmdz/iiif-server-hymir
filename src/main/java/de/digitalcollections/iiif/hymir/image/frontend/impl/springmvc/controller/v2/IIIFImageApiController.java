@@ -1,7 +1,5 @@
 package de.digitalcollections.iiif.hymir.image.frontend.impl.springmvc.controller.v2;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.digitalcollections.iiif.hymir.image.business.api.service.v2.ImageService;
 import de.digitalcollections.iiif.hymir.model.api.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.api.exception.ResolvingException;
@@ -12,7 +10,6 @@ import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
@@ -72,7 +69,6 @@ public class IIIFImageApiController {
    * @throws IOException if image can not be read
    * @throws URISyntaxException if uri for image is erroneous
    * @throws InvalidParametersException if parameters can not be parsed
-   * @throws TransformationException if image can not be transformed
    */
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = "{identifier}/{region}/{size}/{rotation}/{quality}.{format}")
@@ -117,7 +113,6 @@ public class IIIFImageApiController {
     response.sendRedirect("/" + ident + "/info.json");
   }
 
-
   /**
    * Specification see: http://iiif.io/api/image/2.0/#image-information
    * <p>
@@ -154,8 +149,8 @@ public class IIIFImageApiController {
     } else {
       headers.set("Content-Type", "application/json");
       headers.add("Link", "<http://iiif.io/api/image/2/context.json>; "
-                  + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
-                  + "type=\"application/ld+json\"");
+              + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
+              + "type=\"application/ld+json\"");
     }
     headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
     return new ResponseEntity<>(objectMapper.writeValueAsString(info), headers, HttpStatus.OK);
