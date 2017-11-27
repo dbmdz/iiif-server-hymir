@@ -190,7 +190,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithRelativeValues() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,10,10,10/full/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,10,10,10/full/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -200,7 +203,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithRelativeValuesPartiallyExceeding() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:20,20,100,10/full/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:20,20,100,10/full/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -210,7 +216,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareLargerWidth() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square-width/square/full/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square-width/square/full/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -220,7 +229,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareLargerHeight() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square-height/square/full/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square-height/square/full/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -230,7 +242,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareAlreadySquare() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square/square/full/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/square/square/full/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -277,7 +292,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithBestWidth() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/!500,500/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/!500,500/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -287,7 +305,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithMissingHeight() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/,200/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/,200/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -297,7 +318,10 @@ public class IIIFImageApiControllerTest {
   /* 4.2 Size */
   @Test
   public void testScaleWithMissingWidth() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -306,7 +330,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithRelativeValues() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/pct:50/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/pct:50/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
@@ -316,7 +343,10 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testRelativeCropWithAbsoluteScale() throws Exception {
-    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/500,/0/native.jpg"))
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/500,/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    byte[] imgData = mockMvc.perform(get(location))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
