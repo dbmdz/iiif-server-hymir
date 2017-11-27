@@ -72,6 +72,7 @@
     <version.dc-commons-server>1.2.5</version.dc-commons-server>
     <version.dc-core-backend-file>2.0.0</version.dc-core-backend-file>
     <version.dc-core-business>2.0.0</version.dc-core-business>
+    <version.guava>23.5-jre</version.guava>
     <version.iiif-apis>0.2.3</version.iiif-apis>
     <version.imageio-jnr>0.2.1</version.imageio-jnr>
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
@@ -130,6 +131,11 @@
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-parameter-names</artifactId>
       <version>${version.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${version.guava}</version>
     </dependency>
     <dependency>
       <groupId>com.googlecode.json-simple</groupId>
