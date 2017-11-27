@@ -23,9 +23,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.IntStream;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -42,6 +39,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
 
   @Autowired(required = false)
@@ -51,6 +49,7 @@ public class ImageServiceImpl implements ImageService {
   private ResourceService resourceService;
 
   private class DecodedImage {
+
     public BufferedImage img;
     public Dimension targetSize;
     public int rotation;
@@ -72,20 +71,20 @@ public class ImageServiceImpl implements ImageService {
   private void enrichInfo(ImageReader reader, de.digitalcollections.iiif.model.image.ImageService info) throws IOException {
     ImageApiProfile profile = new ImageApiProfile();
     profile.addFeature(
-        ImageApiProfile.Feature.BASE_URI_REDIRECT,
-        ImageApiProfile.Feature.CORS,
-        ImageApiProfile.Feature.JSONLD_MEDIA_TYPE,
-        ImageApiProfile.Feature.MIRRORING,
-        ImageApiProfile.Feature.PROFILE_LINK_HEADER,
-        ImageApiProfile.Feature.REGION_BY_PCT,
-        ImageApiProfile.Feature.REGION_BY_PX,
-        ImageApiProfile.Feature.REGION_SQUARE,
-        ImageApiProfile.Feature.ROTATION_BY_90S,
-        ImageApiProfile.Feature.SIZE_BY_CONFINED_WH,
-        ImageApiProfile.Feature.SIZE_BY_H,
-        ImageApiProfile.Feature.SIZE_BY_PCT,
-        ImageApiProfile.Feature.SIZE_BY_W,
-        ImageApiProfile.Feature.SIZE_BY_WH);
+            ImageApiProfile.Feature.BASE_URI_REDIRECT,
+            ImageApiProfile.Feature.CORS,
+            ImageApiProfile.Feature.JSONLD_MEDIA_TYPE,
+            ImageApiProfile.Feature.MIRRORING,
+            ImageApiProfile.Feature.PROFILE_LINK_HEADER,
+            ImageApiProfile.Feature.REGION_BY_PCT,
+            ImageApiProfile.Feature.REGION_BY_PX,
+            ImageApiProfile.Feature.REGION_SQUARE,
+            ImageApiProfile.Feature.ROTATION_BY_90S,
+            ImageApiProfile.Feature.SIZE_BY_CONFINED_WH,
+            ImageApiProfile.Feature.SIZE_BY_H,
+            ImageApiProfile.Feature.SIZE_BY_PCT,
+            ImageApiProfile.Feature.SIZE_BY_W,
+            ImageApiProfile.Feature.SIZE_BY_WH);
     info.addProfile(ImageApiProfile.LEVEL_TWO, profile);
 
     info.setWidth(reader.getWidth(0));
@@ -94,7 +93,7 @@ public class ImageServiceImpl implements ImageService {
     // Check if multiple resolutions are supported
     int numImages = reader.getNumImages(true);
     if (numImages > 1) {
-      for (int i=0; i < numImages; i++) {
+      for (int i = 0; i < numImages; i++) {
         info.addSize(new Size(reader.getWidth(i), reader.getHeight(i)));
       }
     }
@@ -103,7 +102,7 @@ public class ImageServiceImpl implements ImageService {
     if (reader.isImageTiled(0)) {
       int width = reader.getTileWidth(0);
       TileInfo tileInfo = new TileInfo(width);
-      for (int i=0; i < numImages; i++) {
+      for (int i = 0; i < numImages; i++) {
         int scaledWidth = reader.getTileWidth(i);
         tileInfo.addScaleFactor(width / scaledWidth);
       }
@@ -138,15 +137,15 @@ public class ImageServiceImpl implements ImageService {
     }
     ImageInputStream iis = ImageIO.createImageInputStream(resourceService.getInputStream(res));
     ImageReader reader = Streams.stream(ImageIO.getImageReaders(iis))
-        .findFirst()
-        .orElseThrow(() -> new UnsupportedFormatException());
+            .findFirst()
+            .orElseThrow(() -> new UnsupportedFormatException());
     reader.setInput(iis);
     return reader;
   }
 
   @Override
   public void readImageInfo(String identifier, de.digitalcollections.iiif.model.image.ImageService info)
-      throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException {
+          throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException {
     enrichInfo(getReader(identifier), info);
   }
 
@@ -158,10 +157,10 @@ public class ImageServiceImpl implements ImageService {
     // IIIF regions are always relative to the native size, while ImageIO regions are always relative to the decoded
     // image size, hence the conversion
     Rectangle decodeRegion = new Rectangle(
-        (int) Math.ceil(targetRegion.getX() * decodeScaleFactor),
-        (int) Math.ceil(targetRegion.getY() * decodeScaleFactor),
-        (int) Math.ceil(targetRegion.getWidth() * decodeScaleFactor),
-        (int) Math.ceil(targetRegion.getHeight() * decodeScaleFactor));
+            (int) Math.ceil(targetRegion.getX() * decodeScaleFactor),
+            (int) Math.ceil(targetRegion.getY() * decodeScaleFactor),
+            (int) Math.ceil(targetRegion.getWidth() * decodeScaleFactor),
+            (int) Math.ceil(targetRegion.getHeight() * decodeScaleFactor));
     readParam.setSourceRegion(decodeRegion);
 
     // TurboJpegImageReader can rotate during decoding
@@ -178,7 +177,6 @@ public class ImageServiceImpl implements ImageService {
     ImageReader reader = getReader(identifier);
 
     // TODO: Special case JPEG reader && output format JPEG
-
     if ((selector.getRotation().getRotation() % 90) != 0) {
       throw new UnsupportedOperationException("Can only rotate by multiples of 90 degrees.");
     }
@@ -202,8 +200,8 @@ public class ImageServiceImpl implements ImageService {
       }
     }
     Dimension decodeSize = new Dimension(
-        (int) (targetRegion.getWidth() * decodeScaleFactor),
-        (int) (targetRegion.getHeight() * decodeScaleFactor));
+            (int) (targetRegion.getWidth() * decodeScaleFactor),
+            (int) (targetRegion.getHeight() * decodeScaleFactor));
     ImageReadParam readParam = getReadParam(reader, selector, decodeScaleFactor);
     int rotation = (int) selector.getRotation().getRotation();
     if (readParam instanceof TurboJpegImageReadParam && ((TurboJpegImageReadParam) readParam).getRotationDegree() != 0) {
@@ -224,7 +222,7 @@ public class ImageServiceImpl implements ImageService {
 
   /** Apply transformations to an decoded image **/
   private BufferedImage transformImage(BufferedImage inputImage, Dimension targetSize, int rotation, boolean mirror,
-                                       ImageApiProfile.Quality quality) {
+          ImageApiProfile.Quality quality) {
     BufferedImage img = inputImage;
     int inType = img.getType();
     boolean needsAdditionalScaling = !new Dimension(img.getWidth(), img.getHeight()).equals(targetSize);
@@ -277,7 +275,7 @@ public class ImageServiceImpl implements ImageService {
 
   @Override
   public void processImage(String identifier, ImageApiSelector selector, OutputStream os)
-      throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException, ResourceNotFoundException, IOException {
+          throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException, ResourceNotFoundException, IOException {
     DecodedImage img;
     try {
       img = readImage(identifier, selector);
@@ -287,8 +285,8 @@ public class ImageServiceImpl implements ImageService {
     BufferedImage outImg = transformImage(img.img, img.targetSize, img.rotation, selector.getRotation().isMirror(), selector.getQuality());
 
     ImageWriter writer = Streams.stream(ImageIO.getImageWriters(new ImageTypeSpecifier(outImg), selector.getFormat().name()))
-        .findFirst()
-        .orElseThrow(() -> new UnsupportedFormatException());
+            .findFirst()
+            .orElseThrow(() -> new UnsupportedFormatException());
     ImageOutputStream ios = ImageIO.createImageOutputStream(os);
     writer.setOutput(ios);
     writer.write(null, new IIOImage(outImg, null, null), null);
