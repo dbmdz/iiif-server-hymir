@@ -167,7 +167,7 @@ public class ImageServiceImpl implements ImageService {
     // TurboJpegImageReader can rotate during decoding
     boolean didRotate = false;
     if (selector.getRotation().getRotation() != 0 && reader instanceof TurboJpegImageReader) {
-      ((TurboJpegImageReadParam) readParam).setRotationDegree(selector.getRotation().getRotation());
+      ((TurboJpegImageReadParam) readParam).setRotationDegree((int) selector.getRotation().getRotation());
       didRotate = true;
     }
     return readParam;
@@ -205,7 +205,7 @@ public class ImageServiceImpl implements ImageService {
         (int) (targetRegion.getWidth() * decodeScaleFactor),
         (int) (targetRegion.getHeight() * decodeScaleFactor));
     ImageReadParam readParam = getReadParam(reader, selector, decodeScaleFactor);
-    int rotation = selector.getRotation().getRotation();
+    int rotation = (int) selector.getRotation().getRotation();
     if (readParam instanceof TurboJpegImageReadParam && ((TurboJpegImageReadParam) readParam).getRotationDegree() != 0) {
       if (rotation == 90 || rotation == 270) {
         int w = targetSize.width;
