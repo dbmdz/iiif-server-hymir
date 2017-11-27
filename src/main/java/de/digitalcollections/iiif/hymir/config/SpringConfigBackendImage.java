@@ -1,5 +1,6 @@
 package de.digitalcollections.iiif.hymir.config;
 
+import javax.imageio.ImageIO;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,4 +12,7 @@ import org.springframework.context.annotation.Configuration;
   "de.digitalcollections.core.config"
 })
 public class SpringConfigBackendImage {
+  static {
+    ImageIO.setUseCache(false);  // Use Heap memory for caching instead of disk
+  }
 }
