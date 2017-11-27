@@ -8,6 +8,7 @@ import de.digitalcollections.iiif.hymir.model.api.exception.UnsupportedFormatExc
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
+import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -40,12 +41,8 @@ public class IIIFImageApiController {
   @Autowired
   private IiifObjectMapper objectMapper;
 
-  private String getBasePath(HttpServletRequest request, String identifier) {
+  private String getUrlBase(HttpServletRequest request) {
     String requestURI = request.getRequestURI();
-    if (requestURI.isEmpty()) {
-      requestURI = "/" + identifier + "/"; // For unit-tests
-    }
-    String idEndpoint = requestURI.substring(0, requestURI.lastIndexOf('/'));
 
     String scheme = request.getHeader("X-Forwarded-Proto");
     if (scheme == null) {
@@ -57,7 +54,7 @@ public class IIIFImageApiController {
       host = request.getHeader("Host");
     }
 
-    return String.format("%s://%s%s", scheme, host, idEndpoint);
+    return String.format("%s://%s", scheme, host);
   }
 
   /**
@@ -76,7 +73,7 @@ public class IIIFImageApiController {
           @PathVariable String identifier, @PathVariable String region,
           @PathVariable String size, @PathVariable String rotation,
           @PathVariable String quality, @PathVariable String format,
-          HttpServletRequest request) throws ResolvingException,
+          HttpServletRequest request, HttpServletResponse response) throws ResolvingException,
           UnsupportedFormatException, UnsupportedOperationException, IOException,
           URISyntaxException, InvalidParametersException, ResourceNotFoundException {
     HttpHeaders headers = new HttpHeaders();
@@ -88,6 +85,7 @@ public class IIIFImageApiController {
     }
 
     ImageApiSelector selector = new ImageApiSelector();
+    selector.setIdentifier(identifier);
     selector.setRegion(region);
     selector.setSize(size);
     selector.setRotation(rotation);
@@ -97,15 +95,28 @@ public class IIIFImageApiController {
     selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
     selector.setFormat(ImageApiProfile.Format.valueOf(format.toUpperCase()));
 
-    final String mimeType = selector.getFormat().getMimeType().getTypeName();
-    headers.setContentType(MediaType.parseMediaType(mimeType));
+    de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
+        "http://foo.org/" + identifier);
+    imageService.readImageInfo(identifier, info);
+    String canonicalForm = selector.getCanonicalForm(
+        new Dimension(info.getWidth(), info.getHeight()),
+        ImageApiProfile.LEVEL_TWO,
+        ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
+    if (!canonicalForm.equals(selector.toString())) {
+      String canonicalUrl = getUrlBase(request) + path.substring(0, path.indexOf(identifier)) + canonicalForm;
+      response.sendRedirect(canonicalUrl);
+      return null;
+    } else {
+      final String mimeType = selector.getFormat().getMimeType().getTypeName();
+      headers.setContentType(MediaType.parseMediaType(mimeType));
 
-    String filename = path.replaceFirst("/image/", "").replace('/', '_').replace(',', '_');
-    headers.set("Content-Disposition", "inline; filename=" + filename);
+      String filename = path.replaceFirst("/image/", "").replace('/', '_').replace(',', '_');
+      headers.set("Content-Disposition", "inline; filename=" + filename);
 
-    ByteArrayOutputStream os = new ByteArrayOutputStream();
-    imageService.processImage(identifier, selector, os);
-    return new ResponseEntity<byte[]>(os.toByteArray(), headers, HttpStatus.OK);
+      ByteArrayOutputStream os = new ByteArrayOutputStream();
+      imageService.processImage(identifier, selector, os);
+      return new ResponseEntity<byte[]>(os.toByteArray(), headers, HttpStatus.OK);
+    }
   }
 
   @RequestMapping(value = "{identifier}")
@@ -138,8 +149,15 @@ public class IIIFImageApiController {
   public ResponseEntity<String> getInfo(@PathVariable String identifier,
           HttpServletRequest request) throws Exception {
     identifier = URLDecoder.decode(identifier, "UTF-8");
-    String baseUrl = getBasePath(request, identifier);
-    de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(baseUrl);
+    String path;
+    if (request.getPathInfo() != null) {
+      path = request.getPathInfo();
+    } else {
+      path = request.getServletPath();
+    }
+    String baseUrl = getUrlBase(request);
+    de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
+        baseUrl + path.replace("/info.json", ""));
     imageService.readImageInfo(identifier, info);
 
     HttpHeaders headers = new HttpHeaders();
