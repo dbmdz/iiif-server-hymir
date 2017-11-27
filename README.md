@@ -7,7 +7,8 @@
 [![codecov](https://codecov.io/gh/dbmdz/iiif-server-hymir/branch/master/graph/badge.svg)](https://codecov.io/gh/dbmdz/iiif-server-hymir)
 [![Maven Central](https://img.shields.io/maven-central/v/de.digitalcollections/iiif-server-hymir.svg?maxAge=2592000)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22iiif-server-hymir%22)
 
-Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries](https://github.com/dbmdz/iiif-image-api "IIIF Image API Java Libraries") and [IIIF Presentation API Java Libraries](https://github.com/dbmdz/iiif-presentation-api "IIIF Presentation API Java Libraries") (Java implementations of the [IIIF specifications](http://iiif.io/technical-details/ "IIIF specifications")).
+Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](https://github.com/dbmdz/iiif-apis)
+(Java implementations of the [IIIF specifications](http://iiif.io/technical-details/)).
 
 ## Features
 
@@ -25,56 +26,14 @@ Hymir is a Java based IIIF Server. It is based on [IIIF Image API Java Libraries
 
 ### Supported image formats
 
-<table border="1">
-  <tr>
-    <th>Format</th>
-    <th>supported</th>
-    <th>Image processing engine</th>
-    <th>tested</th>
-  </tr>
-  <tr>
-    <td><a href="http://www.jpeg.org/">JPEG</a></td>
-    <td>yes</td>
-    <td>Java Image I/O</a>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td>yes</td>
-    <td>turbojpeg</a>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td><a href="https://www.iso.org/standard/34342.html">TIFF</a></td>
-    <td>yes</td>
-    <td>Java Image I/O</a>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td><a href="http://www.libpng.org/pub/png/spec/">PNG</a></td>
-    <td>yes</td>
-    <td>Java Image I/O</a>
-    <td>yes</td>
-  </tr>
-  <tr>
-    <td><a href="http://www.jpeg.org/">BMP</a></td>
-    <td>yes</td>
-    <td>Java Image I/O</a>
-    <td>no</td>
-  </tr>
-  <tr>
-    <td><a href="http://www.wapforum.org/what/technical/SPEC-WAESpec-19990524.pdf">WBMP</a></td>
-    <td>yes</td>
-    <td>Java Image I/O</a>
-    <td>no</td>
-  </tr>
-  <tr>
-    <td><a href="http://www.w3.org/Graphics/GIF/spec-gif89a.txt">GIF</a></td>
-    <td>yes</td>
-    <td>Java Image I/O</a>
-    <td>yes</td>
-  </tr>
-</table>
+| Format    | Reading  | Writing | Dependencies                               |
+| --------- | -------- | ------- | ------------------------------------------ |
+|   JPEG    |   [x]    |   [x]   |   libturbojpeg (optional, but recommended) |
+|  JPEG2000 |   [x]    |   [ ]   |   libopenjp2 (>= 2.3 recommended)          |
+|    TIFF   |   [x]    |   [x]   |                                            |
+|    PNG    |   [x]    |   [x]   |                                            |
+|    BMP    |   [x]    |   [x]   |                                            |
+|    GIF    |   [x]    |   [x]   |                                            |
 
 
 ## Prerequisites
@@ -115,17 +74,8 @@ Access Hymir GUI (e.g. http://localhost:9000/).
 ### Using the TurboJPEG backend
 By default, a Java-based image processing backend is used. If you want better
 performance, it is recommended to use the native image processing backend
-that is based on TurboJPEG. For this, you will have to install a shared library
-into `/usr/lib` that the Java code can then load.
-
-If you are running Debian Jessie, you can use the Debian packages provided
-on the [Hymir releases](https://github.com/dbmdz/iiif-server-hymir/releases) page.
-
-For other distributions, you can use the `install_turbojpeg_jni.sh` script in
-the repository root. Note that you will need a recent (>=1.8) JDK, a C compiler
-and  `libtool` and `nasm` installed. Just run the script as root on the target
-machine that runs the application and your image requests should be
-significantly faster.
+that is based on TurboJPEG. For this, you will have to install the TurboJPEG
+native library, on Ubuntu `libturbojpeg`.
 
 ## Configuration
 
