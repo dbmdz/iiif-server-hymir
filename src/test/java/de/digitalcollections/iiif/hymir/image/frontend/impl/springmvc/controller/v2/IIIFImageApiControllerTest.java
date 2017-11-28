@@ -304,7 +304,7 @@ public class IIIFImageApiControllerTest {
   }
 
   @Test
-  public void testScaleWithMissingHeight() throws Exception {
+  public void testScaleWithMissingWidth() throws Exception {
     String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/,200/0/native.jpg"))
         .andExpect(status().is3xxRedirection())
         .andReturn().getResponse().getHeader("Location");
@@ -317,11 +317,8 @@ public class IIIFImageApiControllerTest {
 
   /* 4.2 Size */
   @Test
-  public void testScaleWithMissingWidth() throws Exception {
-    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/native.jpg"))
-        .andExpect(status().is3xxRedirection())
-        .andReturn().getResponse().getHeader("Location");
-    byte[] imgData = mockMvc.perform(get(location))
+  public void testScaleWithMissingHeigth() throws Exception {
+    byte[] imgData = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/native.jpg"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
