@@ -1,5 +1,6 @@
 package de.digitalcollections.iiif.hymir.image.frontend.impl.springmvc.controller.v2;
 
+import com.google.common.base.Strings;
 import de.digitalcollections.iiif.hymir.image.business.api.service.v2.ImageService;
 import de.digitalcollections.iiif.hymir.model.api.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.api.exception.ResolvingException;
@@ -154,6 +155,9 @@ public class IIIFImageApiController {
       path = request.getPathInfo();
     } else {
       path = request.getServletPath();
+    }
+    if (!Strings.isNullOrEmpty(request.getContextPath())) {
+      path = request.getContextPath() + "/" + path;
     }
     String baseUrl = getUrlBase(request);
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
