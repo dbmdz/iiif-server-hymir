@@ -1,6 +1,5 @@
 package de.digitalcollections.iiif.hymir.presentation.backend.impl.repository.v2;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.digitalcollections.core.business.api.ResourceService;
@@ -11,6 +10,7 @@ import de.digitalcollections.core.model.api.resource.exceptions.ResourceIOExcept
 import de.digitalcollections.iiif.hymir.model.api.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.api.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.backend.api.repository.v2.PresentationRepository;
+import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
   private final Cache<String, Object> httpCache;
 
   @Autowired
-  private ObjectMapper objectMapper;
+  private IiifObjectMapper objectMapper;
 
   @Autowired
   private ResourceService resourceService;

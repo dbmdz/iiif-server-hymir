@@ -38,8 +38,8 @@ public class SpringConfig {
 
   @Bean
   @Primary
-  public ObjectMapper objectMapper() {
-    ObjectMapper objectMapper = new IiifObjectMapper();
+  public IiifObjectMapper objectMapper() {
+    IiifObjectMapper objectMapper = new IiifObjectMapper();
     return objectMapper;
   }
 }
