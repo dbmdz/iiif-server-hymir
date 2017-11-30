@@ -54,16 +54,16 @@ public class ViewController {
     return "redirect:/image/" + identifier + "/view.html";
   }
 
-  @RequestMapping(value = "/presentation/{identifier}/view.html", method = RequestMethod.GET)
+  @RequestMapping(value = "/presentation/view", method = RequestMethod.POST)
+  public String viewPresentationPost(@RequestParam String identifier, Model model) {
+    return "redirect:/presentation/view/" + identifier;
+  }
+
+  @RequestMapping(value = "/presentation/view/{identifier}", method = RequestMethod.GET)
   public String viewPresentationGet(@PathVariable String identifier, Model model) {
     model.addAttribute("iiifVersions", iiifVersions);
     model.addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
     return "mirador/view";
-  }
-
-  @RequestMapping(value = "/presentation/view", method = RequestMethod.POST)
-  public String viewPresentationPost(@RequestParam String identifier, Model model) {
-    return "redirect:/presentation/" + identifier + "/view.html";
   }
 
   @RequestMapping(value = "/presentation/manifest", method = RequestMethod.GET)
