@@ -159,9 +159,6 @@ public class IIIFImageApiController {
     } else {
       path = request.getServletPath();
     }
-    if (!Strings.isNullOrEmpty(request.getContextPath())) {
-      path = request.getContextPath() + "/" + path;
-    }
     String baseUrl = getUrlBase(request);
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
         baseUrl + path.replace("/info.json", ""));
