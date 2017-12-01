@@ -54,8 +54,11 @@ public class IIIFImageApiController {
     if (host == null) {
       host = request.getHeader("Host");
     }
-
-    return String.format("%s://%s", scheme, host);
+    String base = String.format("%s://%s", scheme, host);
+    if (!request.getContextPath().isEmpty()) {
+      base += request.getContextPath();
+    }
+    return base;
   }
 
   /**
