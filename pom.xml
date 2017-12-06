@@ -77,7 +77,7 @@
     <version.imageio-jnr>0.2.2</version.imageio-jnr>
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
     <version.jackson>2.9.0</version.jackson>
-    <version.jacoco-maven-plugin>0.7.4.201502262128</version.jacoco-maven-plugin>
+    <version.jacoco-maven-plugin>0.7.9</version.jacoco-maven-plugin>
     <version.logstash-logback-encoder>4.7</version.logstash-logback-encoder>
     <version.prometheus-spring-boot-starter>1.0.2</version.prometheus-spring-boot-starter>
     <version.thymeleaf>3.0.7.RELEASE</version.thymeleaf>
