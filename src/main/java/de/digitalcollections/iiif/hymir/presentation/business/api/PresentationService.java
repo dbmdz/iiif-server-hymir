@@ -8,6 +8,7 @@ import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.iiif.model.sharedcanvas.Range;
 import de.digitalcollections.iiif.model.sharedcanvas.Sequence;
 import java.net.URI;
+import java.time.Instant;
 
 /**
  * Service for IIIF Presentation API functionality.
@@ -29,6 +30,14 @@ public interface PresentationService {
    * @throws InvalidDataException if data is corrupted
    */
   Manifest getManifest(String identifier) throws ResolvingException, InvalidDataException;
+
+  default Instant getManifestModificationDate(String identifier) throws ResolvingException {
+    return null;
+  }
+
+  default Instant getCollectionModificationDate(String identifier) throws ResolvingException {
+    return null;
+  }
 
   default Canvas getCanvas(String manifestId, String canvasUri) throws ResolvingException, InvalidDataException {
     return getCanvas(manifestId, URI.create(canvasUri));

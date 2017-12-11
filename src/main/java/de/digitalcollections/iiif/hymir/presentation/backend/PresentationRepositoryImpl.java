@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -31,11 +32,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class PresentationRepositoryImpl implements PresentationRepository {
-
   private static final String COLLECTION_PREFIX = "collection-";
   private static final Logger LOGGER = LoggerFactory.getLogger(PresentationRepositoryImpl.class);
-
-  private final Cache<String, Object> httpCache;
 
   @Autowired
   private IiifObjectMapper objectMapper;
@@ -43,97 +41,47 @@ public class PresentationRepositoryImpl implements PresentationRepository {
   @Autowired
   private ResourceService resourceService;
 
-  public PresentationRepositoryImpl() {
-    httpCache = CacheBuilder.newBuilder().maximumSize(32).build();
-  }
-
   @Override
   public Collection getCollection(String name) throws ResolvingException, InvalidDataException {
     // to get a regex resolable pattern we add a static prefix for collections
     String collectionName = COLLECTION_PREFIX + name;
-
-    Resource resource;
     try {
-      resource = resourceService.get(collectionName, ResourcePersistenceType.REFERENCED, MimeType.MIME_APPLICATION_JSON);
-    } catch (ResourceIOException ex) {
-      LOGGER.warn("Error getting collection for name " + collectionName, ex);
+      Resource resource = resourceService.get(collectionName, ResourcePersistenceType.REFERENCED, MimeType.MIME_APPLICATION_JSON);
+      return objectMapper.readValue(getResourceJson(resource.getUri()), Collection.class);
+    } catch (IOException ex) {
+      LOGGER.info("Could not retrieve collection {}", collectionName, ex);
       throw new ResolvingException("No collection for name " + collectionName);
     }
-    URI uri = resource.getUri();
-    return getCollection(uri);
-  }
-
-  protected Collection getCollection(URI collectionUri) throws ResolvingException, InvalidDataException {
-    String location = collectionUri.toString();
-    LOGGER.debug("Trying to get collection from " + location);
-
-    Collection collection;
-    String scheme = collectionUri.getScheme();
-
-    // use caching for remote/http resources
-    if ("http".equals(scheme)) {
-      collection = (Collection) httpCache.getIfPresent(location);
-      if (collection != null) {
-        LOGGER.debug("HTTP Cache hit for collection " + location);
-        return collection;
-      }
-    }
-
-    String collectionJson = getResourceJson(collectionUri);
-    try {
-      collection = objectMapper.readValue(collectionJson, Collection.class);
-    } catch (IOException e) {
-      throw new InvalidDataException("Error reading from JSON", e);
-    }
-
-    if ("http".equals(scheme)) {
-      httpCache.put(location, collection);
-    }
-
-    return collection;
   }
 
   @Override
   public Manifest getManifest(String identifier) throws ResolvingException, InvalidDataException {
-    Resource resource;
     try {
-      resource = resourceService.get(identifier, ResourcePersistenceType.REFERENCED, MimeType.MIME_APPLICATION_JSON);
-    } catch (ResourceIOException ex) {
-      LOGGER.warn("Error getting manifest for identifier " + identifier, ex);
+      Resource resource = resourceService.get(identifier, ResourcePersistenceType.REFERENCED, MimeType.MIME_APPLICATION_JSON);
+      return objectMapper.readValue(getResourceJson(resource.getUri()), Manifest.class);
+    } catch (IOException ex) {
+      LOGGER.info("Error getting manifest for identifier " + identifier, ex);
       throw new ResolvingException("No manifest for identifier " + identifier);
     }
-    URI uri = resource.getUri();
-    return getManifest(uri);
   }
 
-  protected Manifest getManifest(URI manifestUri) throws ResolvingException, InvalidDataException {
-    String location = manifestUri.toString();
-    LOGGER.debug("Trying to get manifest from " + location);
+  @Override
+  public Instant getManifestModificationDate(String identifier) throws ResolvingException {
+    return getResourceModificationDate(identifier);
+  }
 
-    Manifest manifest;
-    String scheme = manifestUri.getScheme();
+  @Override
+  public Instant getCollectionModificationDate(String identifier) throws ResolvingException {
+    return getResourceModificationDate(identifier);
+  }
 
-    // use caching for remote/http resources
-    if ("http".equals(scheme)) {
-      manifest = (Manifest) httpCache.getIfPresent(location);
-      if (manifest != null) {
-        LOGGER.debug("HTTP Cache hit for manifest " + location);
-        return manifest;
-      }
-    }
-
-    String manifestJson = getResourceJson(manifestUri);
+  private Instant getResourceModificationDate(String identifier) throws ResolvingException {
     try {
-      manifest = objectMapper.readValue(manifestJson, Manifest.class);
-    } catch (IOException e) {
-      throw new InvalidDataException("Could not read manifest JSON", e);
+      Resource resource = resourceService.get(identifier, ResourcePersistenceType.REFERENCED, MimeType.MIME_APPLICATION_JSON);
+      return Instant.ofEpochMilli(resource.getLastModified());
+    } catch (ResourceIOException ex) {
+      throw new ResolvingException("No manifest for identifier " + identifier);
     }
-
-    if ("http".equals(scheme)) {
-      httpCache.put(location, manifest);
-    }
-
-    return manifest;
   }
 
   protected String getResourceJson(URI resourceUri) throws ResolvingException {
@@ -143,16 +91,5 @@ public class PresentationRepositoryImpl implements PresentationRepository {
     } catch (IOException e) {
       throw new ResolvingException(e);
     }
-  }
-
-  private JSONObject getResourceAsJsonObject(URI resourceUri) throws ResolvingException, ParseException {
-    String json = getResourceJson(resourceUri);
-    JSONParser parser = new JSONParser();
-    Object obj = parser.parse(json);
-    return (JSONObject) obj;
-  }
-
-  private JSONObject getResourceAsJsonObject(String resourceUri) throws ResolvingException, ParseException {
-    return this.getResourceAsJsonObject(URI.create(resourceUri));
   }
 }

@@ -6,11 +6,15 @@ import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatExcepti
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Instant;
 
 /**
  * Service providing image processing functionality.
  */
 public interface ImageService {
+  default Instant getImageModificationDate(String identifier) throws ResourceNotFoundException {
+    return null;
+  };
 
   void readImageInfo(String identifier, de.digitalcollections.iiif.model.image.ImageService info)
       throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException;

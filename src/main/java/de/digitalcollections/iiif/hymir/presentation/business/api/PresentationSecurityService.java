@@ -6,5 +6,4 @@ package de.digitalcollections.iiif.hymir.presentation.business.api;
 public interface PresentationSecurityService {
 
   boolean isAccessAllowed(String identifier);
-
 }

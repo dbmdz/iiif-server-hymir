@@ -7,6 +7,7 @@ import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationSe
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
+import java.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +26,24 @@ public class PresentationServiceImpl implements PresentationService {
 
   @Override
   public Collection getCollection(String name) throws ResolvingException, InvalidDataException {
-    try {
-      return presentationRepository.getCollection(name);
-    } catch (ResolvingException ex) {
-      LOGGER.debug("Collection for '{}' not found.", name);
-      throw ex;
-    }
+    return presentationRepository.getCollection(name);
   }
 
   @Override
   public Manifest getManifest(String identifier) throws ResolvingException, InvalidDataException {
     if (presentationSecurityService != null && !presentationSecurityService.isAccessAllowed(identifier)) {
-      LOGGER.info("Access to manifest for object '{}' is not allowed!", identifier);
       throw new ResolvingException(); // TODO maybe throw an explicitely access disallowed exception
     }
-    LOGGER.debug("Access to manifest for object '{}' is allowed.", identifier);
-    try {
-      return presentationRepository.getManifest(identifier);
-    } catch (ResolvingException ex) {
-      LOGGER.debug("Manifest for '{}' not found.", identifier);
-      throw ex;
-    }
+    return presentationRepository.getManifest(identifier);
+  }
+
+  @Override
+  public Instant getManifestModificationDate(String identifier) throws ResolvingException {
+    return presentationRepository.getManifestModificationDate(identifier);
+  }
+
+  @Override
+  public Instant getCollectionModificationDate(String identifier) throws ResolvingException {
+    return presentationRepository.getCollectionModificationDate(identifier);
   }
 }

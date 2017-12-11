@@ -4,6 +4,7 @@ import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
+import java.time.Instant;
 
 /**
  * Interface to be implemented by project/user of this library.
@@ -24,4 +25,12 @@ public interface PresentationRepository {
    * @throws InvalidDataException if manifest contains invalid data
    */
   Manifest getManifest(String identifier) throws ResolvingException, InvalidDataException;
+
+  default Instant getManifestModificationDate(String identifier) throws ResolvingException {
+    return null;
+  }
+
+  default Instant getCollectionModificationDate(String identifier) throws ResolvingException {
+    return null;
+  }
 }

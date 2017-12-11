@@ -21,13 +21,7 @@ public class SpringConfig {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SpringConfig.class);
 
-  /**
-   * Create a resource bundle for your messages ("messages.properties").<br>
-   * This file goes in src/main/resources because you want it to appear at the root of the classpath on deployment.
-   *
-   * @return message source
-   */
-  @Bean(name = "messageSource")
+  @Bean
   public MessageSource configureMessageSource() {
     ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
     messageSource.setBasenames("classpath:messages", "classpath:messages-overlay", "classpath:messages-commons");

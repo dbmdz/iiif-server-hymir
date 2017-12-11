@@ -14,7 +14,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.yaml.snakeyaml.Yaml;
 
-@Configuration(value = "SpringConfigWebHymir")
+@Configuration
 public class SpringConfigWeb extends WebMvcConfigurerAdapter {
 
   @Override
@@ -30,14 +30,14 @@ public class SpringConfigWeb extends WebMvcConfigurerAdapter {
     registry.addInterceptor(localeChangeInterceptor);
   }
 
-  @Bean(name = "localeResolver")
+  @Bean
   public LocaleResolver sessionLocaleResolver() {
     SessionLocaleResolver localeResolver = new SessionLocaleResolver();
     localeResolver.setDefaultLocale(Locale.GERMAN);
     return localeResolver;
   }
 
-  @Bean(name = "iiifVersions")
+  @Bean
   public Map<String, String> iiifVersions() {
     Map<String, String> versions = null;
     Map<String, String> customVersions;

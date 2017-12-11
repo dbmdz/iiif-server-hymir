@@ -8,92 +8,13 @@
 # In the example below, we have two MIME types (tiff/jpeg) and for JPEG two resolutions
 # in decreasing order of quality, so that the higher-resolution image will be chosen
 # if it is available.
-- pattern: '^BSB-MDZ-0000BSB(\d{4})(\d{4})$'
+- pattern: bsb(\d{8})_(\d{5})
   substitutions:
-    - 'file:~/bsbstruc_dev/content/bsb_content$1/bsb$1$2/iiif/2.1/bsb$1$2_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$1/bsb$1$2/iiif/2.1/bsb$1$2.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$1/bsb$1$2/iiif/2.0/bsb$1$2_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$1/bsb$1$2/iiif/2.0/bsb$1$2.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$1/bsb$1$2/iiif/1.0/bsb$1$2_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$1/bsb$1$2/iiif/1.0/bsb$1$2.json'
+    - 'file:/var/local/bsb$1/images/original/bsb$1_$2.tif'
+    - 'file:/var/local/bsb$1/images/300/bsb$1_$2.jpg'
+    - 'file:/var/local/bsb$1/images/150/bsb$1_$2.jpg'
 
-# Handschriften
-# e.g.: file:/bsbzend/bsb0004/bsb00046285/images/300/bsb00046285_00015.jpg
-- pattern: '^BSB-MDZ-0000BSB\d{8}__(\w{3})(\d{4})(\d{4})$'
+# A simpler example with just a single substitution pattern
+- pattern: bsb(\d{8})
   substitutions:
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/300/$1$2$3.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/200/$1$2$3.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/150/$1$2$3.jpg'
-
-- pattern: '^BSB-MDZ-0000BSB\d{8}__(\w{3})(\d{4})(\d{4})_(\d{5})$'
-  substitutions:
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/300/$1$2$3_$4.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/200/$1$2$3_$4.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg'
-
-- pattern: '^(\w{3})(\d{4})(\d{4})$'
-  substitutions:
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/300/$1$2$3.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/200/$1$2$3.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/150/$1$2$3.jpg'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.1/$1$2$3_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.1/$1$2$3.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.0/$1$2$3_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.0/$1$2$3.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/1.0/$1$2$3_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/1.0/$1$2$3.json'
-
-# bsb00010485_00051
-- pattern: '^(\w{3})(\d{4})(\d{4})_(\d{5})$'
-  substitutions:
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/300/$1$2$3_$4.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/200/$1$2$3_$4.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg'
-    - 'file:~/bsbstruc_local/content/bsb_content$2/$1$2$3/iiif/2.1/$1$2$3_$4_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.1/$1$2$3_$4.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.1/$1$2$3_$4_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.0/$1$2$3_$4.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.0/$1$2$3_$4_manifest.json'
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/iiif/1.0/$1$2$3_$4_manifest.json'
-
-# bsb00010485_00051.jpg (backwards compatibility for old style image identifiers, deprecated)
-- pattern: '^(\w{3})(\d{4})(\d{4})_(\d{5}).jpg$'
-  substitutions:
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/300/$1$2$3_$4.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/200/$1$2$3_$4.jpg'
-    - 'file:~/bsbzend/$1$2/$1$2$3/images/150/$1$2$3_$4.jpg'
-
-# bsb00010485_00267_u001
-- pattern: '^(\w{3})(\d{4})(\d{4})_(\d{5})_u(\d{3})$'
-  substitutions:
-    - 'file:~/bsbstruc_local/content/bsb_content$2/$1$2$3/iiif/2.1/$1$2$3_$4_u$5_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.1/$1$2$3_$4_u$5.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.1/$1$2$3_$4_u$5_manifest.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.0/$1$2$3_$4_u$5.json'
-    - 'file:~/bsbstruc_dev/content/bsb_content$2/$1$2$3/iiif/2.0/$1$2$3_$4_u$5_manifest.json'
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/iiif/1.0/$1$2$3_$4_u$5_manifest.json'
-
-- pattern: '^zoom:(\w{3})(\d{4})(\d{4})_(\d{5})$'
-  substitutions:
-    - 'file:~/zoom/$2/$1$2$3/images/$1$2$3_$4.jpg'
-    - 'file:~/zoom/$2/$1$2$3/images/$1$2$3_$4_pyr.tif'
-
-- pattern: '^words:(\w{3})(\d{4})(\d{4})(?:.*?)$'
-  substitutions:
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/xml/standard/2.2/$1$2$3_word.ent'
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/xml/standard/2.1/$1$2$3_word.ent'
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/xml/standard/2.0/$1$2$3_word.ent'
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/xml/standard/$1$2$3_word.ent'
-
-- pattern: '^coords:(\w{3})(\d{4})(\d{4})(?:.*?)$'
-  substitutions:
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/xml/standard/2.2/$1$2$3_coor.ent'
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/xml/standard/2.1/$1$2$3_coor.ent'
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/xml/standard/2.0/$1$2$3_coor.ent'
-    - 'file:~/bsbstruc/content/bsb_content$2/$1$2$3/xml/standard/$1$2$3_coor.ent'
-
-- pattern: '^collection-(.*)$'
-  substitutions:
-    - 'file:~/bsbstruc_dev/storage/standard/iiif_collection/$1.json'
-    - 'file:~/bsbstruc_dev/storage/standard/iiif_collection/zdb:$1.json'
-    - 'file:~/bsbstruc_dev/storage/standard/iiif_collection/periodical:zdb:$1.json'
+    - 'file:/var/local/bsb$1/manifest/bsb$1.json'

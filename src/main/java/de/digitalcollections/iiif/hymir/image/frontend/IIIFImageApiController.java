@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@Controller(value = "IIIFImageApiController-v2")
+@Controller
 @RequestMapping("/image/v2/")
 public class IIIFImageApiController {
 
@@ -61,16 +61,6 @@ public class IIIFImageApiController {
     return base;
   }
 
-  /**
-   * Specification see <a href="http://iiif.io/api/image/2.0/#image-request-uri-syntax">IIIF 2.0</a><br>
-   *
-   * @throws ResolvingException if identifier can not be resolved to an image
-   * @throws UnsupportedFormatException if target format is not supported
-   * @throws UnsupportedOperationException if operation is not supported
-   * @throws IOException if image can not be read
-   * @throws URISyntaxException if uri for image is erroneous
-   * @throws InvalidParametersException if parameters can not be parsed
-   */
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = "{identifier}/{region}/{size}/{rotation}/{quality}.{format}")
   public ResponseEntity<byte[]> getImageRepresentation(
@@ -123,30 +113,6 @@ public class IIIFImageApiController {
     }
   }
 
-  @RequestMapping(value = "{identifier}")
-  public void redirectToInfo(@PathVariable String ident, HttpServletResponse response) throws IOException {
-    response.sendRedirect("/" + ident + "/info.json");
-  }
-
-  /**
-   * Specification see: http://iiif.io/api/image/2.0/#image-information
-   * <p>
-   * Example response:</p>
-   *
-   * <pre>
-   * {
-   *   "@context": "http://library.stanford.edu/iiif/image-api/1.1/context.json",
-   *   "@id": "http://iiif.example.com/prefix/1E34750D-38DB-4825-A38A-B60A345E591C",
-   *   "width": 6000, "height": 4000
-   * }
-   * </pre>
-   *
-   * @param identifier - The identifier to obtain information for
-   * @param request servlet request
-   * @return The information in JSON notation
-   * @throws ResolvingException if identifier can not be resolved to an image
-   * @throws UnsupportedFormatException if target format is not supported
-   */
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = "{identifier}/info.json",
           method = {RequestMethod.GET, RequestMethod.HEAD})

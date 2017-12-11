@@ -52,11 +52,4 @@ public class Application {
       System.exit(ExitStatus.ERROR);
     }
   }
-
-//  @Override
-//  public void afterPropertiesSet() throws Exception {
-//    if (!StringUtils.isEmpty(rulesPath)) {
-//      System.setProperty("multiPatternResolvingFile", rulesPath);
-//    }
-//  }
 }

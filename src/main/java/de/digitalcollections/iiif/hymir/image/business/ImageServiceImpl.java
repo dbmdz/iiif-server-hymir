@@ -23,6 +23,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Instant;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -292,5 +293,18 @@ public class ImageServiceImpl implements ImageService {
     writer.write(null, new IIOImage(outImg, null, null), null);
     writer.dispose();
     ios.flush();
+  }
+
+  @Override
+  public Instant getImageModificationDate(String identifier) throws ResourceNotFoundException {
+    if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
+      throw new ResourceNotFoundException();
+    }
+    try {
+      Resource res = resourceService.get(identifier, ResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
+      return Instant.ofEpochMilli(res.getLastModified());
+    } catch (ResourceIOException e) {
+      throw new ResourceNotFoundException();
+    }
   }
 }
