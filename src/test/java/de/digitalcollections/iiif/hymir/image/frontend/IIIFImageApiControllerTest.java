@@ -12,6 +12,7 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import org.assertj.core.util.Strings;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,10 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -73,20 +76,24 @@ public class IIIFImageApiControllerTest {
   /* 5. Information Request */
   @Test
   public void testImageInfo() throws Exception {
-    mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/http-bsb/info.json").header("Host", "localhost"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
-            .andExpect(header().string("Link", "<http://iiif.io/api/image/2/context.json>; "
-                    + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
-                    + "type=\"application/ld+json\""))
-            .andExpect(jsonPath("$.width").value(989))
-            .andExpect(jsonPath("$.height").value(1584))
-            .andExpect(jsonPath("$.@context").value("http://iiif.io/api/image/2/context.json"))
-            .andExpect(jsonPath("$.@id").value("http://localhost/image/" + IIIFImageApiController.VERSION + "/http-bsb"))
-            .andExpect(jsonPath("$.protocol").value("http://iiif.io/api/image"))
-            .andExpect(jsonPath("$.profile[0]").value("http://iiif.io/api/image/2/level2.json"))
-            .andExpect(jsonPath("$.tiles.length()").value(1))
-            .andExpect(jsonPath("$.tiles[0].width").value(512));
+    MvcResult result = mockMvc.perform(
+        get("/image/" + IIIFImageApiController.VERSION + "/http-bsb/info.json")
+        .header("Host", "localhost"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("application/json"))
+        .andExpect(header().string("Link", "<http://iiif.io/api/image/2/context.json>; "
+            + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
+            + "type=\"application/ld+json\""))
+        .andExpect(jsonPath("$.width").value(989))
+        .andExpect(jsonPath("$.height").value(1584))
+        .andExpect(jsonPath("$.@context").value("http://iiif.io/api/image/2/context.json"))
+        .andExpect(jsonPath("$.@id").value("http://localhost/image/" + IIIFImageApiController.VERSION + "/http-bsb"))
+        .andExpect(jsonPath("$.protocol").value("http://iiif.io/api/image"))
+        .andExpect(jsonPath("$.profile[0]").value("http://iiif.io/api/image/2/level2.json"))
+        .andExpect(jsonPath("$.tiles.length()").value(1))
+        .andExpect(jsonPath("$.tiles[0].width").value(512))
+        .andReturn();
+    assertThat(result.getResponse().getDateHeader("Last-Modified")).isNotNull();
   }
 
   @Test
@@ -112,11 +119,13 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testContentDispositionHeader() throws Exception {
-    mockMvc
-            .perform(get("/image/" + IIIFImageApiController.VERSION + "/http-google/full/full/0/default.png").header("Referer", "http://localhost/foobar"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType("image/png"))
-            .andExpect(header().string("Content-Disposition", "inline; filename=" + IIIFImageApiController.VERSION + "_http-google_full_full_0_default.png"));
+    MvcResult result = mockMvc.perform(
+        get("/image/" + IIIFImageApiController.VERSION + "/http-google/full/full/0/default.png").header("Referer", "http://localhost/foobar"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("image/png"))
+        .andExpect(header().string("Content-Disposition", "inline; filename=" + IIIFImageApiController.VERSION + "_http-google_full_full_0_default.png"))
+        .andReturn();
+    assertThat(result.getResponse().getDateHeader("Last-Modified")).isNotNull();
   }
 
   /* 4.5 Format */

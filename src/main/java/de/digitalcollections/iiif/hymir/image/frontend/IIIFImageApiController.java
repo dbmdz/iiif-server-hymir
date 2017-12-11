@@ -1,6 +1,5 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
-import com.google.common.base.Strings;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.WebRequest;
 
 @Controller
 @RequestMapping("/image/v2/")
@@ -67,7 +67,7 @@ public class IIIFImageApiController {
           @PathVariable String identifier, @PathVariable String region,
           @PathVariable String size, @PathVariable String rotation,
           @PathVariable String quality, @PathVariable String format,
-          HttpServletRequest request, HttpServletResponse response) throws ResolvingException,
+          HttpServletRequest request, HttpServletResponse response, WebRequest webRequest) throws ResolvingException,
           UnsupportedFormatException, UnsupportedOperationException, IOException,
           URISyntaxException, InvalidParametersException, ResourceNotFoundException {
     HttpHeaders headers = new HttpHeaders();
@@ -77,6 +77,10 @@ public class IIIFImageApiController {
     } else {
       path = request.getServletPath();
     }
+
+    long modified = imageService.getImageModificationDate(identifier).toEpochMilli();
+    webRequest.checkNotModified(modified);
+    headers.setDate("Last-Modified", modified);
 
     ImageApiSelector selector = new ImageApiSelector();
     selector.setIdentifier(identifier);
@@ -116,22 +120,25 @@ public class IIIFImageApiController {
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = "{identifier}/info.json",
           method = {RequestMethod.GET, RequestMethod.HEAD})
-  public ResponseEntity<String> getInfo(@PathVariable String identifier,
-          HttpServletRequest request) throws Exception {
+  public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
+          WebRequest webRequest) throws Exception {
     identifier = URLDecoder.decode(identifier, "UTF-8");
+    long modified = imageService.getImageModificationDate(identifier).toEpochMilli();
+    webRequest.checkNotModified(modified);
     String path;
-    if (request.getPathInfo() != null) {
-      path = request.getPathInfo();
+    if (req.getPathInfo() != null) {
+      path = req.getPathInfo();
     } else {
-      path = request.getServletPath();
+      path = req.getServletPath();
     }
-    String baseUrl = getUrlBase(request);
+    String baseUrl = getUrlBase(req);
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
         baseUrl + path.replace("/info.json", ""));
     imageService.readImageInfo(identifier, info);
 
     HttpHeaders headers = new HttpHeaders();
-    String contentType = request.getHeader("Accept");
+    headers.setDate("Last-Modified", modified);
+    String contentType = req.getHeader("Accept");
     if (contentType != null && contentType.equals("application/ld+json")) {
       headers.set("Content-Type", contentType);
     } else {
