@@ -367,4 +367,12 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.@id").value("http://localhost/image/" + IIIFImageApiController.VERSION + "/spec%253A%252Fial%253Ffile%2523with%255Bspecial%255Dch%2540arac%2525ters"));
   }
+
+  @Test
+  public void testCanonicalRedirectWithRelativeCropAndScale() throws Exception {
+    String location = mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/native.jpg"))
+        .andExpect(status().is3xxRedirection())
+        .andReturn().getResponse().getHeader("Location");
+    assertThat(location).isEqualTo("http://localhost/image/v2/file-zoom/206,511,413,511/346,/0/default.jpg");
+  }
 }

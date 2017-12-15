@@ -54,6 +54,9 @@ public class IIIFImageApiController {
     if (host == null) {
       host = request.getHeader("Host");
     }
+    if (host == null) {
+      host = request.getRemoteHost();
+    }
     String base = String.format("%s://%s", scheme, host);
     if (!request.getContextPath().isEmpty()) {
       base += request.getContextPath();
@@ -96,10 +99,15 @@ public class IIIFImageApiController {
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
         "http://foo.org/" + identifier);
     imageService.readImageInfo(identifier, info);
-    String canonicalForm = selector.getCanonicalForm(
-        new Dimension(info.getWidth(), info.getHeight()),
-        ImageApiProfile.LEVEL_TWO,
-        ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
+    String canonicalForm;
+    try {
+      canonicalForm = selector.getCanonicalForm(
+          new Dimension(info.getWidth(), info.getHeight()),
+          ImageApiProfile.LEVEL_TWO,
+          ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
+    } catch (IllegalArgumentException e) {
+      throw new InvalidParametersException(e.getMessage());
+    }
     if (!canonicalForm.equals(selector.toString())) {
       String canonicalUrl = getUrlBase(request) + path.substring(0, path.indexOf(identifier)) + canonicalForm;
       response.sendRedirect(canonicalUrl);
