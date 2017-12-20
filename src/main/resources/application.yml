@@ -38,6 +38,8 @@ spring:
   thymeleaf:
     cache: false
     mode: HTML
+  messages:
+    basename: messages,messages-overlay,messages-commons
 
 ---
 
