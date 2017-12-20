@@ -1,7 +1,5 @@
 package de.digitalcollections.iiif.hymir.presentation.backend;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import de.digitalcollections.core.business.api.ResourceService;
 import de.digitalcollections.core.model.api.MimeType;
 import de.digitalcollections.core.model.api.resource.Resource;
@@ -19,9 +17,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +27,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class PresentationRepositoryImpl implements PresentationRepository {
+
   private static final String COLLECTION_PREFIX = "collection-";
   private static final Logger LOGGER = LoggerFactory.getLogger(PresentationRepositoryImpl.class);
 
