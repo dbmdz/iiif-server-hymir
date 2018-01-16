@@ -32,11 +32,11 @@ public interface PresentationService {
   Manifest getManifest(String identifier) throws ResolvingException, InvalidDataException;
 
   default Instant getManifestModificationDate(String identifier) throws ResolvingException {
-    return null;
+    return Instant.now();
   }
 
   default Instant getCollectionModificationDate(String identifier) throws ResolvingException {
-    return null;
+    return Instant.now();
   }
 
   default Canvas getCanvas(String manifestId, String canvasUri) throws ResolvingException, InvalidDataException {
