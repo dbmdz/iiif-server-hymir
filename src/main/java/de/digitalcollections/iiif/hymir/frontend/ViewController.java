@@ -1,12 +1,7 @@
 package de.digitalcollections.iiif.hymir.frontend;
 
-import de.digitalcollections.commons.server.HttpLoggingUtilities;
 import de.digitalcollections.iiif.hymir.image.frontend.IIIFImageApiController;
-import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
-import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
-import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
 import de.digitalcollections.iiif.hymir.presentation.frontend.IIIFPresentationApiController;
-import java.net.URI;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

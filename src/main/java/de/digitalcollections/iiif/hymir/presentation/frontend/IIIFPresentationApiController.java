@@ -1,6 +1,5 @@
 package de.digitalcollections.iiif.hymir.presentation.frontend;
 
-import de.digitalcollections.commons.server.HttpLoggingUtilities;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +27,7 @@ import org.springframework.web.context.request.WebRequest;
 @Controller
 @RequestMapping("/presentation/v2")
 public class IIIFPresentationApiController {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(IIIFPresentationApiController.class);
   public static final String VERSION = "v2";
 
@@ -37,10 +36,10 @@ public class IIIFPresentationApiController {
 
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.GET,
-                  produces = "application/json")
+          produces = "application/json")
   @ResponseBody
   public Manifest getManifest(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-      throws ResolvingException, InvalidDataException {
+          throws ResolvingException, InvalidDataException {
     // Return 304 if the manifest has seen no modifications since the requested time
     long modified = presentationService.getManifestModificationDate(identifier).toEpochMilli();
     request.checkNotModified(modified);
@@ -88,7 +87,7 @@ public class IIIFPresentationApiController {
           produces = "application/json")
   @ResponseBody
   public Collection getCollection(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-      throws ResolvingException, InvalidDataException {
+          throws ResolvingException, InvalidDataException {
     long modified = presentationService.getCollectionModificationDate(identifier).toEpochMilli();
     request.checkNotModified(modified);
     Collection collection = presentationService.getCollection(identifier);
