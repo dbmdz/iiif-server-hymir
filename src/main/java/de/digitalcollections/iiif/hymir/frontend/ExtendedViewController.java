@@ -84,7 +84,7 @@ public class ExtendedViewController {
     }
 
     model.addAttribute("iiifVersions", iiifVersions);
-    return "mirador/viewCanvas";
+    return "mirador/view_canvas";
   }
 
   private URI getOriginalUri(HttpServletRequest request) {
