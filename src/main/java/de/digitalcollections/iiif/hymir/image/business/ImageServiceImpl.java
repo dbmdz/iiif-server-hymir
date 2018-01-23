@@ -193,6 +193,9 @@ public class ImageServiceImpl implements ImageService {
     int imageIndex = 0;
     for (int idx = 0; idx < reader.getNumImages(true); idx++) {
       double factor = (double) reader.getWidth(idx) / nativeDimensions.width;
+      if (factor < targetScaleFactor) {
+        continue;
+      }
       double currentError = Math.abs(targetScaleFactor - factor);
       double bestError = Math.abs(targetScaleFactor - decodeScaleFactor);
       if (Math.abs(targetScaleFactor - factor) < Math.abs(targetScaleFactor - decodeScaleFactor)) {
