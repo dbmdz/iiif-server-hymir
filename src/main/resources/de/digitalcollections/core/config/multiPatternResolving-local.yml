@@ -18,3 +18,9 @@
 - pattern: bsb(\d{8})
   substitutions:
     - 'file:/var/local/bsb$1/manifest/bsb$1.json'
+
+# For the official IIIF Image API Validator
+- pattern: 67352ccc-d1b0-11e1-89ae-279075081939
+  substitutions:
+    - 'classpath:validation.jp2'
+    - 'classpath:validation.png'
