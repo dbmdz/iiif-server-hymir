@@ -85,16 +85,19 @@ public class IIIFImageApiController {
     headers.setDate("Last-Modified", modified);
 
     ImageApiSelector selector = new ImageApiSelector();
-    selector.setIdentifier(identifier);
-    selector.setRegion(region);
-    selector.setSize(size);
-    selector.setRotation(rotation);
-    if (quality.equals("native")) {
-      quality = "default";
+    try {
+      selector.setIdentifier(identifier);
+      selector.setRegion(region);
+      selector.setSize(size);
+      selector.setRotation(rotation);
+      if (quality.equals("native")) {
+        quality = "default";
+      }
+      selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
+      selector.setFormat(ImageApiProfile.Format.valueOf(format.toUpperCase()));
+    } catch (IllegalArgumentException e) {
+      throw new InvalidParametersException(e.getMessage());
     }
-    selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
-    selector.setFormat(ImageApiProfile.Format.valueOf(format.toUpperCase()));
-
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
         "http://foo.org/" + identifier);
     imageService.readImageInfo(identifier, info);
