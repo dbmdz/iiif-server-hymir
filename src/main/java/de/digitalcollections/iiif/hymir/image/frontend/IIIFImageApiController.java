@@ -64,7 +64,6 @@ public class IIIFImageApiController {
     return base;
   }
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = "{identifier}/{region}/{size}/{rotation}/{quality}.{format}")
   public ResponseEntity<byte[]> getImageRepresentation(
           @PathVariable String identifier, @PathVariable String region,
@@ -125,7 +124,6 @@ public class IIIFImageApiController {
     }
   }
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = "{identifier}/info.json",
           method = {RequestMethod.GET, RequestMethod.HEAD})
   public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
@@ -156,12 +154,14 @@ public class IIIFImageApiController {
               + "type=\"application/ld+json\"");
     }
     headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
+    // We set the header ourselves, since using @CrossOrigin doesn't expose "*", but always sets the requesting domain
+    headers.add("Access-Control-Allow-Origin", "*");
     return new ResponseEntity<>(objectMapper.writeValueAsString(info), headers, HttpStatus.OK);
   }
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = "{identifier}", method = {RequestMethod.GET, RequestMethod.HEAD})
-  public String getInfoRedirect(@PathVariable String identifier) {
+  public String getInfoRedirect(@PathVariable String identifier, HttpServletResponse response) {
+    response.setHeader("Access-Control-Allow-Origin", "*");
     return "redirect:/image/" + VERSION + "/" + identifier + "/info.json";
   }
 }
