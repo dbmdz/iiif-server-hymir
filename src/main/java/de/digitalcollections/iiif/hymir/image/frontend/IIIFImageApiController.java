@@ -113,6 +113,7 @@ public class IIIFImageApiController {
 
       String filename = path.replaceFirst("/image/", "").replace('/', '_').replace(',', '_');
       headers.set("Content-Disposition", "inline; filename=" + filename);
+      headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
 
       ByteArrayOutputStream os = new ByteArrayOutputStream();
       imageService.processImage(identifier, selector, os);
