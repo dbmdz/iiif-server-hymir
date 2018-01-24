@@ -110,16 +110,19 @@ public class IIIFImageApiController {
     } catch (IllegalArgumentException e) {
       throw new InvalidParametersException(e.getMessage());
     }
+    String canonicalUrl = getUrlBase(request) + path.substring(0, path.indexOf(identifier)) + canonicalForm;
     if (!canonicalForm.equals(selector.toString())) {
-      String canonicalUrl = getUrlBase(request) + path.substring(0, path.indexOf(identifier)) + canonicalForm;
+      response.setHeader("Link", String.format("<%s>;rel=\"canonical\"", canonicalUrl));
       response.sendRedirect(canonicalUrl);
       return null;
     } else {
+      headers.add("Link", String.format("<%s>;rel=\"canonical\"", canonicalUrl));
       final String mimeType = selector.getFormat().getMimeType().getTypeName();
       headers.setContentType(MediaType.parseMediaType(mimeType));
 
       String filename = path.replaceFirst("/image/", "").replace('/', '_').replace(',', '_');
       headers.set("Content-Disposition", "inline; filename=" + filename);
+      headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
 
       ByteArrayOutputStream os = new ByteArrayOutputStream();
       imageService.processImage(identifier, selector, os);
