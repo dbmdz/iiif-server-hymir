@@ -5,7 +5,6 @@ import de.digitalcollections.core.model.api.MimeType;
 import de.digitalcollections.core.model.api.resource.Resource;
 import de.digitalcollections.core.model.api.resource.enums.ResourcePersistenceType;
 import de.digitalcollections.core.model.api.resource.exceptions.ResourceIOException;
-import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.backend.api.PresentationRepository;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
@@ -38,7 +37,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
   private ResourceService resourceService;
 
   @Override
-  public Collection getCollection(String name) throws ResolvingException, InvalidDataException {
+  public Collection getCollection(String name) throws ResolvingException {
     // to get a regex resolable pattern we add a static prefix for collections
     String collectionName = COLLECTION_PREFIX + name;
     try {
@@ -51,7 +50,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
   }
 
   @Override
-  public Manifest getManifest(String identifier) throws ResolvingException, InvalidDataException {
+  public Manifest getManifest(String identifier) throws ResolvingException {
     try {
       Resource resource = resourceService.get(identifier, ResourcePersistenceType.REFERENCED, MimeType.MIME_APPLICATION_JSON);
       return objectMapper.readValue(getResourceJson(resource.getUri()), Manifest.class);
@@ -81,7 +80,6 @@ public class PresentationRepositoryImpl implements PresentationRepository {
   }
 
   protected String getResourceJson(URI resourceUri) throws ResolvingException {
-    InputStream inputStream;
     try (InputStream is = resourceService.getInputStream(resourceUri)) {
       return IOUtils.toString(is, StandardCharsets.UTF_8);
     } catch (IOException e) {

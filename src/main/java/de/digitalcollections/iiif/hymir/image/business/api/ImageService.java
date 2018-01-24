@@ -14,7 +14,7 @@ import java.time.Instant;
 public interface ImageService {
   default Instant getImageModificationDate(String identifier) throws ResourceNotFoundException {
     return null;
-  };
+  }
 
   void readImageInfo(String identifier, de.digitalcollections.iiif.model.image.ImageService info)
       throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException;

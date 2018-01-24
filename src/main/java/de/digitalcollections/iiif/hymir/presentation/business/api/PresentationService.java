@@ -48,7 +48,7 @@ public interface PresentationService {
         .flatMap(seq -> seq.getCanvases().stream())
         .filter(canv -> canv.getIdentifier().equals(canvasUri))
         .findFirst().orElseThrow(ResolvingException::new);
-  };
+  }
 
   default Range getRange(String manifestId, String rangeUri) throws ResolvingException, InvalidDataException {
     return getRange(manifestId, URI.create(rangeUri));
@@ -58,7 +58,7 @@ public interface PresentationService {
     return getManifest(manifestId).getRanges().stream()
         .filter(range -> range.getIdentifier().equals(rangeUri))
         .findFirst().orElseThrow(ResolvingException::new);
-  };
+  }
 
   default Sequence getSequence(String manifestId, String sequenceUri) throws ResolvingException, InvalidDataException {
     return getSequence(manifestId, URI.create(sequenceUri));
@@ -69,5 +69,5 @@ public interface PresentationService {
         .filter(seq -> seq.getIdentifier().equals(sequenceUri))
         .findFirst().orElseThrow(ResolvingException::new);
 
-  };
+  }
 }

@@ -2,7 +2,6 @@ package de.digitalcollections.iiif.hymir.image.frontend;
 
 import com.twelvemonkeys.imageio.stream.ByteArrayImageInputStream;
 import de.digitalcollections.iiif.hymir.Application;
-import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.ByteArrayInputStream;
@@ -12,7 +11,6 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import org.assertj.core.util.Strings;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -103,7 +101,7 @@ public class IIIFImageApiControllerTest {
             .andExpect(MockMvcResultMatchers.redirectedUrl("/image/" + IIIFImageApiController.VERSION + "/abcdef/info.json"));
   }
 
-  private BufferedImage loadImage(byte[] imageData) throws IOException, UnsupportedFormatException {
+  private BufferedImage loadImage(byte[] imageData) throws IOException {
     return ImageIO.read(new ByteArrayInputStream(imageData));
   }
 
@@ -139,7 +137,7 @@ public class IIIFImageApiControllerTest {
     ImageInputStream iis = new ByteArrayImageInputStream(imgData);
     Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
     while (readers.hasNext()) {
-      ImageReader reader = (ImageReader) readers.next();
+      ImageReader reader = readers.next();
       Assert.assertEquals("png", reader.getFormatName().toLowerCase());
     }
   }
@@ -147,11 +145,8 @@ public class IIIFImageApiControllerTest {
   /* Other */
   @Test
   public void testCorsHeader() throws Exception {
-    // NOTE: The spec actually recommends to return '*' as the value for the CORS header, but Spring always
-    // matches the 'Origin' header of the request. While this goes against the recommendation, the outcome
-    // (i.e. everybody can use the API) is the same.
     mockMvc.perform(get("/image/" + IIIFImageApiController.VERSION + "/http-google/info.json").header("Origin", "http://im.a.foreign.er"))
-            .andExpect(header().string("Access-Control-Allow-Origin", "http://im.a.foreign.er"));
+            .andExpect(header().string("Access-Control-Allow-Origin", "*"));
   }
 
   @Test

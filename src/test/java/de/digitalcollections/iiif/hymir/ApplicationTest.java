@@ -35,7 +35,7 @@ public class ApplicationTest {
   private TestRestTemplate testRestTemplate;
 
   @Test
-  public void shouldReturn200WhenSendingRequestToRoot() throws Exception {
+  public void shouldReturn200WhenSendingRequestToRoot() {
     @SuppressWarnings("rawtypes")
     ResponseEntity<String> entity = this.testRestTemplate.getForEntity(
             "http://localhost:" + this.port + "/", String.class);
@@ -44,7 +44,7 @@ public class ApplicationTest {
   }
 
   @Test
-  public void shouldReturn200WhenSendingAuthorizedRequestToSensitiveManagementEndpoint() throws Exception {
+  public void shouldReturn200WhenSendingAuthorizedRequestToSensitiveManagementEndpoint() {
     @SuppressWarnings("rawtypes")
     ResponseEntity<Map> entity = this.testRestTemplate.withBasicAuth("admin", "secret").getForEntity(
             "http://localhost:" + this.mgt + "/monitoring/env", Map.class);
@@ -53,7 +53,7 @@ public class ApplicationTest {
   }
 
   @Test
-  public void shouldReturn401WhenSendingUnauthorizedRequestToSensitiveManagementEndpoint() throws Exception {
+  public void shouldReturn401WhenSendingUnauthorizedRequestToSensitiveManagementEndpoint() {
     @SuppressWarnings("rawtypes")
     ResponseEntity<Map> entity = this.testRestTemplate.getForEntity(
             "http://localhost:" + this.mgt + "/monitoring/env", Map.class);

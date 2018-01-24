@@ -39,7 +39,7 @@ public class SpringConfigWeb extends WebMvcConfigurerAdapter {
 
   @Bean
   public Map<String, String> iiifVersions() {
-    Map<String, String> versions = null;
+    Map<String, String> versions;
     Map<String, String> customVersions;
     Yaml yaml = new Yaml();
     try (InputStream in = this.getClass().getResourceAsStream("/iiif-versions.yml")) {

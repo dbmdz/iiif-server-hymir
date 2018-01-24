@@ -52,7 +52,7 @@ public class IIIFPresentationApiController {
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.HEAD)
   public void checkManifest(@PathVariable String identifier, HttpServletResponse resp)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException {
     Instant modDate = presentationService.getManifestModificationDate(identifier);
     resp.setDateHeader("Last-Modified", modDate.toEpochMilli());
     resp.setStatus(HttpStatus.SC_OK);

@@ -10,7 +10,6 @@ public class SpringConfig {
   @Bean
   @Primary
   public IiifObjectMapper objectMapper() {
-    IiifObjectMapper objectMapper = new IiifObjectMapper();
-    return objectMapper;
+    return new IiifObjectMapper();
   }
 }

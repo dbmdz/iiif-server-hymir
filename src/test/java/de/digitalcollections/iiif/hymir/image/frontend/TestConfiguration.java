@@ -1,7 +1,6 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

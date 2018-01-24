@@ -2,7 +2,6 @@ package de.digitalcollections.iiif.hymir.image.frontend;
 
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
-import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.model.exception.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
@@ -11,19 +10,15 @@ import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,8 +27,6 @@ import org.springframework.web.context.request.WebRequest;
 @Controller
 @RequestMapping("/image/v2/")
 public class IIIFImageApiController {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(IIIFImageApiController.class);
   public static final String VERSION = "v2";
 
   @Autowired
@@ -43,8 +36,6 @@ public class IIIFImageApiController {
   private IiifObjectMapper objectMapper;
 
   private String getUrlBase(HttpServletRequest request) {
-    String requestURI = request.getRequestURI();
-
     String scheme = request.getHeader("X-Forwarded-Proto");
     if (scheme == null) {
       scheme = request.getScheme();
@@ -69,9 +60,9 @@ public class IIIFImageApiController {
           @PathVariable String identifier, @PathVariable String region,
           @PathVariable String size, @PathVariable String rotation,
           @PathVariable String quality, @PathVariable String format,
-          HttpServletRequest request, HttpServletResponse response, WebRequest webRequest) throws ResolvingException,
-          UnsupportedFormatException, UnsupportedOperationException, IOException,
-          URISyntaxException, InvalidParametersException, ResourceNotFoundException {
+          HttpServletRequest request, HttpServletResponse response, WebRequest webRequest)
+      throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException,
+             ResourceNotFoundException {
     HttpHeaders headers = new HttpHeaders();
     String path;
     if (request.getPathInfo() != null) {
@@ -122,11 +113,10 @@ public class IIIFImageApiController {
 
       String filename = path.replaceFirst("/image/", "").replace('/', '_').replace(',', '_');
       headers.set("Content-Disposition", "inline; filename=" + filename);
-      headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
 
       ByteArrayOutputStream os = new ByteArrayOutputStream();
       imageService.processImage(identifier, selector, os);
-      return new ResponseEntity<byte[]>(os.toByteArray(), headers, HttpStatus.OK);
+      return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }
 

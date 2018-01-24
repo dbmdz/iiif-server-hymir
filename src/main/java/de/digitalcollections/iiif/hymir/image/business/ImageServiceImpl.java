@@ -33,16 +33,11 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import org.imgscalr.Scalr;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
-
   @Autowired(required = false)
   private ImageSecurityService imageSecurityService;
 
@@ -133,7 +128,7 @@ public class ImageServiceImpl implements ImageService {
     if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
       throw new ResourceNotFoundException();
     }
-    Resource res = null;
+    Resource res;
     try {
       res = resourceService.get(identifier, ResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
     } catch (ResourceIOException e) {
@@ -142,7 +137,7 @@ public class ImageServiceImpl implements ImageService {
     ImageInputStream iis = ImageIO.createImageInputStream(resourceService.getInputStream(res));
     ImageReader reader = Streams.stream(ImageIO.getImageReaders(iis))
             .findFirst()
-            .orElseThrow(() -> new UnsupportedFormatException());
+            .orElseThrow(UnsupportedFormatException::new);
     reader.setInput(iis);
     return reader;
   }
@@ -166,12 +161,9 @@ public class ImageServiceImpl implements ImageService {
             (int) Math.ceil(targetRegion.getWidth() * decodeScaleFactor),
             (int) Math.ceil(targetRegion.getHeight() * decodeScaleFactor));
     readParam.setSourceRegion(decodeRegion);
-
     // TurboJpegImageReader can rotate during decoding
-    boolean didRotate = false;
     if (selector.getRotation().getRotation() != 0 && reader instanceof TurboJpegImageReader) {
       ((TurboJpegImageReadParam) readParam).setRotationDegree((int) selector.getRotation().getRotation());
-      didRotate = true;
     }
     return readParam;
   }
@@ -180,7 +172,6 @@ public class ImageServiceImpl implements ImageService {
   private DecodedImage readImage(String identifier, ImageApiSelector selector) throws IOException, ResourceNotFoundException, UnsupportedFormatException {
     ImageReader reader = getReader(identifier);
 
-    // TODO: Special case JPEG reader && output format JPEG
     if ((selector.getRotation().getRotation() % 90) != 0) {
       throw new UnsupportedOperationException("Can only rotate by multiples of 90 degrees.");
     }
@@ -199,23 +190,17 @@ public class ImageServiceImpl implements ImageService {
       if (factor < targetScaleFactor) {
         continue;
       }
-      double currentError = Math.abs(targetScaleFactor - factor);
-      double bestError = Math.abs(targetScaleFactor - decodeScaleFactor);
       if (Math.abs(targetScaleFactor - factor) < Math.abs(targetScaleFactor - decodeScaleFactor)) {
         decodeScaleFactor = factor;
         imageIndex = idx;
       }
     }
-    Dimension decodeSize = new Dimension(
-            (int) (targetRegion.getWidth() * decodeScaleFactor),
-            (int) (targetRegion.getHeight() * decodeScaleFactor));
     ImageReadParam readParam = getReadParam(reader, selector, decodeScaleFactor);
     int rotation = (int) selector.getRotation().getRotation();
     if (readParam instanceof TurboJpegImageReadParam && ((TurboJpegImageReadParam) readParam).getRotationDegree() != 0) {
       if (rotation == 90 || rotation == 270) {
         int w = targetSize.width;
-        int h = targetSize.height;
-        targetSize.width = h;
+        targetSize.width = targetSize.height;
         targetSize.height = w;
       }
       rotation = 0;
@@ -256,7 +241,7 @@ public class ImageServiceImpl implements ImageService {
       img = Scalr.rotate(img, Scalr.Rotation.FLIP_HORZ);
     }
     // Quality
-    int outType = -1;
+    int outType;
     switch (quality) {
       case GRAY:
         outType = BufferedImage.TYPE_BYTE_GRAY;
@@ -293,7 +278,7 @@ public class ImageServiceImpl implements ImageService {
 
     ImageWriter writer = Streams.stream(ImageIO.getImageWriters(new ImageTypeSpecifier(outImg), selector.getFormat().name()))
             .findFirst()
-            .orElseThrow(() -> new UnsupportedFormatException());
+            .orElseThrow(UnsupportedFormatException::new);
     ImageOutputStream ios = ImageIO.createImageOutputStream(os);
     writer.setOutput(ios);
     writer.write(null, new IIOImage(outImg, null, null), null);

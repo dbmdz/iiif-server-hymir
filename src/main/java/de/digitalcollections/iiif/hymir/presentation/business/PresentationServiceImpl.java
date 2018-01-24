@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PresentationServiceImpl implements PresentationService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(PresentationServiceImpl.class);
-
   @Autowired
   private PresentationRepository presentationRepository;
 

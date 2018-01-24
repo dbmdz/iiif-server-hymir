@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class ExceptionAdvice {
-
   private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionAdvice.class);
 
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
