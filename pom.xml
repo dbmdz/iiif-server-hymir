@@ -70,8 +70,8 @@
     <version.commons-cli>1.4</version.commons-cli>
     <version.commons-lang3>3.4</version.commons-lang3>
     <version.dc-commons-server>1.2.7</version.dc-commons-server>
-    <version.dc-core-backend-file>2.0.1</version.dc-core-backend-file>
-    <version.dc-core-business>2.0.1</version.dc-core-business>
+    <version.dc-core-backend-file>2.0.2-SNAPSHOT</version.dc-core-backend-file>
+    <version.dc-core-business>2.0.2-SNAPSHOT</version.dc-core-business>
     <version.guava>23.5-jre</version.guava>
     <version.iiif-apis>0.2.7-SNAPSHOT</version.iiif-apis>
     <version.imageio-jnr>0.2.3-SNAPSHOT</version.imageio-jnr>
