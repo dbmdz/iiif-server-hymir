@@ -93,7 +93,11 @@ public class ImageServiceImpl implements ImageService {
     int numImages = reader.getNumImages(true);
     if (numImages > 1) {
       for (int i = 0; i < numImages; i++) {
-        info.addSize(new Size(reader.getWidth(i), reader.getHeight(i)));
+        int width = reader.getWidth(i);
+        int height = reader.getHeight(i);
+        if (width > 1 && height > 1) {
+          info.addSize(new Size(reader.getWidth(i), reader.getHeight(i)));
+        }
       }
     }
 
