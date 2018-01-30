@@ -14,7 +14,7 @@ public interface PresentationRepository {
    * @param name unique name of collection
    * @return Collection specified by name
    * @throws ResolvingException in case Collection does not exist or can not be delivered
-   * @throws InvalidDataException if manifest contains invalid data
+   * @throws InvalidDataException if collection contains invalid data
    */
   Collection getCollection(String name) throws ResolvingException, InvalidDataException;
 

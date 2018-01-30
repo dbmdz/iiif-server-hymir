@@ -1,4 +1,9 @@
 # local/default
+iiif:
+  image:
+    maxWidth: 65500
+    maxHeight: 65500
+
 endpoints:
   hypermedia:
     enabled: true

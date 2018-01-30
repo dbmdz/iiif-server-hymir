@@ -11,8 +11,6 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -112,7 +110,7 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(BufferedImage.TYPE_BYTE_BINARY, image.getType());
+    assertThat(image.getType()).isEqualTo(BufferedImage.TYPE_BYTE_BINARY);
   }
 
   @Test
@@ -138,7 +136,7 @@ public class IIIFImageApiControllerTest {
     Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
     while (readers.hasNext()) {
       ImageReader reader = readers.next();
-      Assert.assertEquals("png", reader.getFormatName().toLowerCase());
+      assertThat(reader.getFormatName()).isEqualToIgnoringCase("png");
     }
   }
 
@@ -182,8 +180,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(50, image.getHeight());
-    Assert.assertEquals(50, image.getWidth());
+    assertThat(image.getWidth()).isEqualTo(50);
+    assertThat(image.getHeight()).isEqualTo(50);
   }
 
   @Test
@@ -201,8 +199,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(255, image.getHeight());
-    Assert.assertEquals(206, image.getWidth());
+    assertThat(image.getWidth()).isEqualTo(206);
+    assertThat(image.getHeight()).isEqualTo(255);
   }
 
   @Test
@@ -214,8 +212,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(255, image.getHeight());
-    Assert.assertEquals(1651, image.getWidth());
+    assertThat(image.getHeight()).isEqualTo(255);
+    assertThat(image.getWidth()).isEqualTo(1651);
   }
 
   @Test
@@ -227,8 +225,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(219, image.getHeight());
-    Assert.assertEquals(219, image.getWidth());
+    assertThat(image.getHeight()).isEqualTo(219);
+    assertThat(image.getWidth()).isEqualTo(219);
   }
 
   @Test
@@ -240,8 +238,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(249, image.getHeight());
-    Assert.assertEquals(249, image.getWidth());
+    assertThat(image.getHeight()).isEqualTo(249);
+    assertThat(image.getWidth()).isEqualTo(249);
   }
 
   @Test
@@ -253,8 +251,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(350, image.getHeight());
-    Assert.assertEquals(350, image.getWidth());
+    assertThat(image.getHeight()).isEqualTo(350);
+    assertThat(image.getWidth()).isEqualTo(350);
   }
 
   /* 4.4 Quality */
@@ -265,8 +263,8 @@ public class IIIFImageApiControllerTest {
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
     Raster ras = image.getRaster();
-    Assert.assertEquals(1, ras.getNumDataElements());
-    Assert.assertEquals(BufferedImage.TYPE_BYTE_GRAY, image.getType());
+    assertThat(ras.getNumDataElements()).isEqualTo(1);
+    assertThat(image.getType()).isEqualTo(BufferedImage.TYPE_BYTE_GRAY);
   }
 
   @Test
@@ -279,8 +277,9 @@ public class IIIFImageApiControllerTest {
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage regularImage = loadImage(imgDataRegular);
     BufferedImage mirroredImage = loadImage(imgDataMirror);
-    Assert.assertEquals(regularImage.getWidth(), mirroredImage.getWidth());
-    Assert.assertEquals(regularImage.getHeight(), mirroredImage.getHeight());
+    assertThat(mirroredImage.getWidth()).isEqualTo(regularImage.getWidth());
+    assertThat(mirroredImage.getHeight()).isEqualTo(regularImage.getHeight());
+    assertThat(imgDataRegular).isNotEqualTo(imgDataMirror);
   }
 
   /* 4.3 Rotation */
@@ -290,8 +289,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(750, image.getHeight());
-    Assert.assertEquals(1024, image.getWidth());
+    assertThat(image.getWidth()).isEqualTo(1024);
+    assertThat(image.getHeight()).isEqualTo(750);
   }
 
   @Test
@@ -303,8 +302,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertThat(image.getWidth(), Matchers.lessThanOrEqualTo(500));
-    Assert.assertThat(image.getHeight(), Matchers.lessThanOrEqualTo(500));
+    assertThat(image.getWidth()).isLessThanOrEqualTo(500);
+    assertThat(image.getHeight()).isLessThanOrEqualTo(500);
   }
 
   @Test
@@ -316,7 +315,7 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(200, image.getHeight());
+    assertThat(image.getHeight()).isEqualTo(200);
   }
 
   /* 4.2 Size */
@@ -326,7 +325,7 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(200, image.getWidth());
+    assertThat(image.getWidth()).isEqualTo(200);
   }
 
   @Test
@@ -338,8 +337,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertEquals(1032, image.getWidth());
-    Assert.assertEquals(1276, image.getHeight());
+    assertThat(image.getWidth()).isEqualTo(1032);
+    assertThat(image.getHeight()).isEqualTo(1276);
   }
 
   @Test
@@ -351,7 +350,8 @@ public class IIIFImageApiControllerTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
     BufferedImage image = loadImage(imgData);
-    Assert.assertTrue(image.getWidth() != image.getHeight());
+    assertThat(image.getWidth()).isEqualTo(500);
+    assertThat(image.getHeight()).isEqualTo(618);
   }
 
   @Test

@@ -3,6 +3,7 @@ package de.digitalcollections.iiif.hymir.image.business.api;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.exception.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
+import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,7 +20,7 @@ public interface ImageService {
   void readImageInfo(String identifier, de.digitalcollections.iiif.model.image.ImageService info)
       throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException;
 
-  void processImage(String identifier, ImageApiSelector selector, OutputStream os)
+  void processImage(String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
       throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
              ResourceNotFoundException, IOException;
 

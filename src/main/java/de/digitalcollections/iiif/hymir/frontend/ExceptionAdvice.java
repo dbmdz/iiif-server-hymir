@@ -18,26 +18,31 @@ public class ExceptionAdvice {
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(InvalidParametersException.class)
   public void handleInvalidParametersException(Exception exception) {
+    // NOP
   }
 
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   @ExceptionHandler(ResolvingException.class)
   public void handleResolvingException(Exception exception) {
+    // NOP
   }
 
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   @ExceptionHandler(ResourceNotFoundException.class)
   public void handleResourceNotFoundException(Exception exception) {
+    // NOP
   }
 
   @ResponseStatus(value = HttpStatus.UNSUPPORTED_MEDIA_TYPE)
   @ExceptionHandler(UnsupportedFormatException.class)
   public void handleUnsupportedFormatException(Exception exception) {
+    // NOP
   }
 
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(UnsupportedOperationException.class)
   public void handleUnsupportedOperationException(Exception exception) {
+    // NOP
   }
 
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -45,4 +50,5 @@ public class ExceptionAdvice {
   public void handleAllOther(Exception exception) {
     LOGGER.error("exception stack trace", exception);
   }
+  // NOP
 }

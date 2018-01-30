@@ -6,6 +6,7 @@ import de.digitalcollections.iiif.hymir.model.exception.ResourceNotFoundExceptio
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
+import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
@@ -35,6 +36,11 @@ public class IIIFImageApiController {
   @Autowired
   private IiifObjectMapper objectMapper;
 
+  /**
+   * Get the base URL for all Image API URLs from the request.
+   *
+   * This will handle cases such as reverse-proxying and SSL-termination on the frontend server
+   */
   private String getUrlBase(HttpServletRequest request) {
     String scheme = request.getHeader("X-Forwarded-Proto");
     if (scheme == null) {
@@ -86,20 +92,20 @@ public class IIIFImageApiController {
       }
       selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
       selector.setFormat(ImageApiProfile.Format.valueOf(format.toUpperCase()));
-    } catch (IllegalArgumentException e) {
-      throw new InvalidParametersException(e.getMessage());
+    } catch (ResolvingException e) {
+      throw new InvalidParametersException(e);
     }
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
         "http://foo.org/" + identifier);
     imageService.readImageInfo(identifier, info);
+    ImageApiProfile profile = ImageApiProfile.merge(info.getProfiles());
     String canonicalForm;
     try {
       canonicalForm = selector.getCanonicalForm(
           new Dimension(info.getWidth(), info.getHeight()),
-          ImageApiProfile.LEVEL_TWO,
-          ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
-    } catch (IllegalArgumentException e) {
-      throw new InvalidParametersException(e.getMessage());
+          profile, ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
+    } catch (ResolvingException e) {
+      throw new InvalidParametersException(e);
     }
     String canonicalUrl = getUrlBase(request) + path.substring(0, path.indexOf(identifier)) + canonicalForm;
     if (!canonicalForm.equals(selector.toString())) {
@@ -116,7 +122,7 @@ public class IIIFImageApiController {
       headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
 
       ByteArrayOutputStream os = new ByteArrayOutputStream();
-      imageService.processImage(identifier, selector, os);
+      imageService.processImage(identifier, selector, profile, os);
       return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }

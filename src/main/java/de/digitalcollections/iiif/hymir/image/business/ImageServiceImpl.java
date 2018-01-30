@@ -13,6 +13,7 @@ import de.digitalcollections.iiif.hymir.model.exception.ResourceNotFoundExceptio
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
+import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.image.Size;
 import de.digitalcollections.iiif.model.image.TileInfo;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReadParam;
@@ -34,6 +35,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,21 +46,27 @@ public class ImageServiceImpl implements ImageService {
   @Autowired
   private ResourceService resourceService;
 
+  @Value("${iiif.image.maxWidth}")
+  private int maxWidth;
+
+  @Value("${iiif.image.maxHeight}")
+  private int maxHeight;
+
   private class DecodedImage {
 
-    public BufferedImage img;
-    public Dimension targetSize;
-    public int rotation;
+    /** Decoded image **/
+    final BufferedImage img;
+
+    /** Final target size for scaling **/
+    final Dimension targetSize;
+
+    /** Rotation needed after decoding? **/
+    final int rotation;
 
     // Small value type to hold information about decoding results
-    public DecodedImage(BufferedImage img, Dimension targetSize, int rotation) {
-      /** Decoded image **/
+    protected DecodedImage(BufferedImage img, Dimension targetSize, int rotation) {
       this.img = img;
-
-      /** Final target size for scaling **/
       this.targetSize = targetSize;
-
-      /** Rotation needed after decoding? **/
       this.rotation = rotation;
     }
   }
@@ -84,6 +92,14 @@ public class ImageServiceImpl implements ImageService {
             ImageApiProfile.Feature.SIZE_BY_PCT,
             ImageApiProfile.Feature.SIZE_BY_W,
             ImageApiProfile.Feature.SIZE_BY_WH);
+
+    // Indicate to the client if we cannot deliver full resolution versions of the image
+    if (reader.getHeight(0) > maxHeight || reader.getWidth(0) > maxWidth) {
+      profile.setMaxHeight(maxHeight);
+      if (maxWidth != maxHeight) {
+        profile.setMaxWidth(maxWidth);
+      }
+    }
     info.addProfile(ImageApiProfile.LEVEL_TWO, profile);
 
     info.setWidth(reader.getWidth(0));
@@ -95,7 +111,7 @@ public class ImageServiceImpl implements ImageService {
       for (int i = 0; i < numImages; i++) {
         int width = reader.getWidth(i);
         int height = reader.getHeight(i);
-        if (width > 1 && height > 1) {
+        if (width > 1 && height > 1 && width <= maxWidth && height <= maxHeight) {
           info.addSize(new Size(reader.getWidth(i), reader.getHeight(i)));
         }
       }
@@ -153,10 +169,15 @@ public class ImageServiceImpl implements ImageService {
   }
 
   /** Determine parameters for image reading based on the IIIF selector and a given scaling factor **/
-  private ImageReadParam getReadParam(ImageReader reader, ImageApiSelector selector, double decodeScaleFactor) throws IOException {
+  private ImageReadParam getReadParam(ImageReader reader, ImageApiSelector selector, double decodeScaleFactor) throws IOException, InvalidParametersException {
     ImageReadParam readParam = reader.getDefaultReadParam();
     Dimension nativeDimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
-    Rectangle targetRegion = selector.getRegion().resolve(nativeDimensions);
+    Rectangle targetRegion;
+    try {
+      targetRegion = selector.getRegion().resolve(nativeDimensions);
+    } catch (ResolvingException e) {
+      throw new InvalidParametersException(e);
+    }
     // IIIF regions are always relative to the native size, while ImageIO regions are always relative to the decoded
     // image size, hence the conversion
     Rectangle decodeRegion = new Rectangle(
@@ -173,7 +194,7 @@ public class ImageServiceImpl implements ImageService {
   }
 
   /** Decode an image **/
-  private DecodedImage readImage(String identifier, ImageApiSelector selector) throws IOException, ResourceNotFoundException, UnsupportedFormatException {
+  private DecodedImage readImage(String identifier, ImageApiSelector selector, ImageApiProfile profile) throws IOException, ResourceNotFoundException, UnsupportedFormatException, InvalidParametersException {
     ImageReader reader = getReader(identifier);
 
     if ((selector.getRotation().getRotation() % 90) != 0) {
@@ -181,9 +202,19 @@ public class ImageServiceImpl implements ImageService {
     }
 
     Dimension nativeDimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
-    Rectangle targetRegion = selector.getRegion().resolve(nativeDimensions);
+    Rectangle targetRegion;
+    try {
+      targetRegion = selector.getRegion().resolve(nativeDimensions);
+    } catch (ResolvingException e) {
+      throw new InvalidParametersException(e);
+    }
     Dimension croppedDimensions = new Dimension(targetRegion.width, targetRegion.height);
-    Dimension targetSize = selector.getSize().resolve(croppedDimensions, ImageApiProfile.LEVEL_TWO);
+    Dimension targetSize;
+    try {
+      targetSize = selector.getSize().resolve(croppedDimensions, profile);
+    } catch (ResolvingException e) {
+      throw new InvalidParametersException(e);
+    }
 
     // Determine the closest resolution to the target that can be decoded directly
     double targetScaleFactor = (double) targetSize.width / targetRegion.getWidth();
@@ -209,11 +240,7 @@ public class ImageServiceImpl implements ImageService {
       }
       rotation = 0;
     }
-    try {
-      return new DecodedImage(reader.read(imageIndex, readParam), targetSize, rotation);
-    } catch (IllegalArgumentException e) {
-      throw new UnsupportedOperationException(e);
-    }
+    return new DecodedImage(reader.read(imageIndex, readParam), targetSize, rotation);
   }
 
   /** Apply transformations to an decoded image **/
@@ -270,14 +297,9 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
-  public void processImage(String identifier, ImageApiSelector selector, OutputStream os)
+  public void processImage(String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
           throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException, ResourceNotFoundException, IOException {
-    DecodedImage img;
-    try {
-      img = readImage(identifier, selector);
-    } catch (IllegalArgumentException e) {
-      throw new InvalidParametersException();
-    }
+    DecodedImage img = readImage(identifier, selector, profile);
     BufferedImage outImg = transformImage(img.img, img.targetSize, img.rotation, selector.getRotation().isMirror(), selector.getQuality());
 
     ImageWriter writer = Streams.stream(ImageIO.getImageWriters(new ImageTypeSpecifier(outImg), selector.getFormat().name()))
