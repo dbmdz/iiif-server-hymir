@@ -60,12 +60,8 @@ footer {
   height: 1.25em;
 }
 
-#viewer * {
+#viewer .mirador-osd-annotation-controls * {
   box-sizing: content-box;
-}
-
-.overlay * {
-  box-sizing: border-box !important;
 }
 
 #viewer .metadata-listing .metadata-item {
