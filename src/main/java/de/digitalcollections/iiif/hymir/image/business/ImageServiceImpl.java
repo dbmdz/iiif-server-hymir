@@ -40,16 +40,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+
   @Autowired(required = false)
   private ImageSecurityService imageSecurityService;
 
   @Autowired
   private ResourceService resourceService;
 
-  @Value("${iiif.image.maxWidth}")
+  @Value("${custom.iiif.image.maxWidth:65500}")
   private int maxWidth;
 
-  @Value("${iiif.image.maxHeight}")
+  @Value("${custom.iiif.image.maxHeight:65500}")
   private int maxHeight;
 
   private class DecodedImage {
