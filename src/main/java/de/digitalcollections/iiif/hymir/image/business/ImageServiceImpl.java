@@ -96,9 +96,9 @@ public class ImageServiceImpl implements ImageService {
 
     // Indicate to the client if we cannot deliver full resolution versions of the image
     if (reader.getHeight(0) > maxHeight || reader.getWidth(0) > maxWidth) {
-      profile.setMaxHeight(maxHeight);
-      if (maxWidth != maxHeight) {
-        profile.setMaxWidth(maxWidth);
+      profile.setMaxWidth(maxWidth);
+      if (maxHeight != maxWidth) {
+        profile.setMaxHeight(maxHeight);
       }
     }
     info.addProfile(ImageApiProfile.LEVEL_TWO, profile);
