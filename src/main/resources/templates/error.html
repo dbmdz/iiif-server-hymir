@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+  <body>
+    <section layout:fragment="content">
+
+      <h3>Uuups!</h3>
+      
+      <h1>Error <span th:text="${ status }">404</span></h1>
+      <p th:text="${error}">...</p>
+      <p th:text="${message}">...</p>
+      <p th:text="${path}">...</p>
+    </section>
+  </body>
+</html>
