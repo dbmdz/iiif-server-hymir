@@ -76,23 +76,14 @@ public class ImageServiceImpl implements ImageService {
   private void enrichInfo(ImageReader reader, de.digitalcollections.iiif.model.image.ImageService info) throws IOException {
     ImageApiProfile profile = new ImageApiProfile();
     profile.addFeature(
-            ImageApiProfile.Feature.BASE_URI_REDIRECT,
-            ImageApiProfile.Feature.CORS,
-            ImageApiProfile.Feature.JSONLD_MEDIA_TYPE,
             ImageApiProfile.Feature.PROFILE_LINK_HEADER,
             ImageApiProfile.Feature.CANONICAL_LINK_HEADER,
-            ImageApiProfile.Feature.REGION_BY_PCT,
-            ImageApiProfile.Feature.REGION_BY_PX,
             ImageApiProfile.Feature.REGION_SQUARE,
             ImageApiProfile.Feature.ROTATION_BY_90S,
             ImageApiProfile.Feature.MIRRORING,
-            ImageApiProfile.Feature.SIZE_BY_CONFINED_WH,
-            ImageApiProfile.Feature.SIZE_BY_DISTORTED_WH,
-            ImageApiProfile.Feature.SIZE_ABOVE_FULL,
-            ImageApiProfile.Feature.SIZE_BY_H,
-            ImageApiProfile.Feature.SIZE_BY_PCT,
-            ImageApiProfile.Feature.SIZE_BY_W,
-            ImageApiProfile.Feature.SIZE_BY_WH);
+            ImageApiProfile.Feature.SIZE_ABOVE_FULL);
+    profile.setQualities(null);
+    profile.addFormat(ImageApiProfile.Format.GIF);
 
     // Indicate to the client if we cannot deliver full resolution versions of the image
     if (reader.getHeight(0) > maxHeight || reader.getWidth(0) > maxWidth) {
@@ -255,7 +246,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     if (rotation != 0) {
-      Scalr.Rotation rot = null;
+      Scalr.Rotation rot;
       switch (rotation) {
         case 90:
           rot = Scalr.Rotation.CW_90;
@@ -266,6 +257,8 @@ public class ImageServiceImpl implements ImageService {
         case 270:
           rot = Scalr.Rotation.CW_270;
           break;
+        default:
+          rot = null;
       }
       img = Scalr.rotate(img, rot);
     }

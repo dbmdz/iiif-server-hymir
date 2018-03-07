@@ -88,6 +88,9 @@ public class IIIFImageApiControllerTest {
         .andExpect(jsonPath("$.profile[0]").value("http://iiif.io/api/image/2/level2.json"))
         .andExpect(jsonPath("$.tiles.length()").value(1))
         .andExpect(jsonPath("$.tiles[0].width").value(512))
+        .andExpect(jsonPath("$.profile[0]").value("http://iiif.io/api/image/2/level2.json"))
+        .andExpect(jsonPath("$.profile[1].qualities").doesNotExist())
+        .andExpect(jsonPath("$.profile[1].formats").isArray())
         .andReturn();
     assertThat(result.getResponse().getDateHeader("Last-Modified")).isNotNull();
   }
