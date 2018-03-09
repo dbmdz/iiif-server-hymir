@@ -82,7 +82,6 @@ public class ImageServiceImpl implements ImageService {
             ImageApiProfile.Feature.ROTATION_BY_90S,
             ImageApiProfile.Feature.MIRRORING,
             ImageApiProfile.Feature.SIZE_ABOVE_FULL);
-    profile.setQualities(null);
     profile.addFormat(ImageApiProfile.Format.GIF);
 
     // Indicate to the client if we cannot deliver full resolution versions of the image
