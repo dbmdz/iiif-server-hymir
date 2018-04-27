@@ -84,6 +84,7 @@
     <version.thymeleaf-layout-dialect>2.2.2</version.thymeleaf-layout-dialect>
     <version.twelvemonkeys>3.3.2</version.twelvemonkeys>
     <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
+    <version.webjar-fontawesome>4.7.0</version.webjar-fontawesome>
     <version.webjar-html5shiv>3.7.3</version.webjar-html5shiv>
     <version.webjar-ie10-viewport-bug-workaround>1.0.3</version.webjar-ie10-viewport-bug-workaround>
     <version.webjar-jquery>3.2.1</version.webjar-jquery>
@@ -335,6 +336,11 @@
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-viewfromurl</artifactId>
       <version>${version.webjar-mirador-viewfromurl}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>font-awesome</artifactId>
+      <version>${version.webjar-fontawesome}</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
