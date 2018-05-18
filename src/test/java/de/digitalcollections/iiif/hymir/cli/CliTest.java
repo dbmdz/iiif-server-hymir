@@ -3,10 +3,11 @@ package de.digitalcollections.iiif.hymir.cli;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.apache.commons.cli.ParseException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.Assertions.from;
 
 public class CliTest {
@@ -15,7 +16,7 @@ public class CliTest {
 
   private StringWriter stringWriter;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     stringWriter = new StringWriter();
     printWriter = new PrintWriter(stringWriter);
@@ -33,9 +34,12 @@ public class CliTest {
     assertThat(cli.hasRulesPath()).isTrue();
   }
 
-  @Test(expected = CliException.class)
+  @Test
   public void shouldThrowExceptionIfRulesPathIsWrong() throws ParseException, CliException {
-    new Cli(printWriter, "--rules=doesnothexist.yml");
+    Throwable thrown = catchThrowable(() -> {
+      new Cli(printWriter, "--rules=doesnothexist.yml");
+    });
+    assertThat(thrown).isInstanceOf(CliException.class);
   }
 
   @Test
@@ -43,34 +47,37 @@ public class CliTest {
     new Cli(printWriter, "--rules=http://www.google.de");
   }
 
-  @Test(expected = CliException.class)
+  @Test
   public void shouldThrowExceptionIfRulesPathIsWrongUrl() throws ParseException, CliException {
-    new Cli(printWriter, "--rules=http://www.adjkhaskdjakdhakjsdhjaksdhaksjd-doesnothexist.de");
+    Throwable thrown = catchThrowable(() -> {
+      new Cli(printWriter, "--rules=http://www.adjkhaskdjakdhakjsdhjaksdhaksjd-doesnothexist.de");
+    });
+    assertThat(thrown).isInstanceOf(CliException.class);
   }
 
   @Test
   public void shouldShowHelp() throws ParseException, CliException {
     Cli cli = new Cli(printWriter, "--help");
     assertThat(stringWriter.toString())
-        .contains("help")
-        .contains("profiles")
-        .contains("rulesPath");
+            .contains("help")
+            .contains("profiles")
+            .contains("rulesPath");
   }
 
   @Test
   public void shouldGetSpringProfiles() throws ParseException, CliException {
     Cli cli = new Cli(printWriter, "-p=dev");
     assertThat(cli)
-        .returns(true, from(Cli::hasSpringProfiles))
-        .returns("dev", from(Cli::getSpringProfiles));
+            .returns(true, from(Cli::hasSpringProfiles))
+            .returns("dev", from(Cli::getSpringProfiles));
   }
 
   @Test
   public void helpShouldSetExitStatusOK() throws ParseException, CliException {
     Cli cli = new Cli(printWriter, "--help");
     assertThat(cli)
-        .returns(true, from(Cli::hasExitStatus))
-        .returns(ExitStatus.OK, from(Cli::getExitStatus));
+            .returns(true, from(Cli::hasExitStatus))
+            .returns(ExitStatus.OK, from(Cli::getExitStatus));
   }
 
 }

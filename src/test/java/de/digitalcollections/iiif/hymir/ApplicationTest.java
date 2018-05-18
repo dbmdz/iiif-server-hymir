@@ -1,34 +1,35 @@
 package de.digitalcollections.iiif.hymir;
 
 import java.util.Map;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.web.server.LocalManagementPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
 /**
  * Basic integration tests for webapp endpoints.
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // set random webapp/server port
-@TestPropertySource(properties = {"management.port=0", "spring.profiles.active=PROD"}) // set random management port
+@TestPropertySource(properties = {"management.server.port=0", "spring.profiles.active=PROD"}) // set random management port
 public class ApplicationTest {
 
   // "local" is not profile name, it is needed to use random port
-  @Value("${local.server.port}")
+  @LocalServerPort
   private int port;
 
   // "local" is not profile name, it is needed to use random port
-  @Value("${local.management.port}")
+  @LocalManagementPort
   private int mgt;
 
   @Autowired

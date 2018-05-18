@@ -5,10 +5,6 @@ custom:
       maxWidth: 65500
       maxHeight: 65500
 
-endpoints:
-  hypermedia:
-    enabled: true
-
 info:
   app:
     encoding: @project.build.sourceEncoding@
@@ -22,17 +18,13 @@ info:
       version: @project.version@
 
 management:
-  context-path: '/monitoring'
-  port: 9001
-  security:
-    enabled: false
-
-security:
-  basic:
-    enabled: false
-  headers:
-    cache: false
-    # disables pragma no-cache header
+  endpoints:
+    web:
+      base-path: '/monitoring'
+      exposure:
+        include: '*'
+  server:
+    port: 9001
 
 server:
   port: 9000
@@ -50,16 +42,12 @@ spring:
 ---
 
 # PROD
-management:
-  security:
-    enabled: true
-
-security:
-  user:
-    name: admin
-    password: secret
-
 spring:
   profiles: PROD
+  security:
+    user:
+      name: admin
+      password: secret
+      roles: ACTUATOR
   thymeleaf:
     cache: true
