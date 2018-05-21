@@ -1,10 +1,10 @@
 ---
-mirador: @version.webjar-mirador@
-mirador-canvaslink: @version.webjar-mirador-canvaslink@
-mirador-imagecropper: @version.webjar-mirador-imagecropper@
-mirador-keyboardnavigation: @version.webjar-mirador-keyboardnavigation@
-mirador-manifestbutton: @version.webjar-mirador-manifestbutton@
-mirador-physicalruler: @version.webjar-mirador-physicalruler@
-mirador-sharebuttons: @version.webjar-mirador-sharebuttons@
-mirador-viewfromurl: @version.webjar-mirador-viewfromurl@
-openseadragon: @version.webjar-openseadragon@
+mirador: '@version.webjar-mirador@'
+mirador-canvaslink: '@version.webjar-mirador-canvaslink@'
+mirador-imagecropper: '@version.webjar-mirador-imagecropper@'
+mirador-keyboardnavigation: '@version.webjar-mirador-keyboardnavigation@'
+mirador-manifestbutton: '@version.webjar-mirador-manifestbutton@'
+mirador-physicalruler: '@version.webjar-mirador-physicalruler@'
+mirador-sharebuttons: '@version.webjar-mirador-sharebuttons@'
+mirador-viewfromurl: '@version.webjar-mirador-viewfromurl@'
+openseadragon: '@version.webjar-openseadragon@'

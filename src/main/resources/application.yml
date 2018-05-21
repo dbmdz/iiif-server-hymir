@@ -8,15 +8,15 @@ custom:
 
 info:
   app:
-    encoding: @project.build.sourceEncoding@
+    encoding: '@project.build.sourceEncoding@'
     java:
-      source: @maven.compiler.source@
-      target: @maven.compiler.target@
+      source: '@maven.compiler.source@'
+      target: '@maven.compiler.target@'
     project:
       name: '@project.name@'
-      groupId: @project.groupId@
-      artifactId: @project.artifactId@
-      version: @project.version@
+      groupId: '@project.groupId@'
+      artifactId: '@project.artifactId@'
+      version: '@project.version@'
 
 management:
   endpoints:
