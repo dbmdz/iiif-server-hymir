@@ -37,12 +37,11 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFImageApiControllerTest {
+  @LocalServerPort
+  int randomServerPort;
 
   @Autowired
   protected IIIFImageApiController iiifController;
-
-//  @Autowired
-  private MockMvc mockMvc;
 
   @Autowired
   private TestRestTemplate restTemplate;
@@ -475,5 +474,15 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,511,413,511/346,/0/default.jpg");
+  }
+
+  @Test
+  public void testNoRedirectIfDisabled() throws Exception {
+    iiifController.setCanonicalRedirectEnabled(false);
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/native.jpg", String.class);
+    iiifController.setCanonicalRedirectEnabled(true);
+    assertThat(response.getStatusCode().series()).isEqualTo(HttpStatus.Series.SUCCESSFUL);
+    String link = response.getHeaders().getFirst("Link").toString();
+    assertThat(link).isEqualTo("<http://localhost:" + randomServerPort + "/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,511,413,511/346,/0/default.jpg>;rel=\"canonical\"");
   }
 }

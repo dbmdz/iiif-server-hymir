@@ -4,6 +4,7 @@ custom:
     image:
       maxWidth: 65500
       maxHeight: 65500
+      canonicalRedirect: true
 
 info:
   app:

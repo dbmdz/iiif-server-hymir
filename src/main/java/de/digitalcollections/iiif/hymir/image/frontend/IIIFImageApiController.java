@@ -8,13 +8,8 @@ import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
-import java.awt.Dimension;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URLDecoder;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,16 +20,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URLDecoder;
+
 @Controller
 @RequestMapping("/image/v2/")
 public class IIIFImageApiController {
   public static final String VERSION = "v2";
 
-  @Autowired
-  private ImageService imageService;
+  @Value("${custom.iiif.image.canonicalRedirect:true}")
+  private boolean isCanonicalRedirectEnabled;
+
+  private final ImageService imageService;
+  private final IiifObjectMapper objectMapper;
 
   @Autowired
-  private IiifObjectMapper objectMapper;
+  public IIIFImageApiController(ImageService imageService, IiifObjectMapper objectMapper) {
+    this.imageService = imageService;
+    this.objectMapper = objectMapper;
+  }
+
+  void setCanonicalRedirectEnabled(boolean canonicalRedirectEnabled) {
+    isCanonicalRedirectEnabled = canonicalRedirectEnabled;
+  }
 
   /**
    * Get the base URL for all Image API URLs from the request.
@@ -108,7 +120,7 @@ public class IIIFImageApiController {
       throw new InvalidParametersException(e);
     }
     String canonicalUrl = getUrlBase(request) + path.substring(0, path.indexOf(identifier)) + canonicalForm;
-    if (!canonicalForm.equals(selector.toString())) {
+    if (this.isCanonicalRedirectEnabled && !canonicalForm.equals(selector.toString())) {
       response.setHeader("Link", String.format("<%s>;rel=\"canonical\"", canonicalUrl));
       response.sendRedirect(canonicalUrl);
       return null;
