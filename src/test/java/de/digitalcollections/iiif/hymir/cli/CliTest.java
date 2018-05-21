@@ -1,14 +1,13 @@
 package de.digitalcollections.iiif.hymir.cli;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.assertj.core.api.Assertions.from;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import static org.assertj.core.api.Assertions.*;
 
 public class CliTest {
 
@@ -49,10 +48,9 @@ public class CliTest {
 
   @Test
   public void shouldThrowExceptionIfRulesPathIsWrongUrl() throws ParseException, CliException {
-    Throwable thrown = catchThrowable(() -> {
+    assertThatThrownBy(() -> {
       new Cli(printWriter, "--rules=http://www.adjkhaskdjakdhakjsdhjaksdhaksjd-doesnothexist.de");
-    });
-    assertThat(thrown).isInstanceOf(CliException.class);
+    }).isInstanceOf(CliException.class);
   }
 
   @Test
