@@ -39,6 +39,10 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFImageApiControllerTest {
+  static {
+    System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
+  }
+
   @LocalServerPort
   int randomServerPort;
 
@@ -50,7 +54,6 @@ public class IIIFImageApiControllerTest {
 
   @BeforeAll
   public static void beforeClass() {
-    System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     System.setProperty("spring.profiles.active", "TEST");
     TestConfiguration.setDefaults();
   }
