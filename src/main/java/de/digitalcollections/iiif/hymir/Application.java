@@ -14,18 +14,31 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.util.UrlPathHelper;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-public class Application {
-
+public class Application implements WebMvcConfigurer {
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
   public static void main(String[] args) {
+    // Allow escaped slashes in routes
+    System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     processArguments(args);
     SpringApplicationBuilder builder = new SpringApplicationBuilder(Application.class);
     builder.banner(hymirBanner());
     builder.run(args);
+  }
+
+  @Override
+  public void configurePathMatch(PathMatchConfigurer configurer) {
+    // Needed for escaped slashes in identifiers
+    UrlPathHelper urlPathHelper = new UrlPathHelper();
+    urlPathHelper.setUrlDecode(false);
+    configurer.setUrlPathHelper(urlPathHelper);
   }
 
   private static Banner hymirBanner() {

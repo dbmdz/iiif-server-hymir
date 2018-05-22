@@ -26,6 +26,7 @@ import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 @Controller
 @RequestMapping("/image/v2/")
@@ -143,7 +144,6 @@ public class IIIFImageApiController {
           method = {RequestMethod.GET, RequestMethod.HEAD})
   public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
           WebRequest webRequest) throws Exception {
-    identifier = URLDecoder.decode(identifier, "UTF-8");
     long modified = imageService.getImageModificationDate(identifier).toEpochMilli();
     webRequest.checkNotModified(modified);
     String path;
@@ -154,7 +154,7 @@ public class IIIFImageApiController {
     }
     String baseUrl = getUrlBase(req);
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
-        baseUrl + path.replace("/info.json", ""));
+        baseUrl + path.replace("/info.json", "").replace(identifier, URLEncoder.encode(identifier, "UTF-8")));
     imageService.readImageInfo(identifier, info);
 
     HttpHeaders headers = new HttpHeaders();

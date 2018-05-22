@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import javax.imageio.ImageIO;
@@ -49,6 +50,7 @@ public class IIIFImageApiControllerTest {
 
   @BeforeAll
   public static void beforeClass() {
+    System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     System.setProperty("spring.profiles.active", "TEST");
     TestConfiguration.setDefaults();
   }
@@ -453,20 +455,18 @@ public class IIIFImageApiControllerTest {
   }
 
   @Test
-  @Disabled
   public void testUrlEncodedIdentifiers() throws Exception {
     HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add("Host", "localhost");
     requestHeaders.add("Referer", "http://localhost/foobar");
 
-    // FIXME restTemplate security exception because of malicious characters in url...
-    ResponseEntity<String> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/" + URLEncoder.encode("spec:/ial?file#with[special]ch@arac%ters", "utf8") + "/info.json",
-                                                            HttpMethod.GET, new HttpEntity<>(requestHeaders), String.class);
+    URI addr = new URI("/image/" + IIIFImageApiController.VERSION + "/" + URLEncoder.encode("spec:/ial?file#with[special]ch@arac%ters", "utf8") + "/info.json");
+    ResponseEntity<String> response = restTemplate.exchange(addr, HttpMethod.GET, new HttpEntity<>(requestHeaders), String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     DocumentContext ctx = JsonPath.parse(response.getBody());
     JsonPathAssert.assertThat(ctx).jsonPathAsString("$.@id")
-            .isEqualTo("http://localhost/image/" + IIIFImageApiController.VERSION + "/spec%253A%252Fial%253Ffile%2523with%255Bspecial%255Dch%2540arac%2525ters");
+            .isEqualTo("http://localhost/image/" + IIIFImageApiController.VERSION + "/spec%3A%2Fial%3Ffile%23with%5Bspecial%5Dch%40arac%25ters");
   }
 
   @Test
