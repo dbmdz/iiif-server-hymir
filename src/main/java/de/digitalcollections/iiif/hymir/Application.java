@@ -16,12 +16,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.util.UrlPathHelper;
 
 @SpringBootApplication
 @EnableAutoConfiguration
 public class Application implements WebMvcConfigurer {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
   public static void main(String[] args) {
