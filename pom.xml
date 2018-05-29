@@ -66,10 +66,13 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <timestamp>${maven.build.timestamp}</timestamp>
+    <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+    <versionName>${project.version} manually built by ${user.name} at ${maven.build.timestamp}</versionName>
 
     <version.assertj-json>1.2.0</version.assertj-json>
     <version.commons-cli>1.4</version.commons-cli>
-    <version.dc-commons-server>1.2.7</version.dc-commons-server>
+    <version.dc-commons>1.3.0-SNAPSHOT</version.dc-commons>
     <version.dc-core-backend-file>2.0.3</version.dc-core-backend-file>
     <version.dc-core-business>2.0.3</version.dc-core-business>
     <version.guava>23.5-jre</version.guava>
@@ -111,12 +114,6 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-properties-migrator</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
@@ -186,7 +183,12 @@
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-server</artifactId>
-      <version>${version.dc-commons-server}</version>
+      <version>${version.dc-commons}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections.commons</groupId>
+      <artifactId>dc-commons-springboot</artifactId>
+      <version>${version.dc-commons}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.core</groupId>

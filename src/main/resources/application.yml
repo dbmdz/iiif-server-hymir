@@ -17,6 +17,7 @@ info:
       groupId: '@project.groupId@'
       artifactId: '@project.artifactId@'
       version: '@project.version@'
+      buildDetails: '@versionName@'
 
 management:
   endpoints:
@@ -32,23 +33,23 @@ server:
   server-header: "@project.name@ v@project.version@"
 
 spring:
+  messages:
+    basename: messages,messages-overlay,messages-commons
   profiles:
     active: local
+  security:
+    user:
+      name: admin
+      password: secret
+      roles: ACTUATOR
   thymeleaf:
     cache: false
     mode: HTML
-  messages:
-    basename: messages,messages-overlay,messages-commons
 
 ---
 
 # PROD
 spring:
   profiles: PROD
-  security:
-    user:
-      name: admin
-      password: secret
-      roles: ACTUATOR
   thymeleaf:
     cache: true
