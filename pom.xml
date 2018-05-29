@@ -80,7 +80,7 @@
     <version.junit-platform-engine>1.1.1</version.junit-platform-engine>
     <version.junit-platform-launcher>1.1.0</version.junit-platform-launcher>
     <version.logstash-logback-encoder>5.1</version.logstash-logback-encoder>
-    <!--<version.prometheus-spring-boot-starter>1.0.2</version.prometheus-spring-boot-starter>-->
+    <version.micrometer-registry-prometheus>1.0.1</version.micrometer-registry-prometheus>
     <version.thymeleaf>3.0.7.RELEASE</version.thymeleaf>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.twelvemonkeys>3.3.2</version.twelvemonkeys>
@@ -152,11 +152,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-<!--    <dependency>
-      <groupId>com.moelholm</groupId>
-      <artifactId>prometheus-spring-boot-starter</artifactId>
-      <version>${version.prometheus-spring-boot-starter}</version>
-    </dependency>-->
     <dependency>
       <groupId>com.revinate</groupId>
       <artifactId>assertj-json</artifactId>
@@ -218,6 +213,11 @@
       <groupId>de.digitalcollections.iiif</groupId>
       <artifactId>iiif-apis</artifactId>
       <version>${version.iiif-apis}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+      <version>${version.micrometer-registry-prometheus}</version>
     </dependency>
     <dependency>
       <groupId>net.logstash.logback</groupId>
