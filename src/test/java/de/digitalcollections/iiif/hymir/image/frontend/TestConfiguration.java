@@ -8,18 +8,20 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import java.util.EnumSet;
 import java.util.Set;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.util.UrlPathHelper;
 
 @Configuration
 @ComponentScan(basePackages = {
-  "de.digitalcollections.core.config",
+  "de.digitalcollections.core.config"
 })
+@AutoConfigureBefore(ServletWebServerFactoryAutoConfiguration.class)
 public class TestConfiguration implements WebMvcConfigurer {
 
   @Bean
@@ -30,6 +32,11 @@ public class TestConfiguration implements WebMvcConfigurer {
   @Bean
   public IiifObjectMapper iiifObjectMapper() {
     return new IiifObjectMapper();
+  }
+
+  @Bean
+  public TomcatServletWebServerFactory tomcat() {
+    return new TomcatServletWebServerFactory();
   }
 
   public static void setDefaults() {
