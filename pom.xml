@@ -80,7 +80,7 @@
     <version.junit-platform-engine>1.1.1</version.junit-platform-engine>
     <version.junit-platform-launcher>1.1.0</version.junit-platform-launcher>
     <version.logstash-logback-encoder>5.1</version.logstash-logback-encoder>
-    <version.micrometer-registry-prometheus>1.0.1</version.micrometer-registry-prometheus>
+    <version.micrometer-registry-prometheus>1.0.4</version.micrometer-registry-prometheus>
     <version.thymeleaf>3.0.7.RELEASE</version.thymeleaf>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.twelvemonkeys>3.3.2</version.twelvemonkeys>
