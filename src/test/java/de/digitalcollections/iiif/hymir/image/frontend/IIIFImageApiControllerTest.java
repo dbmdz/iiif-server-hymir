@@ -17,7 +17,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -39,6 +37,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFImageApiControllerTest {
+
   static {
     System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
   }
@@ -353,12 +352,12 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testMirror() throws Exception {
     ResponseEntity<byte[]> responseRegular = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/0/native.jpg",
-                                                                   HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(responseRegular.getStatusCode()).isEqualTo(HttpStatus.OK);
     byte[] imgDataRegular = responseRegular.getBody();
 
     ResponseEntity<byte[]> responseMirror = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/!0/native.jpg",
-                                                                  HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(responseMirror.getStatusCode()).isEqualTo(HttpStatus.OK);
     byte[] imgDataMirror = responseMirror.getBody();
 
@@ -373,7 +372,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testRotation() throws Exception {
     ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/native.jpg",
-                                                            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     byte[] imgData = response.getBody();
@@ -417,7 +416,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testScaleWithMissingHeigth() throws Exception {
     ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/native.jpg",
-                                                            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     byte[] imgData = response.getBody();
