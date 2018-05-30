@@ -24,11 +24,9 @@ import static org.assertj.core.api.BDDAssertions.then;
 @TestPropertySource(properties = {"management.server.port=0", "spring.profiles.active=PROD"}) // set random management port
 public class ApplicationTest {
 
-  // "local" is not profile name, it is needed to use random port
   @LocalServerPort
   private int port;
 
-  // "local" is not profile name, it is needed to use random port
   @LocalManagementPort
   private int mgt;
 

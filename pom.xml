@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -83,7 +83,6 @@
     <version.junit-platform-engine>1.1.1</version.junit-platform-engine>
     <version.junit-platform-launcher>1.1.0</version.junit-platform-launcher>
     <version.logstash-logback-encoder>5.1</version.logstash-logback-encoder>
-    <version.micrometer-registry-prometheus>1.0.4</version.micrometer-registry-prometheus>
     <version.thymeleaf>3.0.7.RELEASE</version.thymeleaf>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.twelvemonkeys>3.3.2</version.twelvemonkeys>
@@ -219,7 +218,6 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
-      <version>${version.micrometer-registry-prometheus}</version>
     </dependency>
     <dependency>
       <groupId>net.logstash.logback</groupId>
