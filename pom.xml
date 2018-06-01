@@ -92,9 +92,9 @@
     <version.webjar-jquery>3.2.1</version.webjar-jquery>
     <version.webjar-mirador>2.6.0</version.webjar-mirador>
     <version.webjar-mirador-canvaslink>1.2.2</version.webjar-mirador-canvaslink>
+    <version.webjar-mirador-downloadmenu>1.0.0</version.webjar-mirador-downloadmenu>
     <version.webjar-mirador-imagecropper>2.4.5</version.webjar-mirador-imagecropper>
     <version.webjar-mirador-keyboardnavigation>1.1.0</version.webjar-mirador-keyboardnavigation>
-    <version.webjar-mirador-manifestbutton>1.1.1</version.webjar-mirador-manifestbutton>
     <version.webjar-mirador-physicalruler>1.3.4</version.webjar-mirador-physicalruler>
     <version.webjar-mirador-sharebuttons>1.0.0</version.webjar-mirador-sharebuttons>
     <version.webjar-mirador-viewfromurl>1.1.0</version.webjar-mirador-viewfromurl>
@@ -345,6 +345,11 @@
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
+      <artifactId>dbmdz__mirador-downloadmenu</artifactId>
+      <version>${version.webjar-mirador-downloadmenu}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-imagecropper</artifactId>
       <version>${version.webjar-mirador-imagecropper}</version>
     </dependency>
@@ -352,11 +357,6 @@
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-keyboardnavigation</artifactId>
       <version>${version.webjar-mirador-keyboardnavigation}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>dbmdz__mirador-manifestbutton</artifactId>
-      <version>${version.webjar-mirador-manifestbutton}</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
