@@ -90,12 +90,9 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getHeaders().getLastModified()).isNotNull();
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
-    // FIXME fix test
-    // now is [["<http://iiif.io/api/image/2/context.json>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"",
-    //    "<http://iiif.io/api/image/2/level2.json>;rel="profile""]]>
-//    assertThat(responseHeaders.get("Link")).isEqualTo("<http://iiif.io/api/image/2/context.json>; "
-//            + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
-//            + "type=\"application/ld+json\"");
+    assertThat(response.getHeaders().get("Link")).containsExactly(
+        "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+        "<http://iiif.io/api/image/2/level2.json>;rel=\"profile\"");
     DocumentContext ctx = JsonPath.parse(response.getBody());
     JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.width").isEqualTo(989);
     JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.height").isEqualTo(1584);
