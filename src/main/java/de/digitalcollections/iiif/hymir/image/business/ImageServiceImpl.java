@@ -24,6 +24,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
 import java.time.Instant;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -40,12 +41,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+  private final ImageSecurityService imageSecurityService;
+  private final ResourceService resourceService;
 
-  @Autowired(required = false)
-  private ImageSecurityService imageSecurityService;
+  @Value("${custom.iiif.logo:}")
+  private String logoUrl;
 
-  @Autowired
-  private ResourceService resourceService;
+  @Value("${custom.iiif.attribution:}")
+  private String attribution;
+
+  @Value("${custom.iiif.license:}")
+  private String license;
 
   @Value("${custom.iiif.image.maxWidth:65500}")
   private int maxWidth;
@@ -70,6 +76,12 @@ public class ImageServiceImpl implements ImageService {
       this.targetSize = targetSize;
       this.rotation = rotation;
     }
+  }
+
+  public ImageServiceImpl(@Autowired(required = false) ImageSecurityService imageSecurityService,
+                          @Autowired ResourceService resourceService) {
+    this.imageSecurityService = imageSecurityService;
+    this.resourceService = resourceService;
   }
 
   /** Update ImageService based on the image **/
@@ -157,6 +169,20 @@ public class ImageServiceImpl implements ImageService {
   public void readImageInfo(String identifier, de.digitalcollections.iiif.model.image.ImageService info)
           throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException {
     enrichInfo(getReader(identifier), info);
+    if (!this.logoUrl.isEmpty()) {
+      info.addLogo(this.logoUrl);
+    }
+    if (!this.attribution.isEmpty()) {
+      info.addAttribution(this.attribution);
+    }
+    if (!this.license.isEmpty()) {
+      info.addLicense(this.license);
+    } else if (this.imageSecurityService != null) {
+      URI license = this.imageSecurityService.getLicense(identifier);
+      if (license != null) {
+        info.addLicense(license.toString());
+      }
+    }
   }
 
   /** Determine parameters for image reading based on the IIIF selector and a given scaling factor **/
@@ -316,5 +342,45 @@ public class ImageServiceImpl implements ImageService {
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }
+  }
+
+  public String getLogoUrl() {
+    return logoUrl;
+  }
+
+  public void setLogoUrl(String logoUrl) {
+    this.logoUrl = logoUrl;
+  }
+
+  public String getAttribution() {
+    return attribution;
+  }
+
+  public void setAttribution(String attribution) {
+    this.attribution = attribution;
+  }
+
+  public String getLicense() {
+    return license;
+  }
+
+  public void setLicense(String license) {
+    this.license = license;
+  }
+
+  public int getMaxWidth() {
+    return maxWidth;
+  }
+
+  public void setMaxWidth(int maxWidth) {
+    this.maxWidth = maxWidth;
+  }
+
+  public int getMaxHeight() {
+    return maxHeight;
+  }
+
+  public void setMaxHeight(int maxHeight) {
+    this.maxHeight = maxHeight;
   }
 }

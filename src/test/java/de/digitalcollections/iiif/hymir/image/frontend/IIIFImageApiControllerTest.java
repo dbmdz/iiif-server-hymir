@@ -2,10 +2,11 @@ package de.digitalcollections.iiif.hymir.image.frontend;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
+import com.jayway.jsonpath.JsonPathException;
 import com.revinate.assertj.json.JsonPathAssert;
 import com.twelvemonkeys.imageio.stream.ByteArrayImageInputStream;
 import de.digitalcollections.iiif.hymir.Application;
+import de.digitalcollections.iiif.hymir.image.business.ImageServiceImpl;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.ByteArrayInputStream;
@@ -33,7 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,6 +45,9 @@ public class IIIFImageApiControllerTest {
 
   @Autowired
   protected IIIFImageApiController iiifController;
+
+  @Autowired
+  protected ImageServiceImpl imageService;
 
   @Autowired
   private TestRestTemplate restTemplate;
@@ -111,6 +115,17 @@ public class IIIFImageApiControllerTest {
     assertThat(thrown).isInstanceOf(PathNotFoundException.class);
 
     JsonPathAssert.assertThat(ctx).jsonPathAsListOf("$.profile[1].formats", String.class).isNotEmpty();
+  }
+
+  @Test
+  public void testInfoLicenseInformation() throws Exception {
+    imageService.setAttribution("Test Attribution");
+    imageService.setLogoUrl("https://example.com/logo.jpg");
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/info.json", String.class);
+    DocumentContext ctx = JsonPath.parse(response.getBody());
+    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.license").isEqualTo("https://example.com/my-license");
+    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.logo['@id']").isEqualTo("https://example.com/logo.jpg");
+    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.attribution").isEqualTo("Test Attribution");
   }
 
   @Test
