@@ -104,13 +104,8 @@ public class IIIFImageApiControllerTest {
     JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.tiles[0].width").isEqualTo(512);
     JsonPathAssert.assertThat(ctx).jsonPathAsString("$.profile[0]").isEqualTo("http://iiif.io/api/image/2/level2.json");
 
-    // TODO: no easier way to test if a path does not exist?
-    // with mockmvc it was: .andExpect(jsonPath("$.profile[1].qualities").doesNotExist())
-    Throwable thrown = catchThrowable(() -> {
-      JsonPathAssert.assertThat(ctx).jsonPathAsString("$.profile[1].qualities").isNull();
-    });
-    assertThat(thrown).isInstanceOf(PathNotFoundException.class);
-
+    assertThatThrownBy(() -> ctx.read("$.profile[1].formats.qualities"))
+        .isInstanceOf(JsonPathException.class);
     JsonPathAssert.assertThat(ctx).jsonPathAsListOf("$.profile[1].formats", String.class).isNotEmpty();
   }
 
