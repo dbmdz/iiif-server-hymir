@@ -72,11 +72,10 @@
 
     <version.assertj-json>1.2.0</version.assertj-json>
     <version.commons-cli>1.4</version.commons-cli>
-    <version.dc-commons>1.3.0-SNAPSHOT</version.dc-commons>
-    <version.dc-core-backend-file>2.0.3</version.dc-core-backend-file>
-    <version.dc-core-business>2.0.3</version.dc-core-business>
+    <version.dc-commons>1.3.0</version.dc-commons>
+    <version.dc-core>2.1.0</version.dc-core>
     <version.guava>23.5-jre</version.guava>
-    <version.iiif-apis>0.3.2</version.iiif-apis>
+    <version.iiif-apis>0.3.3</version.iiif-apis>
     <version.imageio-jnr>0.2.6</version.imageio-jnr>
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
     <version.jacoco-maven-plugin>0.7.9</version.jacoco-maven-plugin>
@@ -192,13 +191,13 @@
     <dependency>
       <groupId>de.digitalcollections.core</groupId>
       <artifactId>dc-core-backend-file</artifactId>
-      <version>${version.dc-core-backend-file}</version>
+      <version>${version.dc-core}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.core</groupId>
       <artifactId>dc-core-business</artifactId>
-      <version>${version.dc-core-business}</version>
+      <version>${version.dc-core}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
