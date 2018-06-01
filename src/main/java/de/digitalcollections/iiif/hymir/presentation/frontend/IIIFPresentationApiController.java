@@ -42,7 +42,9 @@ public class IIIFPresentationApiController {
           throws ResolvingException, InvalidDataException {
     // Return 304 if the manifest has seen no modifications since the requested time
     long modified = presentationService.getManifestModificationDate(identifier).toEpochMilli();
-    request.checkNotModified(modified);
+    if (request.checkNotModified(modified)) {
+      return null;
+    }
     Manifest manifest = presentationService.getManifest(identifier);
     resp.setDateHeader("Last-Modified", modified);
     LOGGER.info("Serving manifest for {}", identifier);
@@ -89,7 +91,9 @@ public class IIIFPresentationApiController {
   public Collection getCollection(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
           throws ResolvingException, InvalidDataException {
     long modified = presentationService.getCollectionModificationDate(identifier).toEpochMilli();
-    request.checkNotModified(modified);
+    if (request.checkNotModified(modified)) {
+      return null;
+    }
     Collection collection = presentationService.getCollection(identifier);
     LOGGER.info("Serving collection for {}", identifier);
     return collection;
