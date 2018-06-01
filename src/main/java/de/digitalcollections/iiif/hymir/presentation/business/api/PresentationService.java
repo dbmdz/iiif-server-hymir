@@ -6,6 +6,7 @@ import de.digitalcollections.iiif.model.sharedcanvas.Canvas;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.iiif.model.sharedcanvas.Range;
+import de.digitalcollections.iiif.model.sharedcanvas.Resource;
 import de.digitalcollections.iiif.model.sharedcanvas.Sequence;
 import java.net.URI;
 import java.time.Instant;
@@ -44,9 +45,11 @@ public interface PresentationService {
   }
 
   default Canvas getCanvas(String manifestId, URI canvasUri) throws ResolvingException, InvalidDataException {
-    return getManifest(manifestId).getSequences().stream()
+    Manifest manifest = getManifest(manifestId);
+    return manifest.getSequences().stream()
         .flatMap(seq -> seq.getCanvases().stream())
         .filter(canv -> canv.getIdentifier().equals(canvasUri))
+        .map(canv -> this.copyAttributionInfo(manifest, canv))
         .findFirst().orElseThrow(ResolvingException::new);
   }
 
@@ -55,8 +58,10 @@ public interface PresentationService {
   }
 
   default Range getRange(String manifestId, URI rangeUri) throws ResolvingException, InvalidDataException {
-    return getManifest(manifestId).getRanges().stream()
-        .filter(range -> range.getIdentifier().equals(rangeUri))
+    Manifest manifest = getManifest(manifestId);
+    return manifest.getRanges().stream()
+        .filter(r -> r.getIdentifier().equals(rangeUri))
+        .map(r -> this.copyAttributionInfo(manifest, r))
         .findFirst().orElseThrow(ResolvingException::new);
   }
 
@@ -65,9 +70,17 @@ public interface PresentationService {
   }
 
   default Sequence getSequence(String manifestId, URI sequenceUri) throws ResolvingException, InvalidDataException {
-    return getManifest(manifestId).getSequences().stream()
-        .filter(seq -> seq.getIdentifier().equals(sequenceUri))
+    Manifest manifest = getManifest(manifestId);
+    return manifest.getSequences().stream()
+        .filter(s -> s.getIdentifier().equals(sequenceUri))
+        .map(s -> this.copyAttributionInfo(manifest, s))
         .findFirst().orElseThrow(ResolvingException::new);
+  }
 
+  default <T extends Resource> T copyAttributionInfo(Manifest manifest, T res) {
+    res.setLogos(manifest.getLogos());
+    res.setAttribution(manifest.getAttribution());
+    res.setLicenses(manifest.getLicenses());
+    return res;
   }
 }
