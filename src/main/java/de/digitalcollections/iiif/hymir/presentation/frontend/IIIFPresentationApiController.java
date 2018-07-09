@@ -3,6 +3,7 @@ package de.digitalcollections.iiif.hymir.presentation.frontend;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
+import de.digitalcollections.iiif.hymir.presentation.business.api.StatisticsService;
 import de.digitalcollections.iiif.model.sharedcanvas.Canvas;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
@@ -34,6 +35,9 @@ public class IIIFPresentationApiController {
   @Autowired
   private PresentationService presentationService;
 
+  @Autowired
+  private StatisticsService statisticsService;
+
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.GET,
           produces = "application/json")
@@ -45,7 +49,10 @@ public class IIIFPresentationApiController {
     if (request.checkNotModified(modified)) {
       return null;
     }
+    long generationDuration = System.currentTimeMillis();
     Manifest manifest = presentationService.getManifest(identifier);
+    generationDuration = System.currentTimeMillis() - generationDuration;
+    statisticsService.increaseCounter("generations", "manifest", generationDuration);
     resp.setDateHeader("Last-Modified", modified);
     LOGGER.info("Serving manifest for {}", identifier);
     return manifest;

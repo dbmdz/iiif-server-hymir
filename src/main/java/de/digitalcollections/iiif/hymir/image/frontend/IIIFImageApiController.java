@@ -4,6 +4,7 @@ import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.exception.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
+import de.digitalcollections.iiif.hymir.presentation.business.api.StatisticsService;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
@@ -36,6 +37,9 @@ public class IIIFImageApiController {
 
   private final ImageService imageService;
   private final IiifObjectMapper objectMapper;
+
+  @Autowired
+  private StatisticsService statisticsService;
 
   @Autowired
   public IIIFImageApiController(ImageService imageService, IiifObjectMapper objectMapper) {
@@ -133,7 +137,10 @@ public class IIIFImageApiController {
       headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
 
       ByteArrayOutputStream os = new ByteArrayOutputStream();
+      long duration = System.currentTimeMillis();
       imageService.processImage(identifier, selector, profile, os);
+      duration = System.currentTimeMillis() - duration;
+      statisticsService.increaseCounter("image","process", duration);
       return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }
@@ -142,6 +149,7 @@ public class IIIFImageApiController {
           method = {RequestMethod.GET, RequestMethod.HEAD})
   public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
           WebRequest webRequest) throws Exception {
+    long duration = System.currentTimeMillis();
     long modified = imageService.getImageModificationDate(identifier).toEpochMilli();
     webRequest.checkNotModified(modified);
     String path;
@@ -154,7 +162,8 @@ public class IIIFImageApiController {
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
         baseUrl + path.replace("/info.json", "").replace(identifier, URLEncoder.encode(identifier, "UTF-8")));
     imageService.readImageInfo(identifier, info);
-
+    duration = System.currentTimeMillis() - duration;
+    statisticsService.increaseCounter("generations","infojson", duration);
     HttpHeaders headers = new HttpHeaders();
     headers.setDate("Last-Modified", modified);
     String contentType = req.getHeader("Accept");
