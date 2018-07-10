@@ -3,7 +3,6 @@ package de.digitalcollections.iiif.hymir.image.frontend;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
-import com.revinate.assertj.json.JsonPathAssert;
 import com.twelvemonkeys.imageio.stream.ByteArrayImageInputStream;
 import de.digitalcollections.iiif.hymir.Application;
 import de.digitalcollections.iiif.hymir.image.business.ImageServiceImpl;
@@ -33,7 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
@@ -66,8 +65,8 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
     DocumentContext ctx = JsonPath.parse(response.getBody());
-    JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.width").isEqualTo(2064);
-    JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.height").isEqualTo(2553);
+    assertThat(ctx).jsonPathAsInteger("$.width").isEqualTo(2064);
+    assertThat(ctx).jsonPathAsInteger("$.height").isEqualTo(2553);
   }
 
   @Test
@@ -94,19 +93,19 @@ public class IIIFImageApiControllerTest {
         "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
         "<http://iiif.io/api/image/2/level2.json>;rel=\"profile\"");
     DocumentContext ctx = JsonPath.parse(response.getBody());
-    JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.width").isEqualTo(989);
-    JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.height").isEqualTo(1584);
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.@context").isEqualTo("http://iiif.io/api/image/2/context.json");
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("http://localhost/image/" + IIIFImageApiController.VERSION + "/http-bsb");
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.protocol").isEqualTo("http://iiif.io/api/image");
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.profile[0]").isEqualTo("http://iiif.io/api/image/2/level2.json");
-    JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.tiles.length()").isEqualTo(1);
-    JsonPathAssert.assertThat(ctx).jsonPathAsInteger("$.tiles[0].width").isEqualTo(512);
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.profile[0]").isEqualTo("http://iiif.io/api/image/2/level2.json");
+    assertThat(ctx).jsonPathAsInteger("$.width").isEqualTo(989);
+    assertThat(ctx).jsonPathAsInteger("$.height").isEqualTo(1584);
+    assertThat(ctx).jsonPathAsString("$.@context").isEqualTo("http://iiif.io/api/image/2/context.json");
+    assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("http://localhost/image/" + IIIFImageApiController.VERSION + "/http-bsb");
+    assertThat(ctx).jsonPathAsString("$.protocol").isEqualTo("http://iiif.io/api/image");
+    assertThat(ctx).jsonPathAsString("$.profile[0]").isEqualTo("http://iiif.io/api/image/2/level2.json");
+    assertThat(ctx).jsonPathAsInteger("$.tiles.length()").isEqualTo(1);
+    assertThat(ctx).jsonPathAsInteger("$.tiles[0].width").isEqualTo(512);
+    assertThat(ctx).jsonPathAsString("$.profile[0]").isEqualTo("http://iiif.io/api/image/2/level2.json");
 
     assertThatThrownBy(() -> ctx.read("$.profile[1].formats.qualities"))
         .isInstanceOf(JsonPathException.class);
-    JsonPathAssert.assertThat(ctx).jsonPathAsListOf("$.profile[1].formats", String.class).isNotEmpty();
+    assertThat(ctx).jsonPathAsListOf("$.profile[1].formats", String.class).isNotEmpty();
   }
 
   @Test
@@ -115,9 +114,9 @@ public class IIIFImageApiControllerTest {
     imageService.setLogoUrl("https://example.com/logo.jpg");
     ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/info.json", String.class);
     DocumentContext ctx = JsonPath.parse(response.getBody());
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.license").isEqualTo("https://example.com/my-license");
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.logo['@id']").isEqualTo("https://example.com/logo.jpg");
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.attribution").isEqualTo("Test Attribution");
+    assertThat(ctx).jsonPathAsString("$.license").isEqualTo("https://example.com/my-license");
+    assertThat(ctx).jsonPathAsString("$.logo['@id']").isEqualTo("https://example.com/logo.jpg");
+    assertThat(ctx).jsonPathAsString("$.attribution").isEqualTo("Test Attribution");
   }
 
   @Test
@@ -203,7 +202,7 @@ public class IIIFImageApiControllerTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     DocumentContext ctx = JsonPath.parse(response.getBody());
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("http://example.com:8080/image/" + IIIFImageApiController.VERSION + "/http-google");
+    assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("http://example.com:8080/image/" + IIIFImageApiController.VERSION + "/http-google");
   }
 
   @Test
@@ -215,7 +214,7 @@ public class IIIFImageApiControllerTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     DocumentContext ctx = JsonPath.parse(response.getBody());
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("https://localhost/image/" + IIIFImageApiController.VERSION + "/http-google");
+    assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("https://localhost/image/" + IIIFImageApiController.VERSION + "/http-google");
   }
 
   @Test
@@ -226,7 +225,7 @@ public class IIIFImageApiControllerTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     DocumentContext ctx = JsonPath.parse(response.getBody());
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("http://example.org/image/" + IIIFImageApiController.VERSION + "/http-google");
+    assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("http://example.org/image/" + IIIFImageApiController.VERSION + "/http-google");
   }
 
   @Test
@@ -237,7 +236,7 @@ public class IIIFImageApiControllerTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     DocumentContext ctx = JsonPath.parse(response.getBody());
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("http://example.org:8080/image/" + IIIFImageApiController.VERSION + "/http-google");
+    assertThat(ctx).jsonPathAsString("$.@id").isEqualTo("http://example.org:8080/image/" + IIIFImageApiController.VERSION + "/http-google");
   }
 
   /* 4.1 Region */
@@ -473,7 +472,7 @@ public class IIIFImageApiControllerTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     DocumentContext ctx = JsonPath.parse(response.getBody());
-    JsonPathAssert.assertThat(ctx).jsonPathAsString("$.@id")
+    assertThat(ctx).jsonPathAsString("$.@id")
             .isEqualTo("http://localhost/image/" + IIIFImageApiController.VERSION + "/spec%3A%2Fial%3Ffile%23with%5Bspecial%5Dch%40arac%25ters");
   }
 
