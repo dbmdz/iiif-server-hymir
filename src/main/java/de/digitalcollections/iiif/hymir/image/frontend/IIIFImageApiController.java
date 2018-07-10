@@ -1,10 +1,10 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
+import de.digitalcollections.commons.springboot.metrics.MetricsService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.exception.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
-import de.digitalcollections.iiif.hymir.presentation.business.api.StatisticsService;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
@@ -39,7 +39,7 @@ public class IIIFImageApiController {
   private final IiifObjectMapper objectMapper;
 
   @Autowired
-  private StatisticsService statisticsService;
+  private MetricsService metricsService;
 
   @Autowired
   public IIIFImageApiController(ImageService imageService, IiifObjectMapper objectMapper) {
@@ -140,7 +140,7 @@ public class IIIFImageApiController {
       long duration = System.currentTimeMillis();
       imageService.processImage(identifier, selector, profile, os);
       duration = System.currentTimeMillis() - duration;
-      statisticsService.increaseCounter("image","process", duration);
+      metricsService.increaseCounterWithDurationAndPercentiles("image","process", duration);
       return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }
@@ -163,7 +163,7 @@ public class IIIFImageApiController {
         baseUrl + path.replace("/info.json", "").replace(identifier, URLEncoder.encode(identifier, "UTF-8")));
     imageService.readImageInfo(identifier, info);
     duration = System.currentTimeMillis() - duration;
-    statisticsService.increaseCounter("generations","infojson", duration);
+    metricsService.increaseCounterWithDurationAndPercentiles("generations","infojson", duration);
     HttpHeaders headers = new HttpHeaders();
     headers.setDate("Last-Modified", modified);
     String contentType = req.getHeader("Accept");

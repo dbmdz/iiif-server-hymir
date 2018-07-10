@@ -1,9 +1,9 @@
 package de.digitalcollections.iiif.hymir.presentation.frontend;
 
+import de.digitalcollections.commons.springboot.metrics.MetricsService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
-import de.digitalcollections.iiif.hymir.presentation.business.api.StatisticsService;
 import de.digitalcollections.iiif.model.sharedcanvas.Canvas;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
@@ -36,7 +36,7 @@ public class IIIFPresentationApiController {
   private PresentationService presentationService;
 
   @Autowired
-  private StatisticsService statisticsService;
+  private MetricsService metricsService;
 
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.GET,
@@ -52,7 +52,7 @@ public class IIIFPresentationApiController {
     long generationDuration = System.currentTimeMillis();
     Manifest manifest = presentationService.getManifest(identifier);
     generationDuration = System.currentTimeMillis() - generationDuration;
-    statisticsService.increaseCounter("generations", "manifest", generationDuration);
+    metricsService.increaseCounterWithDurationAndPercentiles("generations", "manifest", generationDuration);
     resp.setDateHeader("Last-Modified", modified);
     LOGGER.info("Serving manifest for {}", identifier);
     return manifest;
