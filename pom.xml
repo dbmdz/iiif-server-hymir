@@ -77,7 +77,7 @@
 
     <version.assertj-json>1.2.0</version.assertj-json>
     <version.commons-cli>1.4</version.commons-cli>
-    <version.dc-commons>1.4.0</version.dc-commons>
+    <version.dc-commons>1.4.1</version.dc-commons>
     <version.dc-core>2.1.0</version.dc-core>
     <version.guava>23.5-jre</version.guava>
     <version.iiif-apis>0.3.3</version.iiif-apis>
