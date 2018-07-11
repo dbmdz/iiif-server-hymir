@@ -48,7 +48,7 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
     http.csrf().disable();
     http.authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers(EndpointRequest.to("health", "info", "version")).permitAll()
+            .requestMatchers(EndpointRequest.to("health", "info", "version", "prometheus")).permitAll()
             .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
             .antMatchers("/**").permitAll()
             .and()
