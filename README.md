@@ -163,3 +163,18 @@ Monitoring endpoints under http://localhost:9001/monitoring (HAL-Browser-GUI), a
 - Bavarian State Library, Project Bavarikon: <a href="http://www.bavarikon.de/">https://www.bavarikon.de/</a>
 - Bavarian State Library, Project digiPress: <a href="https://digipress.digitale-sammlungen.de/">https://digipress.digitale-sammlungen.de/</a>
 - Bavarian State Library, iiif-Bookshelf: <a href="https://iiif.digitale-sammlungen.de/">https://iiif.digitale-sammlungen.de/</a>
+
+## Development
+
+* Install git client
+* Install Java JDK 1.8 or above
+* Install Apache Maven buildttool
+
+```sh
+$ cd ~/development
+$ git clone git@github.com:dbmdz/iiif-server-hymir.git
+$ cd iiif-server-hymir
+$ mvn clean install
+```
+
+Executable JAR-file is in `target` directory.
