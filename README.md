@@ -178,3 +178,16 @@ $ mvn clean install
 ```
 
 Executable JAR-file is in `target` directory.
+
+On systems without installed `libturbojpeg` test fail.
+To build without tests, execute:
+
+```sh
+$ mvn clean install -DskipTests=true
+```
+
+To install `libturbojpeg` on Debian based systems:
+
+````bash
+$ sudo apt install libturbojpeg
+```
