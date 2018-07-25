@@ -18,7 +18,8 @@ public class PresentationServiceImpl implements PresentationService {
   private final PresentationSecurityService presentationSecurityService;
 
   @Autowired
-  public PresentationServiceImpl(PresentationRepository presentationRepository, PresentationSecurityService presentationSecurityService) {
+  public PresentationServiceImpl(PresentationRepository presentationRepository,
+                                 @Autowired(required=false) PresentationSecurityService presentationSecurityService) {
     this.presentationRepository = presentationRepository;
     this.presentationSecurityService = presentationSecurityService;
   }
