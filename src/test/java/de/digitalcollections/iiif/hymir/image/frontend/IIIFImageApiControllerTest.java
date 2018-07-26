@@ -1,11 +1,15 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
+import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
 import com.twelvemonkeys.imageio.stream.ByteArrayImageInputStream;
 import de.digitalcollections.iiif.hymir.Application;
 import de.digitalcollections.iiif.hymir.image.business.ImageServiceImpl;
+import de.digitalcollections.turbojpeg.lib.libturbojpeg;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.ByteArrayInputStream;
@@ -16,6 +20,8 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import jnr.ffi.LibraryLoader;
+import jnr.ffi.Runtime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -31,9 +37,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,6 +59,15 @@ public class IIIFImageApiControllerTest {
     System.setProperty("spring.profiles.active", "TEST");
     System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     TestConfiguration.setDefaults();
+  }
+
+  @Test
+  public void testTurboJpegInstalled() {
+    libturbojpeg lib = LibraryLoader.create(libturbojpeg.class)
+        .load("turbojpeg");
+    Runtime runtime = Runtime.getRuntime(lib);
+
+    assertThat(runtime).isNotNull();
   }
 
   @Test
