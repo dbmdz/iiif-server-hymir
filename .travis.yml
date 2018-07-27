@@ -4,25 +4,27 @@ jdk:
 addons:
   apt:
     packages:
-      - libturbojpeg
-
+    - libturbojpeg
+    - libxml2-utils
 before_script:
+- PROJECT_VERSION=$(xmllint --xpath '/*[local-name()="project"]/*[local-name()="version"]/text()' pom.xml)
 - if [ ! -z "$TRAVIS_TAG" ]; then mvn versions:set -DnewVersion=$TRAVIS_TAG; fi
-
 script:
 - mvn clean install
-
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-
+- if [[ "$PROJECT_VERSION" == *SNAPSHOT ]]; then mvn deploy -B -DskipTests=true --settings settings.xml; fi
 deploy:
   provider: releases
   api_key:
     secure: B2aWP1iYhmrBeyERQxlgnt1qA7pjCNuNwjY31CrrOrCo0tlhKGN1S2yB6xpNZqT4uXdM52Y1xFI+wS5Pnptck9LpdrLhOVVEKqC0YRHdiuUQ2PjzdBTPwsP1euk6deKWiOkhB7srqi/+Wc7Yu78yFSluVAWmTHVeXwy53Eu9VaJhMPaLRH/tRF2xvh2DDHzl0B+ESRNeUMMG+rHl+8kwahg9RkR6BzIW8dPHMNTXLo5p0uqXt5TlquRvqlp6wcB3D/OjYiaNtMaxM17GuEq6GOHzEk2Ctx2ahLP1zT8rRIG1VPWKqlGZyXmMnj4jmWrJid6O9LMPcAWmHmysZ/Ii1g/rVOaifarBIkGXmSZGfjjKmiZKOXgdatJTfm7qTy/SBbjZsxiXVA1FXOQO44MJbpQccS+omnKID+uYe+J5rO8vqjHISfKVuLYy2EjkFZfG1p4rhQ4Egjo4g7QHjx7hUb/ASTPBv4tgz6CrJ7Hd3o2Zxyyt0ZunUzSWgQgtPXKzMfaCnvwyQrheMT15ZveC4sOpsZqUzqd6Vl2zg/IMsCOAYZz7koB/xA0MFBGlaMYtXSx8sMJtSR+RkpiSkc32xFsXP/ae0lRvPykcmHNoUJvQgfrM0lkvjxIdY+PfsII+yToz9ex62md0wnIZ73UFM2V8azlrUDHTYXGqagpnTTU=
   file_glob: true
   file:
-  - "**/target/*.jar"
-  - "*.deb"
+  - target/*.jar
   skip_cleanup: true
   on:
     tags: true
+env:
+  global:
+  - secure: DOVuDDZR4KfnhHIrUHhQ28oaR9vG7tEzSZPNdNvI1n5PvCBrCEl/sSzHe7nQdeR2fpTNUvwyS3fuF1+q6VoXrVgXdcF+EQZQfSencgasmpstkEIDl4KBUdu2S85oEk1Ulf5Kd4Nd/O4ei5bThlKcrQyk+OMiblGSuQwuR0vf4c9Z60mU/IWqJcU3OyBCRJ8BTVk2q+mZD6xm4bjdYjZtIJhmvwnQQdlcj7rZK/9FD1rmX5kLGN2wWds3jB1K1JDDc4YNVXhiwlELpJ/5eTi57FteCMpHrUbiaSDeqK98F2p8dkblz/2Jgdom4nsURySLhCuCr8/RP049zdvbIZEaxZ4/P6fsHGiqwgkUwZIEmfjq9dDbVlJboJBRdWy5zkFal+acc8Q3JHzD/SKOgH8f8qKu55oJw/0Q6Vgb6yAVxExPvFEciYGdiiBIn9ge6D4PElSZR5BTAOrUGPimk8nErBpb5O2GDE0ep7vQk4mCvbczE0NbHyyZ/9ZBdqsYDL+RZsHABeen9RZ7AzmpCSbKckQCl3c/jO/svh6eYmLGmTPYC0bv4ISAunMab6XFGc20d8iK5MIkOYGvnwoN/4BVPZ0WmlCRlB5IR38AWsDmpJeaPyFKNdDSZk+L42tD2zNprvkmjsbs9VuLsgvM96XcxYiYRDeegDjPcNEUaa8atfM=
+  - secure: RLmbem0X3vpG+CwcdYad0RDHz6UxKbJV4bRcFSlNkoW+bCfD3dxwaK0otcMv9I7/MPJKfwQLE+p1Xihk/IZsCbr+FqEkjYNyA6KcQvXh5mQ4xdRlHInPqS2w9ROHDFLz3qfsUZAMjLeRv46RKiegUl17NWCrlnhnpTEUiOEhN1/OdXP7EtlC9emGWpqahQHdbGHH4P58Leoa5EeqQp+EgAyrIyO+ti8918PV5yBlTHGTyJ8XHKabUCzJgQCsuZq2QrkdYZ90nXDSBSmfonJp4pf9VT2HONG4I0FmG/TT/fJi5+6WyuBaQikIcGXbzTnX/cXTLekv/UjzVzXXM4UUsIrPDV/o2cVHVt10uwOBAmb+684Fp7lv3vyfgG37Oy0gMGZBadkA6qENTxN9/DEgp4GfdTK+FivN8M0oQktJiFFLMGhExquW3b9GVb7lJa5HS/UOUzaTlKi8DxSnCxPu42tIIDNmrMBT3VZ/gtnrMeTRsWoZwj7+jAAvY8hVlYVvs3HWD78oO4dGsPWKKZHfxcp4hOrVaW7jFkoqX2BjnFhsI2GQAnthZ8BXeQWzBgBx7ZOw4GOhTXKExGEzlEIfEH2KGVKAB3OaMBkdBs7CjtBZ33JEFq0KiO9Sqr7XiLsFg6C8KfD7Af9QM9Sv0M+gmfSryIqEv/ePJnE29vggBZA=
