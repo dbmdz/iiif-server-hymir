@@ -1,11 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.business;
 
 import com.google.common.collect.Streams;
-import de.digitalcollections.core.business.api.ResourceService;
-import de.digitalcollections.core.model.api.MimeType;
-import de.digitalcollections.core.model.api.resource.Resource;
-import de.digitalcollections.core.model.api.resource.enums.ResourcePersistenceType;
-import de.digitalcollections.core.model.api.resource.exceptions.ResourceIOException;
+import de.digitalcollections.commons.file.business.api.FileResourceService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
@@ -16,6 +12,10 @@ import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.image.Size;
 import de.digitalcollections.iiif.model.image.TileInfo;
+import de.digitalcollections.model.api.identifiable.resource.FileResource;
+import de.digitalcollections.model.api.identifiable.resource.MimeType;
+import de.digitalcollections.model.api.identifiable.resource.enums.FileResourcePersistenceType;
+import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceIOException;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReadParam;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReader;
 import java.awt.Dimension;
@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -41,8 +42,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+
   private final ImageSecurityService imageSecurityService;
-  private final ResourceService resourceService;
+  private final FileResourceService fileResourceService;
 
   @Value("${custom.iiif.logo:}")
   private String logoUrl;
@@ -79,9 +81,9 @@ public class ImageServiceImpl implements ImageService {
   }
 
   public ImageServiceImpl(@Autowired(required = false) ImageSecurityService imageSecurityService,
-                          @Autowired ResourceService resourceService) {
+          @Autowired FileResourceService fileResourceService) {
     this.imageSecurityService = imageSecurityService;
-    this.resourceService = resourceService;
+    this.fileResourceService = fileResourceService;
   }
 
   /** Update ImageService based on the image **/
@@ -151,13 +153,13 @@ public class ImageServiceImpl implements ImageService {
     if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
       throw new ResourceNotFoundException();
     }
-    Resource res;
+    FileResource fileResource;
     try {
-      res = resourceService.get(identifier, ResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
+      fileResource = fileResourceService.get(identifier, FileResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }
-    ImageInputStream iis = ImageIO.createImageInputStream(resourceService.getInputStream(res));
+    ImageInputStream iis = ImageIO.createImageInputStream(fileResourceService.getInputStream(fileResource));
     ImageReader reader = Streams.stream(ImageIO.getImageReaders(iis))
             .findFirst()
             .orElseThrow(UnsupportedFormatException::new);
@@ -337,8 +339,8 @@ public class ImageServiceImpl implements ImageService {
       throw new ResourceNotFoundException();
     }
     try {
-      Resource res = resourceService.get(identifier, ResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
-      return Instant.ofEpochMilli(res.getLastModified());
+      FileResource res = fileResourceService.get(identifier, FileResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
+      return Instant.ofEpochMilli(res.getLastModified().toEpochSecond(ZoneOffset.UTC));
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }
