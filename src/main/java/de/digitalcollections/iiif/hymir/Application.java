@@ -9,18 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.Banner;
 import org.springframework.boot.ResourceBanner;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.util.UrlPathHelper;
 
 @SpringBootApplication
-@EnableAutoConfiguration
-public class Application implements WebMvcConfigurer {
+public class Application {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
@@ -31,14 +26,6 @@ public class Application implements WebMvcConfigurer {
     SpringApplicationBuilder builder = new SpringApplicationBuilder(Application.class);
     builder.banner(hymirBanner());
     builder.run(args);
-  }
-
-  @Override
-  public void configurePathMatch(PathMatchConfigurer configurer) {
-    // Needed for escaped slashes in identifiers
-    UrlPathHelper urlPathHelper = new UrlPathHelper();
-    urlPathHelper.setUrlDecode(false);
-    configurer.setUrlPathHelper(urlPathHelper);
   }
 
   private static Banner hymirBanner() {
