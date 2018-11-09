@@ -5,12 +5,25 @@
   <body>
     <section layout:fragment="content">
 
-      <h3>Uuups!</h3>
-      
-      <h1>Error <span th:text="${ status }">404</span></h1>
-      <p th:text="${error}">...</p>
-      <p th:text="${message}">...</p>
-      <p th:text="${path}">...</p>
+      <div class="well">
+        <h3 th:text="#{error.page_title}">Ooops!</h3>
+
+        <h1>
+          <label th:text="#{error.status_code}">Status code</label>: <span th:text="${status}">The status code</span>
+        </h1>
+        <p>
+          <label th:text="#{error.reason}">Error reason</label>: <span th:text="${error}">The error reason</span>
+        </p>
+        <p>
+          <label th:text="#{error.message}">Error message</label>: <span th:text="${message}">The exception message</span>
+        </p>
+        <p>
+          <label th:text="#{error.url-path}">Called url path</label>: <span th:text="${path}">The URL path when the exception was raised</span>
+        </p>
+        <p>
+          <label th:text="#{error.timestamp}">Time error occured</label>: <span th:text="${timestamp}">The time that the errors were extracted</span>
+        </p>
+      </div>
     </section>
   </body>
 </html>
