@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.0.2.RELEASE</version>
+    <version>2.1.0.RELEASE</version>
   </parent>
 
   <name>DigitalCollections: Hymir IIIF Server</name>
@@ -14,7 +14,7 @@
 
   <groupId>de.digitalcollections</groupId>
   <artifactId>iiif-server-hymir</artifactId>
-  <version>3.6.4-SNAPSHOT</version>
+  <version>4.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <url>https://github.com/dbmdz/iiif-server-hymir</url>
@@ -77,17 +77,14 @@
 
     <version.assertj-json>1.2.0</version.assertj-json>
     <version.commons-cli>1.4</version.commons-cli>
-    <version.dc-commons>1.4.1</version.dc-commons>
-    <version.dc-core>2.1.0</version.dc-core>
+    <version.dc-commons>2.0.1-SNAPSHOT</version.dc-commons>
     <version.guava>23.5-jre</version.guava>
-    <version.iiif-apis>0.3.3</version.iiif-apis>
+    <version.iiif-apis>0.3.4-SNAPSHOT</version.iiif-apis>
     <version.imageio-jnr>0.2.6</version.imageio-jnr>
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
     <version.jacoco-maven-plugin>0.8.2</version.jacoco-maven-plugin>
-    <version.junit-platform-engine>1.1.1</version.junit-platform-engine>
-    <version.junit-platform-launcher>1.1.0</version.junit-platform-launcher>
+    <version.json-simple>1.1.1</version.json-simple>
     <version.logstash-logback-encoder>5.1</version.logstash-logback-encoder>
-    <version.thymeleaf>3.0.7.RELEASE</version.thymeleaf>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.twelvemonkeys>3.3.2</version.twelvemonkeys>
     <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
@@ -107,12 +104,9 @@
     <version.webjar-respond>1.4.2</version.webjar-respond>
 
     <!-- plugins -->
-    <version.maven-compiler-plugin>3.7.0</version.maven-compiler-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.maven-javadoc-plugin>3.0.1</version.maven-javadoc-plugin>
-    <version.maven-resources-plugin>3.1.0</version.maven-resources-plugin>
     <version.maven-source-plugin>3.0.1</version.maven-source-plugin>
-    <version.maven-surefire-plugin>2.22.1</version.maven-surefire-plugin>
     <version.nexus-staging-maven-plugin>1.6.7</version.nexus-staging-maven-plugin>
   </properties>
 
@@ -145,6 +139,7 @@
     <dependency>
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
+      <version>${version.json-simple}</version>
       <exclusions>
         <exclusion>
           <groupId>junit</groupId>
@@ -194,15 +189,9 @@
       <version>${version.dc-commons}</version>
     </dependency>
     <dependency>
-      <groupId>de.digitalcollections.core</groupId>
-      <artifactId>dc-core-backend-file</artifactId>
-      <version>${version.dc-core}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections.core</groupId>
-      <artifactId>dc-core-business</artifactId>
-      <version>${version.dc-core}</version>
+      <groupId>de.digitalcollections.commons</groupId>
+      <artifactId>dc-commons-file</artifactId>
+      <version>${version.dc-commons}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
@@ -221,8 +210,19 @@
     </dependency>
     <dependency>
       <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
     </dependency>
+    <!-- FIXME: causes tests to fail
+    <dependency>
+      <groupId>net.bull.javamelody</groupId>
+      <artifactId>javamelody-spring-boot-starter</artifactId>
+      <version>1.74.0</version>
+    </dependency>
+    -->
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
@@ -240,7 +240,13 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+      <version>3.10.0</version> <!-- with 3.11.1 assertThat no longer worked ... -->
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jolokia</groupId>
+      <artifactId>jolokia-core</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.imgscalr</groupId>
@@ -260,30 +266,16 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-engine</artifactId>
-      <version>${version.junit-platform-engine}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-launcher</artifactId>
-      <version>${version.junit-platform-launcher}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-actuator-autoconfigure</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-hateoas</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -293,12 +285,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -426,7 +412,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>${version.maven-resources-plugin}</version>
         <configuration>
           <delimiters>
             <delimiter>@</delimiter>
@@ -451,7 +436,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${version.maven-compiler-plugin}</version>
         <configuration>
           <showDeprecation>true</showDeprecation>
           <encoding>${project.build.sourceEncoding}</encoding>
@@ -491,8 +475,8 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>${version.maven-surefire-plugin}</version>
-        <dependencies>
+        <!--<version>${version.maven-surefire-plugin}</version>-->
+        <!--        <dependencies>
           <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-surefire-provider</artifactId>
@@ -503,7 +487,7 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.1.1</version>
           </dependency>
-        </dependencies>
+        </dependencies>-->
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -542,6 +526,28 @@
           <serverId>ossrh</serverId>
           <nexusUrl>https://oss.sonatype.org/</nexusUrl>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>get-the-git-infos</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>validate-the-git-infos</id>
+            <goals>
+              <goal>validateRevision</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
         </configuration>
       </plugin>
     </plugins>

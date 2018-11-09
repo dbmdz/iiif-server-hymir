@@ -13,19 +13,13 @@ import java.util.Set;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @ComponentScan(basePackages = {
-  "de.digitalcollections.core.config"
+  "de.digitalcollections.commons.file.config"
 })
 public class TestConfiguration implements WebMvcConfigurer {
-
-  @Bean
-  public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-    return new PropertySourcesPlaceholderConfigurer();
-  }
 
   @Bean
   public IiifObjectMapper iiifObjectMapper() {

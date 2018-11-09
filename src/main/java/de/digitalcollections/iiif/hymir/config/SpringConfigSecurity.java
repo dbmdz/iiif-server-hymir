@@ -3,6 +3,8 @@ package de.digitalcollections.iiif.hymir.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.actuate.health.HealthEndpoint;
+import org.springframework.boot.actuate.info.InfoEndpoint;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,9 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
   @Value("${spring.security.user.password}")
   private String actuatorPassword;
 
+  @Value("${javamelody.init-parameters.monitoring-path:/monitoring}")
+  String javamelodyMonitoringPath;
+
   @Bean
   public HttpFirewall looseFirewall() {
     DefaultHttpFirewall firewall = new DefaultHttpFirewall();
@@ -39,6 +44,7 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(WebSecurity web) throws Exception {
     super.configure(web);
+    web.ignoring().antMatchers(javamelodyMonitoringPath);
     // We need to loosen the firewall settings to allow various urlencoded characters in identifiers
     web.httpFirewall(looseFirewall());
   }
@@ -48,7 +54,8 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
     http.csrf().disable();
     http.authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers(EndpointRequest.to("health", "info", "version", "prometheus")).permitAll()
+            .requestMatchers(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class)).permitAll()
+            .requestMatchers(EndpointRequest.to("version", "prometheus", "jolokia")).permitAll()
             .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
             .antMatchers("/**").permitAll()
             .and()
