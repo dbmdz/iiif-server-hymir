@@ -32,7 +32,7 @@
 
   <logger name="de.digitalcollections.iiif.hymir.presentation.backend" level="error" />
   <logger name="de.digitalcollections.iiif.hymir.presentation.business" level="error" />
-  <logger name="de.digitalcollections.core" level="error" />
+  <logger name="de.digitalcollections.commons" level="error" />
 
   <root level="info">
     <appender-ref ref="default" />

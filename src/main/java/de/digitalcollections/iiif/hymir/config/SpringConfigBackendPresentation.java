@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = {
-  "de.digitalcollections.core.config"
+  "de.digitalcollections.commons.file.config"
 })
 public class SpringConfigBackendPresentation {
 }
