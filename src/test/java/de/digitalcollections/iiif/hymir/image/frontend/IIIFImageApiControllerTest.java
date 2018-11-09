@@ -1,8 +1,5 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
-import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
@@ -38,6 +35,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFImageApiControllerTest {
@@ -64,7 +65,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testTurboJpegInstalled() {
     libturbojpeg lib = LibraryLoader.create(libturbojpeg.class)
-        .load("turbojpeg");
+            .load("turbojpeg");
     Runtime runtime = Runtime.getRuntime(lib);
 
     assertThat(runtime).isNotNull();
@@ -102,8 +103,8 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
     assertThat(response.getHeaders().get("Link")).containsExactly(
-        "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
-        "<http://iiif.io/api/image/2/level2.json>;rel=\"profile\"");
+            "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+            "<http://iiif.io/api/image/2/level2.json>;rel=\"profile\"");
     DocumentContext ctx = JsonPath.parse(response.getBody());
     assertThat(ctx).jsonPathAsInteger("$.width").isEqualTo(989);
     assertThat(ctx).jsonPathAsInteger("$.height").isEqualTo(1584);
@@ -116,7 +117,7 @@ public class IIIFImageApiControllerTest {
     assertThat(ctx).jsonPathAsString("$.profile[0]").isEqualTo("http://iiif.io/api/image/2/level2.json");
 
     assertThatThrownBy(() -> ctx.read("$.profile[1].formats.qualities"))
-        .isInstanceOf(JsonPathException.class);
+            .isInstanceOf(JsonPathException.class);
     assertThat(ctx).jsonPathAsListOf("$.profile[1].formats", String.class).isNotEmpty();
   }
 
