@@ -2,6 +2,10 @@ body {
   padding-top: 65px;
 }
 
+.error-page p {
+  text-align: left;
+}
+
 footer {
   position: absolute;
   bottom: 0;
