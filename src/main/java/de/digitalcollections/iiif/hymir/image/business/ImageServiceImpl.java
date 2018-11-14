@@ -340,7 +340,7 @@ public class ImageServiceImpl implements ImageService {
     }
     try {
       FileResource res = fileResourceService.get(identifier, FileResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
-      return Instant.ofEpochMilli(res.getLastModified().toEpochSecond(ZoneOffset.UTC));
+      return res.getLastModified().toInstant(ZoneOffset.UTC);
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }

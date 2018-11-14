@@ -74,7 +74,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
   private Instant getResourceModificationDate(String identifier) throws ResolvingException {
     try {
       FileResource resource = resourceService.get(identifier, FileResourcePersistenceType.REFERENCED, MimeType.MIME_APPLICATION_JSON);
-      return Instant.ofEpochMilli(resource.getLastModified().toEpochSecond(ZoneOffset.UTC));
+      return resource.getLastModified().toInstant(ZoneOffset.UTC);
     } catch (ResourceIOException ex) {
       throw new ResolvingException("No manifest for identifier " + identifier);
     }
