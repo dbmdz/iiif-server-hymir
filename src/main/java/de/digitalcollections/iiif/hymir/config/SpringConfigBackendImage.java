@@ -29,7 +29,9 @@ public class SpringConfigBackendImage {
       Iterator<ImageReader> imageReaders = ImageIO.getImageReadersByMIMEType(mimeType);
       for (Iterator iterator = imageReaders; iterator.hasNext();) {
         ImageReader imageReader = (ImageReader) iterator.next();
-        LOGGER.info("ImageReader: {} {}", mimeType, imageReader.getClass().toString());
+        if (imageReader != null) {
+          LOGGER.info("ImageReader: {} {}", mimeType, imageReader.getClass().toString());
+        }
       }
     }
 
