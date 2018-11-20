@@ -86,7 +86,7 @@
     <version.json-simple>1.1.1</version.json-simple>
     <version.logstash-logback-encoder>5.1</version.logstash-logback-encoder>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
-    <version.twelvemonkeys>3.4.1</version.twelvemonkeys>
+    <version.twelvemonkeys>3.3.2</version.twelvemonkeys> <!-- 3.4.1 -->
     <version.webjar-bootstrap>3.3.7</version.webjar-bootstrap>
     <version.webjar-fontawesome>4.7.0</version.webjar-fontawesome>
     <version.webjar-html5shiv>3.7.3</version.webjar-html5shiv>
