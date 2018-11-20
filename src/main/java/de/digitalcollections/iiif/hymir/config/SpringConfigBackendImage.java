@@ -41,7 +41,9 @@ public class SpringConfigBackendImage {
       Iterator<ImageWriter> imageWriters = ImageIO.getImageWritersByMIMEType(writerMimeType);
       for (Iterator iterator = imageWriters; iterator.hasNext();) {
         ImageWriter imageWriter = (ImageWriter) iterator.next();
-        LOGGER.info("ImageWriter: {} {}", writerMimeType, imageWriter.getClass().toString());
+        if (imageWriter != null) {
+          LOGGER.info("ImageWriter: {} {}", writerMimeType, imageWriter.getClass().toString());
+        }
       }
     }
   }
