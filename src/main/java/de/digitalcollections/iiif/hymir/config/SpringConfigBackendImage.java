@@ -56,20 +56,21 @@ public class SpringConfigBackendImage {
   // TODO: not the proper way in java 11 to deactivate module feature?
   private static void deregisterSunImageSpis() {
     IIORegistry registry = IIORegistry.getDefaultInstance();
-    try {
-      // We need to disable using the com.sun.imageio.* classes for tiff and jpeg due to strange runtime bugs.
-      // But we can just rely on the TwelveMonkeys imageio packages 🎉
-      // gif and png support is not provided by TwelveMonkeys (https://github.com/haraldk/TwelveMonkeys/issues/137)
-      // so we do not need to disable PNGImage{Reader,Writer}Spi and GIFImage{Reader, Writer}Spi for the com.sun.imageio.* classes here.
-      Set<String> spis = new HashSet<>(Arrays.asList("com.sun.imageio.plugins.tiff.TIFFImageReaderSpi", "com.sun.imageio.plugins.tiff.TIFFImageWriterSpi",
-          "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi", "com.sun.imageio.plugins.jpeg.JPEGImageWriterSpi",
-          "com.sun.imageio.plugins.bmp.BMPImageReaderSpi", "com.sun.imageio.plugins.bmp.BMPImageWriterSpi"));
-      for (String spi : spis) {
+
+    // We need to disable using the com.sun.imageio.* classes for tiff and jpeg due to strange runtime bugs.
+    // But we can just rely on the TwelveMonkeys imageio packages 🎉
+    // gif and png support is not provided by TwelveMonkeys (https://github.com/haraldk/TwelveMonkeys/issues/137)
+    // so we do not need to disable PNGImage{Reader,Writer}Spi and GIFImage{Reader, Writer}Spi for the com.sun.imageio.* classes here.
+    Set<String> spis = new HashSet<>(Arrays.asList("com.sun.imageio.plugins.tiff.TIFFImageReaderSpi", "com.sun.imageio.plugins.tiff.TIFFImageWriterSpi",
+        "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi", "com.sun.imageio.plugins.jpeg.JPEGImageWriterSpi",
+        "com.sun.imageio.plugins.bmp.BMPImageReaderSpi", "com.sun.imageio.plugins.bmp.BMPImageWriterSpi"));
+    for (String spi : spis) {
+      try {
         Object spiProvider = registry.getServiceProviderByClass(Class.forName(spi));
         registry.deregisterServiceProvider(spiProvider);
+      } catch (ClassNotFoundException e) {
+        LOGGER.debug(e.getMessage());
       }
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
     }
   }
 }
