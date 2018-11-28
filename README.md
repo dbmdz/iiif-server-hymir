@@ -77,8 +77,6 @@ performance, it is recommended to use the native image processing backend
 that is based on TurboJPEG. For this, you will have to install the TurboJPEG
 native library, on Ubuntu `libturbojpeg`.
 
-## Configuration
-
 ### Logging
 
 (Configured in logback-spring.xml)
@@ -153,6 +151,33 @@ An image API url example:
 ```
 http://localhost:9000/image/v2/image_001/full/full/0/default.jpg
 ```
+### Change endpoint URLs
+
+#### Image API URL
+
+By default the url prefix of the IIIF Image API endpoint is `/image/v2/`.
+You can configure another url prefix on server startup using system property `custom.iiif.image.urlPrefix`.
+
+Example:
+
+```sh
+$ java -Dcustom.iiif.image.urlPrefix='/iiifImage/' -jar target/hymir-4.0.0-SNAPSHOT-exec.jar --rules=file:/etc/hymir/rules.yml --spring.profiles.active=local
+```
+
+Resulting URL: `http://localhost:9000/iiifImage/bsb00113391_00001/full/300,/0/default.jpg`
+
+#### Presentation API URL
+
+By default the url prefix of the IIIF Presentation API endpoint is `/presentation/v2/`.
+You can configure another url prefix on server startup using system property `custom.iiif.presentation.urlPrefix`.
+
+Example:
+
+```sh
+$ java -Dcustom.iiif.presentation.urlPrefix='/iiifPresentation/' -jar target/hymir-4.0.0-SNAPSHOT-exec.jar --rules=file:/etc/hymir/rules.yml --spring.profiles.active=local
+```
+
+Resulting URL: `http://localhost:9000/iiifPresentation/bsb00113391/manifest`
 
 ## Administration
 

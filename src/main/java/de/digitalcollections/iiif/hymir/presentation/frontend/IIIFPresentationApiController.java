@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 @Controller
-@RequestMapping("/presentation/v2")
+@RequestMapping("${custom.iiif.presentation.urlPrefix:/presentation/v2}")
 public class IIIFPresentationApiController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(IIIFPresentationApiController.class);

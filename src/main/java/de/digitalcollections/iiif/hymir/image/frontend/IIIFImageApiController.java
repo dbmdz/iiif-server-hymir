@@ -28,8 +28,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 
 @Controller
-@RequestMapping("/image/v2/")
+@RequestMapping("${custom.iiif.image.urlPrefix:/image/v2/}")
 public class IIIFImageApiController {
+
   public static final String VERSION = "v2";
 
   @Value("${custom.iiif.image.canonicalRedirect:true}")
@@ -82,8 +83,8 @@ public class IIIFImageApiController {
           @PathVariable String size, @PathVariable String rotation,
           @PathVariable String quality, @PathVariable String format,
           HttpServletRequest request, HttpServletResponse response, WebRequest webRequest)
-      throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException,
-             ResourceNotFoundException {
+          throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException,
+          ResourceNotFoundException {
     HttpHeaders headers = new HttpHeaders();
     String path;
     if (request.getPathInfo() != null) {
@@ -111,14 +112,14 @@ public class IIIFImageApiController {
       throw new InvalidParametersException(e);
     }
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
-        "http://foo.org/" + identifier);
+            "http://foo.org/" + identifier);
     imageService.readImageInfo(identifier, info);
     ImageApiProfile profile = ImageApiProfile.merge(info.getProfiles());
     String canonicalForm;
     try {
       canonicalForm = selector.getCanonicalForm(
-          new Dimension(info.getWidth(), info.getHeight()),
-          profile, ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
+              new Dimension(info.getWidth(), info.getHeight()),
+              profile, ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
     } catch (ResolvingException e) {
       throw new InvalidParametersException(e);
     }
@@ -140,7 +141,7 @@ public class IIIFImageApiController {
       long duration = System.currentTimeMillis();
       imageService.processImage(identifier, selector, profile, os);
       duration = System.currentTimeMillis() - duration;
-      metricsService.increaseCounterWithDurationAndPercentiles("image","process", duration);
+      metricsService.increaseCounterWithDurationAndPercentiles("image", "process", duration);
       return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }
@@ -160,10 +161,10 @@ public class IIIFImageApiController {
     }
     String baseUrl = getUrlBase(req);
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
-        baseUrl + path.replace("/info.json", "").replace(identifier, URLEncoder.encode(identifier, "UTF-8")));
+            baseUrl + path.replace("/info.json", "").replace(identifier, URLEncoder.encode(identifier, "UTF-8")));
     imageService.readImageInfo(identifier, info);
     duration = System.currentTimeMillis() - duration;
-    metricsService.increaseCounterWithDurationAndPercentiles("generations","infojson", duration);
+    metricsService.increaseCounterWithDurationAndPercentiles("generations", "infojson", duration);
     HttpHeaders headers = new HttpHeaders();
     headers.setDate("Last-Modified", modified);
     String contentType = req.getHeader("Accept");
