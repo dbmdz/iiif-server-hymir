@@ -256,7 +256,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testCropWithAbsoluteValues() throws Exception {
     ResponseEntity<byte[]> response = restTemplate.exchange(
-            "/image/" + IIIFImageApiController.VERSION + "/file-zoom/20,20,50,50/full/0/native.jpg",
+            "/image/" + IIIFImageApiController.VERSION + "/file-zoom/20,20,50,50/full/0/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -269,13 +269,13 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithAbsoluteValuesTotallyExceeding() throws Exception {
-    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/5000,5000,100,100/full/0/native.jpg", String.class);
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/5000,5000,100,100/full/0/default.jpg", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
   @Test
   public void testCropWithRelativeValues() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,10,10,10/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,10,10,10/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,255,206,255/full/0/default.jpg");
@@ -290,7 +290,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithRelativeValuesPartiallyExceeding() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:20,20,100,10/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:20,20,100,10/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/413,511,1651,255/full/0/default.jpg");
@@ -305,7 +305,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareLargerWidth() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square-width/square/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square-width/square/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/square-width/122,0,219,219/full/0/default.jpg");
@@ -320,7 +320,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareLargerHeight() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square-height/square/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square-height/square/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/square-height/0,40,249,249/full/0/default.jpg");
@@ -335,7 +335,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareAlreadySquare() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square/square/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square/square/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/square/full/full/0/default.jpg");
@@ -368,12 +368,12 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testMirror() throws Exception {
-    ResponseEntity<byte[]> responseRegular = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/0/native.jpg",
+    ResponseEntity<byte[]> responseRegular = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/0/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(responseRegular.getStatusCode()).isEqualTo(HttpStatus.OK);
     byte[] imgDataRegular = responseRegular.getBody();
 
-    ResponseEntity<byte[]> responseMirror = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/!0/native.jpg",
+    ResponseEntity<byte[]> responseMirror = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/!0/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(responseMirror.getStatusCode()).isEqualTo(HttpStatus.OK);
     byte[] imgDataMirror = responseMirror.getBody();
@@ -388,7 +388,7 @@ public class IIIFImageApiControllerTest {
   /* 4.3 Rotation */
   @Test
   public void testRotation() throws Exception {
-    ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/native.jpg",
+    ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -400,7 +400,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithBestWidth() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/!500,500/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/!500,500/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/404,500/0/default.jpg");
@@ -416,7 +416,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithMissingWidth() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/,200/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/,200/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/161,200/0/default.jpg");
@@ -432,7 +432,7 @@ public class IIIFImageApiControllerTest {
   /* 4.2 Size */
   @Test
   public void testScaleWithMissingHeigth() throws Exception {
-    ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/native.jpg",
+    ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -443,7 +443,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithRelativeValues() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/pct:50/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/pct:50/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/1032,/0/default.jpg");
@@ -459,7 +459,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testRelativeCropWithAbsoluteScale() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/500,/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/500,/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,511,413,511/500,/0/default.jpg");
@@ -491,7 +491,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCanonicalRedirectWithRelativeCropAndScale() throws Exception {
-    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/native.jpg", String.class);
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/default.jpg", String.class);
     assertThat(response.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,511,413,511/346,/0/default.jpg");
@@ -500,7 +500,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testNoRedirectIfDisabled() throws Exception {
     iiifController.setCanonicalRedirectEnabled(false);
-    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/native.jpg", String.class);
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/default.jpg", String.class);
     iiifController.setCanonicalRedirectEnabled(true);
     assertThat(response.getStatusCode().series()).isEqualTo(HttpStatus.Series.SUCCESSFUL);
     String link = response.getHeaders().getFirst("Link").toString();

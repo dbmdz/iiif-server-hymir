@@ -266,7 +266,7 @@ public class ImageServiceImpl implements ImageService {
   private BufferedImage transformImage(BufferedImage inputImage, Dimension targetSize, int rotation, boolean mirror,
           ImageApiProfile.Quality quality) {
     BufferedImage img = inputImage;
-    int inType = img.getType();
+    final int inType = img.getType();
     boolean needsAdditionalScaling = !new Dimension(img.getWidth(), img.getHeight()).equals(targetSize);
     if (needsAdditionalScaling) {
       img = Scalr.resize(img, Scalr.Method.BALANCED, Scalr.Mode.FIT_EXACT, targetSize.width, targetSize.height);
