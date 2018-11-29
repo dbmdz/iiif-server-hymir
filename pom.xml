@@ -155,22 +155,17 @@
     </dependency>
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
+      <artifactId>imageio-bmp</artifactId>
+      <version>${version.twelvemonkeys}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-jpeg</artifactId>
       <version>${version.twelvemonkeys}</version>
     </dependency>
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-tiff</artifactId>
-      <version>${version.twelvemonkeys}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.twelvemonkeys.imageio</groupId>
-      <artifactId>imageio-jpeg</artifactId>
-      <version>${version.twelvemonkeys}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.twelvemonkeys.imageio</groupId>
-      <artifactId>imageio-bmp</artifactId>
       <version>${version.twelvemonkeys}</version>
     </dependency>
     <dependency>
