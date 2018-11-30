@@ -3,12 +3,12 @@ package de.digitalcollections.iiif.hymir.image.frontend;
 import de.digitalcollections.commons.springboot.metrics.MetricsService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
-import de.digitalcollections.iiif.hymir.model.exception.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
+import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -83,8 +83,7 @@ public class IIIFImageApiController {
           @PathVariable String size, @PathVariable String rotation,
           @PathVariable String quality, @PathVariable String format,
           HttpServletRequest request, HttpServletResponse response, WebRequest webRequest)
-          throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException,
-          ResourceNotFoundException {
+          throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException, ResourceNotFoundException {
     HttpHeaders headers = new HttpHeaders();
     String path;
     if (request.getPathInfo() != null) {
