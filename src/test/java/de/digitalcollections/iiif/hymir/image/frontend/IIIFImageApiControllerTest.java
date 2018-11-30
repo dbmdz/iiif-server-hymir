@@ -1,5 +1,6 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
+import de.digitalcollections.iiif.hymir.TestConfiguration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
