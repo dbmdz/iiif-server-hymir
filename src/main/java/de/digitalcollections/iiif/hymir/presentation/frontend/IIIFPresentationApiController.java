@@ -9,6 +9,7 @@ import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.iiif.model.sharedcanvas.Range;
 import de.digitalcollections.iiif.model.sharedcanvas.Sequence;
+import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
 import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +44,7 @@ public class IIIFPresentationApiController {
           produces = "application/json")
   @ResponseBody
   public Manifest getManifest(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     // Return 304 if the manifest has seen no modifications since the requested time
     long modified = presentationService.getManifestModificationDate(identifier).toEpochMilli();
     if (request.checkNotModified(modified)) {
@@ -61,7 +62,7 @@ public class IIIFPresentationApiController {
   @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.HEAD)
   public void checkManifest(@PathVariable String identifier, HttpServletResponse resp)
-          throws ResolvingException {
+          throws ResolvingException, ResourceNotFoundException {
     Instant modDate = presentationService.getManifestModificationDate(identifier);
     resp.setDateHeader("Last-Modified", modDate.toEpochMilli());
     resp.setStatus(HttpStatus.SC_OK);
@@ -71,7 +72,7 @@ public class IIIFPresentationApiController {
   @RequestMapping(value = {"{manifestId}/canvas/{canvasId}"}, method = RequestMethod.GET)
   @ResponseBody
   public Canvas getCanvas(@PathVariable String manifestId, @PathVariable String canvasId, HttpServletRequest req)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return presentationService.getCanvas(manifestId, getOriginalUri(req));
   }
 
@@ -79,7 +80,7 @@ public class IIIFPresentationApiController {
   @RequestMapping(value = {"{manifestId}/range/{rangeId}"}, method = RequestMethod.GET)
   @ResponseBody
   public Range getRange(@PathVariable String manifestId, @PathVariable String rangeId, HttpServletRequest req)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return presentationService.getRange(manifestId, getOriginalUri(req));
   }
 
@@ -87,7 +88,7 @@ public class IIIFPresentationApiController {
   @RequestMapping(value = {"{manifestId}/sequence/{sequenceId}"}, method = RequestMethod.GET)
   @ResponseBody
   public Sequence getSequence(@PathVariable String manifestId, @PathVariable String sequenceId, HttpServletRequest req)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return presentationService.getSequence(manifestId, getOriginalUri(req));
   }
 
@@ -96,7 +97,7 @@ public class IIIFPresentationApiController {
           produces = "application/json")
   @ResponseBody
   public Collection getCollection(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     long modified = presentationService.getCollectionModificationDate(identifier).toEpochMilli();
     if (request.checkNotModified(modified)) {
       return null;

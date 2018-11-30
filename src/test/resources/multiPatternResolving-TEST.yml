@@ -12,3 +12,5 @@
   substitutions: ['classpath\:mockdata/mock-square-width.jpg']
 - pattern: square-height
   substitutions: ['classpath\:mockdata/mock-square-height.jpg']
+- pattern: manifest-invalid-data
+  substitutions: ['classpath\:mockdata/manifest-invalid-data.json']

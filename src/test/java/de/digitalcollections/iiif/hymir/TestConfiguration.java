@@ -1,4 +1,4 @@
-package de.digitalcollections.iiif.hymir.image.frontend;
+package de.digitalcollections.iiif.hymir;
 
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;

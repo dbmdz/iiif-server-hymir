@@ -7,30 +7,32 @@ import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationSe
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
+import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PresentationServiceImpl implements PresentationService {
+
   private final PresentationRepository presentationRepository;
 
   private final PresentationSecurityService presentationSecurityService;
 
   @Autowired
   public PresentationServiceImpl(PresentationRepository presentationRepository,
-                                 @Autowired(required=false) PresentationSecurityService presentationSecurityService) {
+          @Autowired(required = false) PresentationSecurityService presentationSecurityService) {
     this.presentationRepository = presentationRepository;
     this.presentationSecurityService = presentationSecurityService;
   }
 
   @Override
-  public Collection getCollection(String name) throws ResolvingException, InvalidDataException {
+  public Collection getCollection(String name) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return presentationRepository.getCollection(name);
   }
 
   @Override
-  public Manifest getManifest(String identifier) throws ResolvingException, InvalidDataException {
+  public Manifest getManifest(String identifier) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     if (presentationSecurityService != null && !presentationSecurityService.isAccessAllowed(identifier)) {
       throw new ResolvingException(); // TODO maybe throw an explicitely access disallowed exception
     }
@@ -38,12 +40,12 @@ public class PresentationServiceImpl implements PresentationService {
   }
 
   @Override
-  public Instant getManifestModificationDate(String identifier) throws ResolvingException {
+  public Instant getManifestModificationDate(String identifier) throws ResolvingException, ResourceNotFoundException {
     return presentationRepository.getManifestModificationDate(identifier);
   }
 
   @Override
-  public Instant getCollectionModificationDate(String identifier) throws ResolvingException {
+  public Instant getCollectionModificationDate(String identifier) throws ResolvingException, ResourceNotFoundException {
     return presentationRepository.getCollectionModificationDate(identifier);
   }
 }

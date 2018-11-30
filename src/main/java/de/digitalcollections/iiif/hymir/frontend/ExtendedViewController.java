@@ -5,6 +5,7 @@ import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
 import de.digitalcollections.iiif.hymir.presentation.frontend.IIIFPresentationApiController;
+import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -44,20 +45,20 @@ public class ExtendedViewController {
   }
 
   /**
-   * Direct link for viewing a specified canvas (page) used for citation.
-   * https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00107186/canvas/1
+   * Direct link for viewing a specified canvas (page) used for citation.https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00107186/canvas/1
    * @param version api version
    * @param objectIdentifier object identifier
    * @param canvasName name of canvas
    * @param model mvc model
    * @param request request
    * @return canvas specific view
-   * @throws ResolvingException if no manifest found
+   * @throws ResolvingException if identifier of manifest can not be resolved
+   * @throws ResourceNotFoundException if manifest not found
    * @throws InvalidDataException if manifest can't be read
    */
   @RequestMapping(value = "/presentation/{version}/{objectIdentifier}/canvas/{canvasName}/view", method = RequestMethod.GET)
   public String viewCanvasGet(@PathVariable String version, @PathVariable String objectIdentifier, @PathVariable String canvasName, Model model, HttpServletRequest request)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     HttpLoggingUtilities.addRequestClientInfoToMDC(request);
     MDC.put("manifestId", objectIdentifier);
     MDC.put("canvasName", canvasName);
