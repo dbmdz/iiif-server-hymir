@@ -7,8 +7,7 @@
 [![codecov](https://codecov.io/gh/dbmdz/iiif-server-hymir/branch/master/graph/badge.svg)](https://codecov.io/gh/dbmdz/iiif-server-hymir)
 [![Maven Central](https://img.shields.io/maven-central/v/de.digitalcollections/iiif-server-hymir.svg?maxAge=2592000)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22iiif-server-hymir%22)
 
-Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](https://github.com/dbmdz/iiif-apis)
-(Java implementations of the [IIIF specifications](http://iiif.io/technical-details/)).
+Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](https://github.com/dbmdz/iiif-apis) (Java implementations of the [IIIF specifications](http://iiif.io/technical-details/)). It can be used to serve images, presentation manifests and presentation collections.
 
 ## Features
 
@@ -52,19 +51,19 @@ Run the downloaded application with `java -jar hymir-<version>-exec.jar`
 - Example with Logstash-JSON-logging to ./hymir.log:
 
 ```sh
-$ java -jar hymir-3.0.1-exec.jar
+$ java -jar hymir-4.0.0-exec.jar
 ```
 
 - Example with logging to console:
 
 ```sh
-$ java -jar hymir-3.0.1-exec.jar --spring.profiles.active=local
+$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=local
 ```
 
 - Example with logging to console and custom file resolving rules:
 
 ```sh
-$ java -jar hymir-3.0.1-exec.jar --spring.profiles.active=local --rules=file:/etc/hymir/rules.yml
+$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=local --rules=file:/etc/hymir/rules.yml
 ```
 
 Access Hymir GUI (e.g. http://localhost:9000/).
@@ -83,7 +82,7 @@ native library, on Ubuntu `libturbojpeg`.
 
 The default logging file is configured as `./hymir.log` in Logstash-JSON-format.
 
-If you want human readable logging to console use "--spring.profiles.active=local" on start command line.
+If you want human readable logging to console use `--spring.profiles.active=local` on start command line.
 
 
 ### Image and presentation manifest resolving
@@ -106,54 +105,56 @@ Example file "rules.yml":
 # In the example below, we have two MIME types (tiff/jpeg) and for JPEG two resolutions
 # in decreasing order of quality, so that the higher-resolution image will be chosen
 # if it is available.
-- pattern: ^bsb(\d{8})_(\d{5})$
+# An image pattern resolving example:
+- pattern: ^(\d{8})_(\d{5})$
   substitutions:
-    - 'file:/var/local/bsb$1/images/original/bsb$1_$2.tif'
-    - 'file:/var/local/bsb$1/images/300/bsb$1_$2.jpg'
-    - 'file:/var/local/bsb$1/images/150/bsb$1_$2.jpg'
+    - 'file:/var/local/iiif/images/$1/original/image_$1_$2.tif'
+    - 'file:/var/local/iiif/images/$1/300/image_$1_$2.jpg'
+    - 'file:/var/local/iiif/images/$1/150/image_$1_$2.jpg'
 
-# A simpler example with just a single substitution pattern (for resolving IIIF-manifests)
-- pattern: ^bsb(\d{8})$
+# An manifest pattern resolving example:
+- pattern: ^(\d{8})$
   substitutions:
-    - 'file:/var/local/bsb$1/manifest/bsb$1.json'
+    - 'file:/var/local/iiif/presentation/manifests/manifest_$1.json'
+
+# For the official IIIF Image API Validator
+- pattern: 67352ccc-d1b0-11e1-89ae-279075081939
+  substitutions:
+    - 'classpath:validation.jp2'
+    - 'classpath:validation.png'
+
+# Collection manifests ('collection-' pattern-prefix is statically added to requested collection name to disambigued from other patterns)
+- pattern: ^collection-(.*)$
+  substitutions:
+    - 'file:/var/local/iiif/presentation/collections/$1.json'
 ```
 
-Use Case:
+### Serve images
 
-In the simplest case you just want to serve images of a directory, supporting just the image API.
-Let's assume you have a bunch of jpg-files residing in the directory "/home/hans/my_images".
-The files are named "image_001.jpg", "image_002.jpg", ...
+See <https://iiif.io/api/image/2.1/>
 
-You could take the filename as identifier. The rules.yml then is just:
+In the simplest case you just want to serve images of a directory.
+
+Example: 
+
+Let's assume you have a bunch of jpg-files residing in the directory "/var/local/iiif/images" for objects with identifiers `00000001`, `00000002` and so on. The `images`-directory contains a directory for each object in which in turn all images of an object reside.
+The files are named "image_00000001_00001.jpg", "image_00000001_00002.jpg", ... thus containing the object id and the image number in the filename.
+
+An example for a rules.yml entry (including matching just for identifiers and numbered images with digits) then just could look like this:
 
 ```yaml
-- pattern: ^(.*)$
+- pattern: ^(\d{8})_(\d{5})$
   substitutions:
-    - 'file:/home/hans/my_images/$1'
+    - 'file:/var/local/iiif/images/$1/image_$1_$2.jpg'
 ```
 
-An image API url example:
+An IIIF Image API url example for this pattern:
 
 ```
-http://localhost:9000/image/v2/image_001.jpg/full/full/0/default.jpg
+http://localhost:9000/image/v2/00000005_00012/full/full/0/default.jpg
 ```
 
-To make it more safe (avoid serving of other files) and shorter, you could decide to shorten the identifier and concatenate the file extension in the rule:
-
-```yaml
-- pattern: ^(.*)$
-  substitutions:
-    - 'file:/home/hans/my_images/$1.jpg'
-```
-
-An image API url example:
-
-```
-http://localhost:9000/image/v2/image_001/full/full/0/default.jpg
-```
-### Change endpoint URLs
-
-#### Image API URL
+#### Change Image API URL prefix
 
 By default the url prefix of the IIIF Image API endpoint is `/image/v2/`.
 You can configure another url prefix on server startup using system property `custom.iiif.image.urlPrefix`.
@@ -161,12 +162,37 @@ You can configure another url prefix on server startup using system property `cu
 Example:
 
 ```sh
-$ java -Dcustom.iiif.image.urlPrefix='/iiifImage/' -jar target/hymir-4.0.0-SNAPSHOT-exec.jar --rules=file:/etc/hymir/rules.yml --spring.profiles.active=local
+$ java -Dcustom.iiif.image.urlPrefix='/iiifImage/' -jar target/hymir-4.0.0-exec.jar --rules=file:/etc/hymir/rules.yml --spring.profiles.active=local
 ```
 
-Resulting URL: `http://localhost:9000/iiifImage/bsb00113391_00001/full/300,/0/default.jpg`
+Resulting URL: `http://localhost:9000/iiifImage/00113391_00001/full/300,/0/default.jpg`
 
-#### Presentation API URL
+### Serve IIIF Presentation manifests
+
+See <https://iiif.io/api/presentation/2.1/#manifest>
+
+In the simplest case you just want to serve static (pregenerated) IIIF Presentation manifest json-files of a directory.
+
+Example:
+
+Let's assume you have a bunch of json-files residing in the directory "/var/local/iiif/presentation/manifests" for the objects with identifiers `00000001`, `00000002` and so on.
+The files are named "manifest_00000001.json", "manifest_00000002.json", ... containing the object id in the filename.
+
+An example for a rules.yml entry (including matching just for identifiers with digits) then could look like this:
+
+```yaml
+- pattern: ^(\d{8})$
+  substitutions:
+    - 'file:/var/local/iiif/presentation/manifests/manifest_$1.json'
+```
+
+An IIIF Presentation API url for a manifest example:
+
+```
+http://localhost:9000/presentation/v2/00000002/manifest
+```
+
+#### Change Presentation API URL prefix
 
 By default the url prefix of the IIIF Presentation API endpoint is `/presentation/v2/`.
 You can configure another url prefix on server startup using system property `custom.iiif.presentation.urlPrefix`.
@@ -174,10 +200,37 @@ You can configure another url prefix on server startup using system property `cu
 Example:
 
 ```sh
-$ java -Dcustom.iiif.presentation.urlPrefix='/iiifPresentation/' -jar target/hymir-4.0.0-SNAPSHOT-exec.jar --rules=file:/etc/hymir/rules.yml --spring.profiles.active=local
+$ java -Dcustom.iiif.presentation.urlPrefix='/iiifPresentation/' -jar target/hymir-4.0.0-exec.jar --rules=file:/etc/hymir/rules.yml --spring.profiles.active=local
 ```
 
-Resulting URL: `http://localhost:9000/iiifPresentation/bsb00113391/manifest`
+Resulting URL: `http://localhost:9000/iiifPresentation/00113391/manifest`
+
+### Serve IIIF Presentation collections
+
+See <https://iiif.io/api/presentation/2.1/#collection>
+
+In the simplest case you just want to serve static (pregenerated) IIIF Presentation collection json-files of a directory.
+
+Example:
+
+Let's assume you have a bunch of json-files residing in the directory "/var/local/iiif/presentation/collections" for collections with a specific name, e.g. `newspapers`.
+The files are named e.g. `newspapers.json`, `medieval_manuscripts.json`, ... containing the collection name in the filename.
+
+An example for a rules.yml entry then just could look like this:
+
+```yaml
+- pattern: ^collection-(.*)$
+  substitutions:
+    - 'file:/var/local/iiif/presentation/collections/$1.json'
+```
+
+An IIIF Presentation API url for a collection example:
+
+```
+http://localhost:9000/presentation/v2/collection/newspapers
+```
+
+Implementation background: To get a regex resolvable pattern that can be differentiated from patterns for manifest json-files (same mimetype), Hymir adds the static prefix `collection-` to the given identifier for collections. (This does not appear in the identifier in the url, just in the rules.yml regex)
 
 ## Administration
 
@@ -185,7 +238,8 @@ Monitoring endpoints under http://localhost:9001/monitoring (HAL-Browser-GUI), a
 
 ## Users
 
-- Bavarian State Library, Project Bavarikon: <a href="http://www.bavarikon.de/">https://www.bavarikon.de/</a>
+- Bavarian State Library, Project "bavarikon": <a href="http://www.bavarikon.de/">https://www.bavarikon.de/</a>
+- Bavarian State Library, Project "Digital East Asian Collections": <a href="https://eastasia.digital-collections.de/">https://eastasia.digital-collections.de/</a>
 - Bavarian State Library, Project digiPress: <a href="https://digipress.digitale-sammlungen.de/">https://digipress.digitale-sammlungen.de/</a>
 - Bavarian State Library, iiif-Bookshelf: <a href="https://iiif.digitale-sammlungen.de/">https://iiif.digitale-sammlungen.de/</a>
 
