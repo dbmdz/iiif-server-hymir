@@ -261,7 +261,7 @@ Implementation background: To get a regex resolvable pattern that can be differe
 Default logging configuration is specified in the file `logback-spring.xml` packaged in the exectable Hymir JAR-file.
 The default logging file is configured as `./hymir.log` in Logstash-JSON-format.
 
-If you want human readable logging to console use `--spring.profiles.active=local` on start command line.
+If you want human readable logging to console use `--spring.profiles.active=local` on start command line or define a custom `logback-spring.xml` config location (see "Usage" section above).
 
 ### Using the TurboJPEG backend
 By default, a Java-based image processing backend is used. If you want better
