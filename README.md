@@ -286,6 +286,55 @@ $ java xfv hymir-4.0.0.jar application.yml
 
 Now put the file beside the executable Hymir jar and edit it according to your requirements.
 
+#### Configure custom HTTP-Response-Header
+
+If you already put your custom `application.yml` file in place (see above), it is possible to set custom HTTP response headers in responses for
+
+- all requests to Image and Presentation API urls
+- Image API: image requests
+- Image API: info.json requests
+- Presentation API: manifest requests (includes canvas and range requests)
+- Presentation API: collection requests
+
+Customized response headers are placed in the `custom.iiif.headers`-section of your `application.yml` configuration file, e.g.:
+
+```yml
+custom:
+  iiif:
+    headers:
+      all:
+        - name: 'served by'
+          value: 'hymir'
+      image:
+        image:
+          - name: 'cache-control'
+            value: 'max-age=86400'
+        info:
+          - name: 'header1'
+            value: 'value1'
+      presentation:
+        manifest:
+          - name: 'mani1'
+            value: 'mani-value1'
+          - name: 'mani2'
+            value: 'mani-value2'
+        collection: null
+```
+
+If you want to override a header that is set by default (e.g. `Access-Control-Allow-Origin=*`), you just have to configure it with another value, e.g.:
+
+```yml
+custom:
+  iiif:
+    headers:
+      image:
+        info:
+          - name: 'Access-Control-Allow-Origin'
+            value: 'https://yourdomain.org'
+```
+
+(Given example is a bad practice in the IIIF context, as it contradicts the "interoperability" idea of IIIF...)
+
 ## Administration
 
 Monitoring endpoints under http://localhost:9001/monitoring (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)

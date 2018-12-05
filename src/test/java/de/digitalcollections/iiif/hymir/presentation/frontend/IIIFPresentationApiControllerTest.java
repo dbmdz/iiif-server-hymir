@@ -17,7 +17,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        properties = {"spring.profiles.active=TEST",
+                      "spring.config.name=application-customResponseHeaders-test"},
+        classes = {Application.class, TestConfiguration.class},
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFPresentationApiControllerTest {
 
   @LocalServerPort
@@ -34,7 +38,6 @@ public class IIIFPresentationApiControllerTest {
 
   @BeforeAll
   public static void beforeAll() {
-    System.setProperty("spring.profiles.active", "TEST");
     System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     TestConfiguration.setDefaults();
   }
@@ -43,5 +46,12 @@ public class IIIFPresentationApiControllerTest {
   public void testInvalidDataInManifest() {
     ResponseEntity<String> response = restTemplate.getForEntity("/presentation/" + IIIFPresentationApiController.VERSION + "/manifest-invalid-data/manifest", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @Test
+  public void testManifest() {
+    ResponseEntity<String> response = restTemplate.getForEntity("/presentation/" + IIIFPresentationApiController.VERSION + "/manifest-valid-data/manifest", String.class);
+    assertThat(response.getHeaders().get("mani1")).containsExactly("mani-value1");
+    assertThat(response.getHeaders().get("mani2")).containsExactly("mani-value2");
   }
 }

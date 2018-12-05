@@ -1,0 +1,85 @@
+custom:
+  iiif:
+    headers:
+      all:
+        - name: 'served by'
+          value: 'hymir'
+      image:
+        image:
+          - name: 'cache-control'
+            value: 'max-age=86400'
+        info:
+          - name: 'header1'
+            value: 'value1'
+      presentation:
+        manifest:
+          - name: 'mani1'
+            value: 'mani-value1'
+          - name: 'mani2'
+            value: 'mani-value2'
+        collection: null
+    image:
+      maxWidth: 65500
+      maxHeight: 65500
+      canonicalRedirect: true
+
+info:
+  app:
+    encoding: '@project.build.sourceEncoding@'
+    java:
+      source: '@maven.compiler.source@'
+      target: '@maven.compiler.target@'
+    project:
+      name: '@project.name@'
+      groupId: '@project.groupId@'
+      artifactId: '@project.artifactId@'
+      version: '@project.version@'
+      buildDetails: '@versionName@'
+
+javamelody:
+  enabled: true
+  init-parameters:
+    allowed-addr-pattern: 'localhost|127\.0\.0\.1|0:0:0:0:0:0:0:1'
+    authorized-users: 'admin:somepassword'
+    http-transform-pattern: '(\\d+|(?<=currenttitles/).*|(?<=citationtitles/).*|(?<=occurrences/).*|(?<=periodical/).*|(?<=issues/).*)'
+    # log http requests:
+    log: false
+    monitoring-path: '/monitoring/javamelody'
+    url-exclude-pattern: '^(/webjars|/jsondoc|/monitoring).*'
+
+management:
+  endpoint:
+    health:
+      show-details: when-authorized
+  endpoints:
+    web:
+      base-path: '/monitoring'
+      exposure:
+        include: '*'
+  info:
+    git:
+      mode: full
+  server:
+    port: 9001
+
+server:
+  error:
+    include-exception: true
+    include-stacktrace: always
+  port: 9000
+  server-header: "@project.name@ v@project.version@"
+
+spring:
+  messages:
+    basename: messages,messages-overlay,messages-commons
+    fallback-to-system-locale: false
+  profiles:
+    active: TEST
+  security:
+    user:
+      name: admin
+      password: secret
+      roles: ACTUATOR
+  thymeleaf:
+    cache: false
+    mode: HTML

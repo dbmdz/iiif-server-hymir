@@ -1,11 +1,11 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
-import de.digitalcollections.iiif.hymir.TestConfiguration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
 import com.twelvemonkeys.imageio.stream.ByteArrayImageInputStream;
 import de.digitalcollections.iiif.hymir.Application;
+import de.digitalcollections.iiif.hymir.TestConfiguration;
 import de.digitalcollections.iiif.hymir.image.business.ImageServiceImpl;
 import de.digitalcollections.turbojpeg.lib.libturbojpeg;
 import java.awt.image.BufferedImage;
@@ -41,7 +41,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        properties = {"spring.profiles.active=TEST",
+                      "spring.config.name=application-customResponseHeaders-test"},
+        classes = {Application.class, TestConfiguration.class},
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFImageApiControllerTest {
 
   @LocalServerPort
@@ -58,7 +62,6 @@ public class IIIFImageApiControllerTest {
 
   @BeforeAll
   public static void beforeAll() {
-    System.setProperty("spring.profiles.active", "TEST");
     System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     TestConfiguration.setDefaults();
   }
@@ -102,6 +105,7 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getHeaders().getLastModified()).isNotNull();
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+    assertThat(response.getHeaders().get("header1")).containsExactly("value1");
 
     assertThat(response.getHeaders().get("Link")).containsExactly(
             "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
@@ -172,6 +176,7 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.IMAGE_PNG);
     assertThat(response.getHeaders().getContentDisposition().getType()).isEqualTo("inline");
     assertThat(response.getHeaders().getContentDisposition().getFilename()).isEqualTo(IIIFImageApiController.VERSION + "_http-google_full_full_0_default.png");
+    assertThat(response.getHeaders().get("cache-control")).containsExactly("max-age=86400");
   }
 
   /* 4.5 Format */
