@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class IIIFPresentationApiControllerTest {
 
   @LocalServerPort
-  int randomServerPort;
+  private int randomServerPort;
 
   @Autowired
   protected IIIFPresentationApiController iiifController;

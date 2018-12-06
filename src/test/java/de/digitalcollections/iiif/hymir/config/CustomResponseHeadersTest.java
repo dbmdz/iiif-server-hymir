@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CustomResponseHeadersTest {
 
   @Autowired
-  CustomResponseHeaders headers;
+  private CustomResponseHeaders headers;
 
   @Test
   public void testCustomResponseHeadersConfiguration() {
