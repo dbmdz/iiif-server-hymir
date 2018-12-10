@@ -27,7 +27,7 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
   private String actuatorPassword;
 
   @Value("${javamelody.init-parameters.monitoring-path:/monitoring}")
-  String javamelodyMonitoringPath;
+  private String javamelodyMonitoringPath;
 
   @Bean
   public HttpFirewall looseFirewall() {

@@ -1,6 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
 import de.digitalcollections.commons.springboot.metrics.MetricsService;
+import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
@@ -35,6 +36,9 @@ public class IIIFImageApiController {
 
   @Value("${custom.iiif.image.canonicalRedirect:true}")
   private boolean isCanonicalRedirectEnabled;
+
+  @Autowired
+  protected CustomResponseHeaders customResponseHeaders;
 
   private final ImageService imageService;
   private final IiifObjectMapper objectMapper;
@@ -141,12 +145,15 @@ public class IIIFImageApiController {
       imageService.processImage(identifier, selector, profile, os);
       duration = System.currentTimeMillis() - duration;
       metricsService.increaseCounterWithDurationAndPercentiles("image", "process", duration);
+
+      customResponseHeaders.forImageTile().forEach(customResponseHeader -> {
+        headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
+      });
       return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }
 
-  @RequestMapping(value = "{identifier}/info.json",
-          method = {RequestMethod.GET, RequestMethod.HEAD})
+  @RequestMapping(value = "{identifier}/info.json", method = {RequestMethod.GET, RequestMethod.HEAD})
   public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
           WebRequest webRequest) throws Exception {
     long duration = System.currentTimeMillis();
@@ -176,8 +183,11 @@ public class IIIFImageApiController {
               + "type=\"application/ld+json\"");
     }
     headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
-    // We set the header ourselves, since using @CrossOrigin doesn't expose "*", but always sets the requesting domain
     headers.add("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forImageInfo().forEach(customResponseHeader -> {
+      headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
     return new ResponseEntity<>(objectMapper.writeValueAsString(info), headers, HttpStatus.OK);
   }
 

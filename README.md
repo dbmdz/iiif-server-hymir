@@ -46,44 +46,68 @@ Download `hymir-<version>-exec.jar` from the GitHub [releases](https://github.co
 
 ## Usage
 
-Run the downloaded application with `java -jar hymir-<version>-exec.jar`
+Run the downloaded application:
 
-- Example with Logstash-JSON-logging to ./hymir.log:
-
-```sh
-$ java -jar hymir-4.0.0-exec.jar
-```
-
-- Example with logging to console:
+- locally for testing (default active configuration profile is "local"):
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=local
+$ java -jar hymir-<version>-exec.jar
 ```
+Logging: to console
+Image, manifest and collection file resolving: see <src/main/resources/multiPatternResolving-local.yml> (using directories under `/var/local/iiif`)
+Application configuration: see <src/main/resources/application.yml> (`local` profile section at beginning of file)
 
-- Example with logging to console and custom file resolving rules:
+
+- in production
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=local --rules=file:/etc/hymir/rules.yml
+$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
 ```
+
+Logging: to file `./hymir.log` in [Logstash](https://www.elastic.co/de/products/logstash)-JSON format
+Image, manifest and collection file resolving: see <src/main/resources/multiPatternResolving-PROD.yml> (using directories under `/var/local/iiif`)
+Application configuration: see <src/main/resources/application.yml> (`PROD` profile section overriding some values at bottom of file)
+
+- in production with custom logging configuration file:
+
+```sh
+$ java -Dlogging.config=file:/etc/hymir/logback-spring.xml -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
+```
+
+Read <https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html> and <https://logback.qos.ch/manual/configuration.html>.
+
+- in production with custom file resolving rules (to specify images, manifest and collection locations):
+
+```sh
+$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD --rules=file:/etc/hymir/rules.yml
+```
+
+- in production with custom configuration file `application.yml`:
+
+(Custom `application.yml` placed beside jar-file. No explicit command line option needed.)
+
+```sh
+$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
+```
+
+- in production with a custom server port (e.g. port 8080):
+
+```sh
+$ java -Dserver.port=8080 -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
+```
+
+Complete parametrized example:
+
+```sh
+$ java -Dserver.port=8080 -Dlogging.config=file:/etc/hymir/logback-spring.xml -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD --rules=file:/etc/hymir/rules.yml
+```
+
+(and `application.yml`beside jar file).
+
 
 Access Hymir GUI (e.g. http://localhost:9000/).
 
 ## Configuration
-
-### Using the TurboJPEG backend
-By default, a Java-based image processing backend is used. If you want better
-performance, it is recommended to use the native image processing backend
-that is based on TurboJPEG. For this, you will have to install the TurboJPEG
-native library, on Ubuntu `libturbojpeg`.
-
-### Logging
-
-(Configured in logback-spring.xml)
-
-The default logging file is configured as `./hymir.log` in Logstash-JSON-format.
-
-If you want human readable logging to console use `--spring.profiles.active=local` on start command line.
-
 
 ### Image and presentation manifest resolving
 
@@ -231,6 +255,85 @@ http://localhost:9000/presentation/v2/collection/newspapers
 ```
 
 Implementation background: To get a regex resolvable pattern that can be differentiated from patterns for manifest json-files (same mimetype), Hymir adds the static prefix `collection-` to the given identifier for collections. (This does not appear in the identifier in the url, just in the rules.yml regex)
+
+### Logging
+
+Default logging configuration is specified in the file `logback-spring.xml` packaged in the exectable Hymir JAR-file.
+The default logging file is configured as `./hymir.log` in Logstash-JSON-format.
+
+If you want human readable logging to console use `--spring.profiles.active=local` on start command line or define a custom `logback-spring.xml` config location (see "Usage" section above).
+
+### Using the TurboJPEG backend
+By default, a Java-based image processing backend is used. If you want better
+performance, it is recommended to use the native image processing backend
+that is based on TurboJPEG. For this, you will have to install the TurboJPEG
+native library, on Ubuntu `libturbojpeg`.
+
+### Custom configuration file `application.yml`
+
+The default configuration of the server comes packaged in the executable JAR-file of Hymir.
+To customize (override) the default configuration parameters, simply put your custom `application.yml` file beside (in the same directory of) the Hymir JAR-file.
+Your custom `application.yml` does not have to replace all default properties. It can contain only the properties you want to change.
+
+To get the default configuration file, you should download the `hymir-<release-version>.jar` file (NOT containing `-exec` in filename) from <https://github.com/dbmdz/iiif-server-hymir/releases>
+and unpack the contained `application.yml` with:
+
+Example:
+
+```sh
+$ java xfv hymir-4.0.0.jar application.yml
+```
+
+Now put the file beside the executable Hymir jar and edit it according to your requirements.
+
+#### Configure custom HTTP-Response-Header
+
+If you already put your custom `application.yml` file in place (see above), it is possible to set custom HTTP response headers in responses for
+
+- all requests to Image and Presentation API urls
+- Image API: image requests
+- Image API: info.json requests
+- Presentation API: manifest requests (includes canvas and range requests)
+- Presentation API: collection requests
+
+Customized response headers are placed in the `custom.iiif.headers`-section of your `application.yml` configuration file, e.g.:
+
+```yml
+custom:
+  iiif:
+    headers:
+      all:
+        - name: 'served by'
+          value: 'hymir'
+      image:
+        image:
+          - name: 'cache-control'
+            value: 'max-age=86400'
+        info:
+          - name: 'header1'
+            value: 'value1'
+      presentation:
+        manifest:
+          - name: 'mani1'
+            value: 'mani-value1'
+          - name: 'mani2'
+            value: 'mani-value2'
+        collection: null
+```
+
+If you want to override a header that is set by default (e.g. `Access-Control-Allow-Origin=*`), you just have to configure it with another value, e.g.:
+
+```yml
+custom:
+  iiif:
+    headers:
+      image:
+        info:
+          - name: 'Access-Control-Allow-Origin'
+            value: 'https://yourdomain.org'
+```
+
+(Given example is a bad practice in the IIIF context, as it contradicts the "interoperability" idea of IIIF...)
 
 ## Administration
 
