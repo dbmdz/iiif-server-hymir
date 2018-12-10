@@ -1,7 +1,7 @@
 package de.digitalcollections.iiif.hymir;
 
 import com.jayway.jsonpath.DocumentContext;
-import com.revinate.assertj.json.JsonPathAssert;
+import de.digitalcollections.iiif.hymir.JsonPathAssert;
 import org.assertj.core.api.Assertions;
 
 public class HymirAssertions extends Assertions {
