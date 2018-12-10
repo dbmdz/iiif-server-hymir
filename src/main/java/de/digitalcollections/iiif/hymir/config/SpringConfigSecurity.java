@@ -55,7 +55,7 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .requestMatchers(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class)).permitAll()
-            .requestMatchers(EndpointRequest.to("version", "prometheus", "jolokia")).permitAll()
+            .requestMatchers(EndpointRequest.to("version")).permitAll()
             .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
             .antMatchers("/**").permitAll()
             .and()
