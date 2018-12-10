@@ -23,6 +23,12 @@
         <p>
           <label th:text="#{error.timestamp}">Time error occured</label>: <span th:text="${timestamp}">The time that the errors were extracted</span>
         </p>
+        <p th:if="${exception}">
+          <label th:text="#{error.exception}">Exception</label>: <span th:text="${exception}">The class name of the root exception (if configured)</span>
+        </p>
+        <p th:if="${trace}">
+          <label th:text="#{error.stacktrace}">Stacktrace</label>: <span th:text="${trace}">The exception stack trace</span>
+        </p>
       </div>
     </section>
   </body>
