@@ -54,8 +54,10 @@ Run the downloaded application:
 $ java -jar hymir-<version>-exec.jar
 ```
 Logging: to console
-Image, manifest and collection file resolving: see <src/main/resources/multiPatternResolving-local.yml> (using directories under `/var/local/iiif`)
-Application configuration: see <src/main/resources/application.yml> (`local` profile section at beginning of file)
+
+Image, manifest and collection file resolving: see [here](src/main/resources/multiPatternResolving-local.yml) (using directories under `/var/local/iiif`)
+
+Application configuration: see [here](src/main/resources/application.yml) (`local` profile section at beginning of file)
 
 
 - in production
@@ -65,8 +67,10 @@ $ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
 ```
 
 Logging: to file `./hymir.log` in [Logstash](https://www.elastic.co/de/products/logstash)-JSON format
-Image, manifest and collection file resolving: see <src/main/resources/multiPatternResolving-PROD.yml> (using directories under `/var/local/iiif`)
-Application configuration: see <src/main/resources/application.yml> (`PROD` profile section overriding some values at bottom of file)
+
+Image, manifest and collection file resolving: see [here](src/main/resources/multiPatternResolving-PROD.yml) (using directories under `/var/local/iiif`)
+
+Application configuration: see [here](src/main/resources/application.yml) (`PROD` profile section overriding some values at bottom of file)
 
 - in production with custom logging configuration file:
 
@@ -102,8 +106,7 @@ Complete parametrized example:
 $ java -Dserver.port=8080 -Dlogging.config=file:/etc/hymir/logback-spring.xml -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD --rules=file:/etc/hymir/rules.yml
 ```
 
-(and `application.yml`beside jar file).
-
+(and `application.yml` beside jar file).
 
 Access Hymir GUI (e.g. http://localhost:9000/).
 
@@ -111,12 +114,12 @@ Access Hymir GUI (e.g. http://localhost:9000/).
 
 ### Image and presentation manifest resolving
 
-Based on unique resource identifiers the server tries to resolve identifiers to a "file:" or "http:" path.
+Based on unique resource identifiers the server tries to resolve identifiers to a `file:` or `http:` path.
 The resolving rules (one rule per line) are configurable with regular expressions in YML-files.
 
 You can pass the path to your custom resolving rules with the `--rules=/path/to/rules.yml` option.
 
-Example file "rules.yml":
+Example file `rules.yml`:
 
 ```yaml
 # This configuration file defines a list of patterns with one ore more substitutions.
@@ -162,9 +165,10 @@ In the simplest case you just want to serve images of a directory.
 Example: 
 
 Let's assume you have a bunch of jpg-files residing in the directory "/var/local/iiif/images" for objects with identifiers `00000001`, `00000002` and so on. The `images`-directory contains a directory for each object in which in turn all images of an object reside.
+
 The files are named "image_00000001_00001.jpg", "image_00000001_00002.jpg", ... thus containing the object id and the image number in the filename.
 
-An example for a rules.yml entry (including matching just for identifiers and numbered images with digits) then just could look like this:
+An example for an entry in the `rules.yml`  (including matching just for identifiers and numbered images with digits) then just could look like this:
 
 ```yaml
 - pattern: ^(\d{8})_(\d{5})$
@@ -172,15 +176,12 @@ An example for a rules.yml entry (including matching just for identifiers and nu
     - 'file:/var/local/iiif/images/$1/image_$1_$2.jpg'
 ```
 
-An IIIF Image API url example for this pattern:
-
-```
-http://localhost:9000/image/v2/00000005_00012/full/full/0/default.jpg
-```
+An IIIF Image API url example for this pattern: `http://localhost:9000/image/v2/00000005_00012/full/full/0/default.jpg`
 
 #### Change Image API URL prefix
 
 By default the url prefix of the IIIF Image API endpoint is `/image/v2/`.
+
 You can configure another url prefix on server startup using system property `custom.iiif.image.urlPrefix`.
 
 Example:
@@ -200,9 +201,10 @@ In the simplest case you just want to serve static (pregenerated) IIIF Presentat
 Example:
 
 Let's assume you have a bunch of json-files residing in the directory "/var/local/iiif/presentation/manifests" for the objects with identifiers `00000001`, `00000002` and so on.
+
 The files are named "manifest_00000001.json", "manifest_00000002.json", ... containing the object id in the filename.
 
-An example for a rules.yml entry (including matching just for identifiers with digits) then could look like this:
+An example for an entry in the `rules.yml` (including matching just for identifiers with digits) then could look like this:
 
 ```yaml
 - pattern: ^(\d{8})$
@@ -210,15 +212,12 @@ An example for a rules.yml entry (including matching just for identifiers with d
     - 'file:/var/local/iiif/presentation/manifests/manifest_$1.json'
 ```
 
-An IIIF Presentation API url for a manifest example:
-
-```
-http://localhost:9000/presentation/v2/00000002/manifest
-```
+An IIIF Presentation API url for a manifest example: `http://localhost:9000/presentation/v2/00000002/manifest`
 
 #### Change Presentation API URL prefix
 
 By default the url prefix of the IIIF Presentation API endpoint is `/presentation/v2/`.
+
 You can configure another url prefix on server startup using system property `custom.iiif.presentation.urlPrefix`.
 
 Example:
@@ -238,9 +237,10 @@ In the simplest case you just want to serve static (pregenerated) IIIF Presentat
 Example:
 
 Let's assume you have a bunch of json-files residing in the directory "/var/local/iiif/presentation/collections" for collections with a specific name, e.g. `newspapers`.
+
 The files are named e.g. `newspapers.json`, `medieval_manuscripts.json`, ... containing the collection name in the filename.
 
-An example for a rules.yml entry then just could look like this:
+An example for an entry in the `rules.yml` then just could look like this:
 
 ```yaml
 - pattern: ^collection-(.*)$
@@ -248,22 +248,18 @@ An example for a rules.yml entry then just could look like this:
     - 'file:/var/local/iiif/presentation/collections/$1.json'
 ```
 
-An IIIF Presentation API url for a collection example:
-
-```
-http://localhost:9000/presentation/v2/collection/newspapers
-```
+An IIIF Presentation API url for a collection example: `http://localhost:9000/presentation/v2/collection/newspapers`
 
 Implementation background: To get a regex resolvable pattern that can be differentiated from patterns for manifest json-files (same mimetype), Hymir adds the static prefix `collection-` to the given identifier for collections. (This does not appear in the identifier in the url, just in the rules.yml regex)
 
 ### Logging
 
-Default logging configuration is specified in the file `logback-spring.xml` packaged in the exectable Hymir JAR-file.
-The default logging file is configured as `./hymir.log` in Logstash-JSON-format.
+Default logging configuration is specified in the file `logback-spring.xml` packaged in the exectable Hymir JAR-file. The default logging file is configured as `./hymir.log` in Logstash-JSON-format.
 
 If you want human readable logging to console use `--spring.profiles.active=local` on start command line or define a custom `logback-spring.xml` config location (see "Usage" section above).
 
 ### Using the TurboJPEG backend
+
 By default, a Java-based image processing backend is used. If you want better
 performance, it is recommended to use the native image processing backend
 that is based on TurboJPEG. For this, you will have to install the TurboJPEG
@@ -273,12 +269,10 @@ native library, on Ubuntu `libturbojpeg`.
 
 The default configuration of the server comes packaged in the executable JAR-file of Hymir.
 To customize (override) the default configuration parameters, simply put your custom `application.yml` file beside (in the same directory of) the Hymir JAR-file.
+
 Your custom `application.yml` does not have to replace all default properties. It can contain only the properties you want to change.
 
-To get the default configuration file, you should download the `hymir-<release-version>.jar` file (NOT containing `-exec` in filename) from <https://github.com/dbmdz/iiif-server-hymir/releases>
-and unpack the contained `application.yml` with:
-
-Example:
+To get the default configuration file, you should download the `hymir-<release-version>.jar` file (NOT containing `-exec` in filename) from <https://github.com/dbmdz/iiif-server-hymir/releases> and unpack the contained `application.yml` with:
 
 ```sh
 $ java xfv hymir-4.0.0.jar application.yml
@@ -342,7 +336,7 @@ Monitoring endpoints under http://localhost:9001/monitoring (HAL-Browser-GUI), a
 ## Users
 
 - Bavarian State Library, Project "bavarikon": <a href="http://www.bavarikon.de/">https://www.bavarikon.de/</a>
-- Bavarian State Library, Project "Digital East Asian Collections": <a href="https://eastasia.digital-collections.de/">https://eastasia.digital-collections.de/</a>
+- Bavarian State Library, Project "Digital East Asian Collections": <a href="https://ostasien.digitale-sammlungen.de/">https://ostasien.digitale-sammlungen.de/</a>
 - Bavarian State Library, Project digiPress: <a href="https://digipress.digitale-sammlungen.de/">https://digipress.digitale-sammlungen.de/</a>
 - Bavarian State Library, iiif-Bookshelf: <a href="https://iiif.digitale-sammlungen.de/">https://iiif.digitale-sammlungen.de/</a>
 
