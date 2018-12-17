@@ -8,6 +8,7 @@ import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.iiif.model.sharedcanvas.Range;
 import de.digitalcollections.iiif.model.sharedcanvas.Resource;
 import de.digitalcollections.iiif.model.sharedcanvas.Sequence;
+import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
 import java.time.Instant;
 
@@ -20,61 +21,63 @@ public interface PresentationService {
    * @param name unique name of collection
    * @return Collection specified by name
    * @throws ResolvingException if no collection found or access disallowed
+   * @throws ResourceNotFoundException if collection with given name can not be found
    * @throws InvalidDataException if data is corrupted
    */
-  Collection getCollection(String name) throws ResolvingException, InvalidDataException;
+  Collection getCollection(String name) throws ResolvingException, ResourceNotFoundException, InvalidDataException;
 
   /**
    * @param identifier unique id for IIIF resource
    * @return Manifest specifying presentation for IIIF resource
    * @throws ResolvingException if no manifest found or access disallowed
+   * @throws ResourceNotFoundException if Manifest with given identifier can not be found
    * @throws InvalidDataException if data is corrupted
    */
-  Manifest getManifest(String identifier) throws ResolvingException, InvalidDataException;
+  Manifest getManifest(String identifier) throws ResolvingException, ResourceNotFoundException, InvalidDataException;
 
-  default Instant getManifestModificationDate(String identifier) throws ResolvingException {
+  default Instant getManifestModificationDate(String identifier) throws ResolvingException, ResourceNotFoundException {
     return Instant.now();
   }
 
-  default Instant getCollectionModificationDate(String identifier) throws ResolvingException {
+  default Instant getCollectionModificationDate(String identifier) throws ResolvingException, ResourceNotFoundException {
     return Instant.now();
   }
 
-  default Canvas getCanvas(String manifestId, String canvasUri) throws ResolvingException, InvalidDataException {
+  default Canvas getCanvas(String manifestId, String canvasUri) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return getCanvas(manifestId, URI.create(canvasUri));
   }
 
-  default Canvas getCanvas(String manifestId, URI canvasUri) throws ResolvingException, InvalidDataException {
+  default Canvas getCanvas(String manifestId, URI canvasUri) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     Manifest manifest = getManifest(manifestId);
     return manifest.getSequences().stream()
-        .flatMap(seq -> seq.getCanvases().stream())
-        .filter(canv -> canv.getIdentifier().equals(canvasUri))
-        .map(canv -> this.copyAttributionInfo(manifest, canv))
-        .findFirst().orElseThrow(ResolvingException::new);
+            .flatMap(seq -> seq.getCanvases().stream())
+            .filter(canv -> canv.getIdentifier().equals(canvasUri))
+            .map(canv -> this.copyAttributionInfo(manifest, canv))
+            .findFirst().orElseThrow(ResolvingException::new);
   }
 
-  default Range getRange(String manifestId, String rangeUri) throws ResolvingException, InvalidDataException {
+  default Range getRange(String manifestId, String rangeUri) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return getRange(manifestId, URI.create(rangeUri));
   }
 
-  default Range getRange(String manifestId, URI rangeUri) throws ResolvingException, InvalidDataException {
+  default Range getRange(String manifestId, URI rangeUri) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     Manifest manifest = getManifest(manifestId);
     return manifest.getRanges().stream()
-        .filter(r -> r.getIdentifier().equals(rangeUri))
-        .map(r -> this.copyAttributionInfo(manifest, r))
-        .findFirst().orElseThrow(ResolvingException::new);
+            .filter(r -> r.getIdentifier().equals(rangeUri))
+            .map(r -> this.copyAttributionInfo(manifest, r))
+            .findFirst().orElseThrow(ResolvingException::new);
   }
 
-  default Sequence getSequence(String manifestId, String sequenceUri) throws ResolvingException, InvalidDataException {
+  default Sequence getSequence(String manifestId, String sequenceUri) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return getSequence(manifestId, URI.create(sequenceUri));
   }
 
-  default Sequence getSequence(String manifestId, URI sequenceUri) throws ResolvingException, InvalidDataException {
+  default Sequence getSequence(String manifestId, URI sequenceUri) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     Manifest manifest = getManifest(manifestId);
     return manifest.getSequences().stream()
-        .filter(s -> s.getIdentifier().equals(sequenceUri))
-        .map(s -> this.copyAttributionInfo(manifest, s))
-        .findFirst().orElseThrow(ResolvingException::new);
+            .filter(s -> s.getIdentifier().equals(sequenceUri))
+            .map(s -> this.copyAttributionInfo(manifest, s))
+            .findFirst().orElseThrow(ResolvingException::new);
   }
 
   default <T extends Resource> T copyAttributionInfo(Manifest manifest, T res) {

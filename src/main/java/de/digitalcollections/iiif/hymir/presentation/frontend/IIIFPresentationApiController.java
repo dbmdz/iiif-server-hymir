@@ -1,6 +1,7 @@
 package de.digitalcollections.iiif.hymir.presentation.frontend;
 
 import de.digitalcollections.commons.springboot.metrics.MetricsService;
+import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
@@ -9,6 +10,7 @@ import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.iiif.model.sharedcanvas.Range;
 import de.digitalcollections.iiif.model.sharedcanvas.Sequence;
+import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
 import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,11 +27,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 @Controller
-@RequestMapping("/presentation/v2")
+@RequestMapping("${custom.iiif.presentation.urlPrefix:/presentation/v2}")
 public class IIIFPresentationApiController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(IIIFPresentationApiController.class);
   public static final String VERSION = "v2";
+
+  @Autowired
+  protected CustomResponseHeaders customResponseHeaders;
 
   @Autowired
   private PresentationService presentationService;
@@ -38,12 +42,13 @@ public class IIIFPresentationApiController {
   @Autowired
   private MetricsService metricsService;
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
+  // We set the header ourselves, since using @CrossOrigin doesn't expose "*", but always sets the requesting domain
+  // @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.GET,
           produces = "application/json")
   @ResponseBody
   public Manifest getManifest(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     // Return 304 if the manifest has seen no modifications since the requested time
     long modified = presentationService.getManifestModificationDate(identifier).toEpochMilli();
     if (request.checkNotModified(modified)) {
@@ -54,50 +59,75 @@ public class IIIFPresentationApiController {
     generationDuration = System.currentTimeMillis() - generationDuration;
     metricsService.increaseCounterWithDurationAndPercentiles("generations", "manifest", generationDuration);
     resp.setDateHeader("Last-Modified", modified);
+    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forPresentationManifest().forEach(customResponseHeader -> {
+      resp.setHeader(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
     LOGGER.info("Serving manifest for {}", identifier);
     return manifest;
   }
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.HEAD)
   public void checkManifest(@PathVariable String identifier, HttpServletResponse resp)
-          throws ResolvingException {
+          throws ResolvingException, ResourceNotFoundException {
     Instant modDate = presentationService.getManifestModificationDate(identifier);
     resp.setDateHeader("Last-Modified", modDate.toEpochMilli());
+    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forPresentationManifest().forEach(customResponseHeader -> {
+      resp.setHeader(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
     resp.setStatus(HttpStatus.SC_OK);
   }
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{manifestId}/canvas/{canvasId}"}, method = RequestMethod.GET)
   @ResponseBody
-  public Canvas getCanvas(@PathVariable String manifestId, @PathVariable String canvasId, HttpServletRequest req)
-          throws ResolvingException, InvalidDataException {
+  public Canvas getCanvas(@PathVariable String manifestId, @PathVariable String canvasId, HttpServletRequest req, HttpServletResponse resp)
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forPresentationManifest().forEach(customResponseHeader -> {
+      resp.setHeader(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
     return presentationService.getCanvas(manifestId, getOriginalUri(req));
   }
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{manifestId}/range/{rangeId}"}, method = RequestMethod.GET)
   @ResponseBody
-  public Range getRange(@PathVariable String manifestId, @PathVariable String rangeId, HttpServletRequest req)
-          throws ResolvingException, InvalidDataException {
+  public Range getRange(@PathVariable String manifestId, @PathVariable String rangeId, HttpServletRequest req, HttpServletResponse resp)
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forPresentationManifest().forEach(customResponseHeader -> {
+      resp.setHeader(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
     return presentationService.getRange(manifestId, getOriginalUri(req));
   }
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{manifestId}/sequence/{sequenceId}"}, method = RequestMethod.GET)
   @ResponseBody
-  public Sequence getSequence(@PathVariable String manifestId, @PathVariable String sequenceId, HttpServletRequest req)
-          throws ResolvingException, InvalidDataException {
+  public Sequence getSequence(@PathVariable String manifestId, @PathVariable String sequenceId, HttpServletRequest req, HttpServletResponse resp)
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forPresentationManifest().forEach(customResponseHeader -> {
+      resp.setHeader(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
     return presentationService.getSequence(manifestId, getOriginalUri(req));
   }
 
-  @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"collection/{identifier}"}, method = {RequestMethod.GET, RequestMethod.HEAD},
           produces = "application/json")
   @ResponseBody
   public Collection getCollection(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-          throws ResolvingException, InvalidDataException {
+          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     long modified = presentationService.getCollectionModificationDate(identifier).toEpochMilli();
+    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forPresentationCollection().forEach(customResponseHeader -> {
+      resp.setHeader(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
     if (request.checkNotModified(modified)) {
       return null;
     }

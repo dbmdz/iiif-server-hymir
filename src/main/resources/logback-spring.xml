@@ -13,11 +13,8 @@
         <maxHistory>90</maxHistory>
         <totalSizeCap>5GB</totalSizeCap>
       </rollingPolicy>
-      <!--<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
         <customFields>{"service":"hymir-server", "group":"rest", "instance":"${instance.name:-default}"}</customFields>
-      </encoder>-->
-      <encoder>
-        <pattern>[%d{ISO8601} %5p] %40.40c:%4L [%-8t] - %m%n</pattern>
       </encoder>
     </appender>
   </springProfile>
@@ -32,7 +29,7 @@
 
   <logger name="de.digitalcollections.iiif.hymir.presentation.backend" level="error" />
   <logger name="de.digitalcollections.iiif.hymir.presentation.business" level="error" />
-  <logger name="de.digitalcollections.core" level="error" />
+  <logger name="de.digitalcollections.commons" level="error" />
 
   <root level="info">
     <appender-ref ref="default" />

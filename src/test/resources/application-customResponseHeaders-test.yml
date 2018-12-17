@@ -1,6 +1,23 @@
-# local/default
 custom:
   iiif:
+    headers:
+      all:
+        - name: 'served by'
+          value: 'hymir'
+      image:
+        image:
+          - name: 'cache-control'
+            value: 'max-age=86400'
+        info:
+          - name: 'header1'
+            value: 'value1'
+      presentation:
+        manifest:
+          - name: 'mani1'
+            value: 'mani-value1'
+          - name: 'mani2'
+            value: 'mani-value2'
+        collection: null
     image:
       maxWidth: 65500
       maxHeight: 65500
@@ -57,7 +74,7 @@ spring:
     basename: messages,messages-overlay,messages-commons
     fallback-to-system-locale: false
   profiles:
-    active: local
+    active: TEST
   security:
     user:
       name: admin
@@ -66,16 +83,3 @@ spring:
   thymeleaf:
     cache: false
     mode: HTML
-
----
-
-# PROD
-spring:
-  profiles: PROD
-  thymeleaf:
-    cache: true
-
-server:
-  error:
-    include-exception: false
-    include-stacktrace: 'never'

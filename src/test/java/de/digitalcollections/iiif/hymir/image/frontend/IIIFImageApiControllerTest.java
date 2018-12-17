@@ -1,13 +1,11 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
-import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
 import com.twelvemonkeys.imageio.stream.ByteArrayImageInputStream;
 import de.digitalcollections.iiif.hymir.Application;
+import de.digitalcollections.iiif.hymir.TestConfiguration;
 import de.digitalcollections.iiif.hymir.image.business.ImageServiceImpl;
 import de.digitalcollections.turbojpeg.lib.libturbojpeg;
 import java.awt.image.BufferedImage;
@@ -38,8 +36,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        properties = {"spring.profiles.active=TEST",
+                      "spring.config.name=application-customResponseHeaders-test"},
+        classes = {Application.class, TestConfiguration.class},
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFImageApiControllerTest {
 
   @LocalServerPort
@@ -56,7 +62,6 @@ public class IIIFImageApiControllerTest {
 
   @BeforeAll
   public static void beforeAll() {
-    System.setProperty("spring.profiles.active", "TEST");
     System.setProperty("org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", "true");
     TestConfiguration.setDefaults();
   }
@@ -64,7 +69,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testTurboJpegInstalled() {
     libturbojpeg lib = LibraryLoader.create(libturbojpeg.class)
-        .load("turbojpeg");
+            .load("turbojpeg");
     Runtime runtime = Runtime.getRuntime(lib);
 
     assertThat(runtime).isNotNull();
@@ -100,10 +105,11 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getHeaders().getLastModified()).isNotNull();
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+    assertThat(response.getHeaders().get("header1")).containsExactly("value1");
 
     assertThat(response.getHeaders().get("Link")).containsExactly(
-        "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
-        "<http://iiif.io/api/image/2/level2.json>;rel=\"profile\"");
+            "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+            "<http://iiif.io/api/image/2/level2.json>;rel=\"profile\"");
     DocumentContext ctx = JsonPath.parse(response.getBody());
     assertThat(ctx).jsonPathAsInteger("$.width").isEqualTo(989);
     assertThat(ctx).jsonPathAsInteger("$.height").isEqualTo(1584);
@@ -116,7 +122,7 @@ public class IIIFImageApiControllerTest {
     assertThat(ctx).jsonPathAsString("$.profile[0]").isEqualTo("http://iiif.io/api/image/2/level2.json");
 
     assertThatThrownBy(() -> ctx.read("$.profile[1].formats.qualities"))
-        .isInstanceOf(JsonPathException.class);
+            .isInstanceOf(JsonPathException.class);
     assertThat(ctx).jsonPathAsListOf("$.profile[1].formats", String.class).isNotEmpty();
   }
 
@@ -170,6 +176,7 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.IMAGE_PNG);
     assertThat(response.getHeaders().getContentDisposition().getType()).isEqualTo("inline");
     assertThat(response.getHeaders().getContentDisposition().getFilename()).isEqualTo(IIIFImageApiController.VERSION + "_http-google_full_full_0_default.png");
+    assertThat(response.getHeaders().get("cache-control")).containsExactly("max-age=86400");
   }
 
   /* 4.5 Format */
@@ -255,7 +262,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testCropWithAbsoluteValues() throws Exception {
     ResponseEntity<byte[]> response = restTemplate.exchange(
-            "/image/" + IIIFImageApiController.VERSION + "/file-zoom/20,20,50,50/full/0/native.jpg",
+            "/image/" + IIIFImageApiController.VERSION + "/file-zoom/20,20,50,50/full/0/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -268,13 +275,13 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithAbsoluteValuesTotallyExceeding() throws Exception {
-    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/5000,5000,100,100/full/0/native.jpg", String.class);
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/5000,5000,100,100/full/0/default.jpg", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
   @Test
   public void testCropWithRelativeValues() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,10,10,10/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,10,10,10/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,255,206,255/full/0/default.jpg");
@@ -289,7 +296,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithRelativeValuesPartiallyExceeding() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:20,20,100,10/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:20,20,100,10/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/413,511,1651,255/full/0/default.jpg");
@@ -304,7 +311,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareLargerWidth() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square-width/square/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square-width/square/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/square-width/122,0,219,219/full/0/default.jpg");
@@ -319,7 +326,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareLargerHeight() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square-height/square/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square-height/square/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/square-height/0,40,249,249/full/0/default.jpg");
@@ -334,7 +341,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCropWithSquareAlreadySquare() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square/square/full/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/square/square/full/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/square/full/full/0/default.jpg");
@@ -367,12 +374,12 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testMirror() throws Exception {
-    ResponseEntity<byte[]> responseRegular = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/0/native.jpg",
+    ResponseEntity<byte[]> responseRegular = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/0/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(responseRegular.getStatusCode()).isEqualTo(HttpStatus.OK);
     byte[] imgDataRegular = responseRegular.getBody();
 
-    ResponseEntity<byte[]> responseMirror = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/!0/native.jpg",
+    ResponseEntity<byte[]> responseMirror = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/!0/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(responseMirror.getStatusCode()).isEqualTo(HttpStatus.OK);
     byte[] imgDataMirror = responseMirror.getBody();
@@ -387,7 +394,7 @@ public class IIIFImageApiControllerTest {
   /* 4.3 Rotation */
   @Test
   public void testRotation() throws Exception {
-    ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/native.jpg",
+    ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -399,7 +406,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithBestWidth() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/!500,500/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/!500,500/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/404,500/0/default.jpg");
@@ -415,7 +422,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithMissingWidth() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/,200/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/,200/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/161,200/0/default.jpg");
@@ -431,7 +438,7 @@ public class IIIFImageApiControllerTest {
   /* 4.2 Size */
   @Test
   public void testScaleWithMissingHeigth() throws Exception {
-    ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/native.jpg",
+    ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/default.jpg",
             HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -442,7 +449,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testScaleWithRelativeValues() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/pct:50/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/pct:50/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/1032,/0/default.jpg");
@@ -458,7 +465,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testRelativeCropWithAbsoluteScale() throws Exception {
-    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/500,/0/native.jpg", String.class);
+    ResponseEntity<String> response1 = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/500,/0/default.jpg", String.class);
     assertThat(response1.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response1.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,511,413,511/500,/0/default.jpg");
@@ -490,7 +497,7 @@ public class IIIFImageApiControllerTest {
 
   @Test
   public void testCanonicalRedirectWithRelativeCropAndScale() throws Exception {
-    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/native.jpg", String.class);
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/default.jpg", String.class);
     assertThat(response.getStatusCode().series()).isEqualTo(HttpStatus.Series.REDIRECTION);
     String location = response.getHeaders().getLocation().getPath();
     assertThat(location).isEqualTo("/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,511,413,511/346,/0/default.jpg");
@@ -499,7 +506,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testNoRedirectIfDisabled() throws Exception {
     iiifController.setCanonicalRedirectEnabled(false);
-    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/native.jpg", String.class);
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/file-zoom/pct:10,20,20,20/pct:84/0/default.jpg", String.class);
     iiifController.setCanonicalRedirectEnabled(true);
     assertThat(response.getStatusCode().series()).isEqualTo(HttpStatus.Series.SUCCESSFUL);
     String link = response.getHeaders().getFirst("Link").toString();

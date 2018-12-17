@@ -1,14 +1,15 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
 import de.digitalcollections.commons.springboot.metrics.MetricsService;
+import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
-import de.digitalcollections.iiif.hymir.model.exception.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
+import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,12 +29,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 
 @Controller
-@RequestMapping("/image/v2/")
+@RequestMapping("${custom.iiif.image.urlPrefix:/image/v2/}")
 public class IIIFImageApiController {
+
   public static final String VERSION = "v2";
 
   @Value("${custom.iiif.image.canonicalRedirect:true}")
   private boolean isCanonicalRedirectEnabled;
+
+  @Autowired
+  protected CustomResponseHeaders customResponseHeaders;
 
   private final ImageService imageService;
   private final IiifObjectMapper objectMapper;
@@ -82,8 +87,7 @@ public class IIIFImageApiController {
           @PathVariable String size, @PathVariable String rotation,
           @PathVariable String quality, @PathVariable String format,
           HttpServletRequest request, HttpServletResponse response, WebRequest webRequest)
-      throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException,
-             ResourceNotFoundException {
+          throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException, ResourceNotFoundException {
     HttpHeaders headers = new HttpHeaders();
     String path;
     if (request.getPathInfo() != null) {
@@ -111,14 +115,14 @@ public class IIIFImageApiController {
       throw new InvalidParametersException(e);
     }
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
-        "http://foo.org/" + identifier);
+            "http://foo.org/" + identifier);
     imageService.readImageInfo(identifier, info);
     ImageApiProfile profile = ImageApiProfile.merge(info.getProfiles());
     String canonicalForm;
     try {
       canonicalForm = selector.getCanonicalForm(
-          new Dimension(info.getWidth(), info.getHeight()),
-          profile, ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
+              new Dimension(info.getWidth(), info.getHeight()),
+              profile, ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
     } catch (ResolvingException e) {
       throw new InvalidParametersException(e);
     }
@@ -140,13 +144,16 @@ public class IIIFImageApiController {
       long duration = System.currentTimeMillis();
       imageService.processImage(identifier, selector, profile, os);
       duration = System.currentTimeMillis() - duration;
-      metricsService.increaseCounterWithDurationAndPercentiles("image","process", duration);
+      metricsService.increaseCounterWithDurationAndPercentiles("image", "process", duration);
+
+      customResponseHeaders.forImageTile().forEach(customResponseHeader -> {
+        headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
+      });
       return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }
 
-  @RequestMapping(value = "{identifier}/info.json",
-          method = {RequestMethod.GET, RequestMethod.HEAD})
+  @RequestMapping(value = "{identifier}/info.json", method = {RequestMethod.GET, RequestMethod.HEAD})
   public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
           WebRequest webRequest) throws Exception {
     long duration = System.currentTimeMillis();
@@ -160,10 +167,10 @@ public class IIIFImageApiController {
     }
     String baseUrl = getUrlBase(req);
     de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
-        baseUrl + path.replace("/info.json", "").replace(identifier, URLEncoder.encode(identifier, "UTF-8")));
+            baseUrl + path.replace("/info.json", "").replace(identifier, URLEncoder.encode(identifier, "UTF-8")));
     imageService.readImageInfo(identifier, info);
     duration = System.currentTimeMillis() - duration;
-    metricsService.increaseCounterWithDurationAndPercentiles("generations","infojson", duration);
+    metricsService.increaseCounterWithDurationAndPercentiles("generations", "infojson", duration);
     HttpHeaders headers = new HttpHeaders();
     headers.setDate("Last-Modified", modified);
     String contentType = req.getHeader("Accept");
@@ -176,8 +183,11 @@ public class IIIFImageApiController {
               + "type=\"application/ld+json\"");
     }
     headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
-    // We set the header ourselves, since using @CrossOrigin doesn't expose "*", but always sets the requesting domain
     headers.add("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forImageInfo().forEach(customResponseHeader -> {
+      headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
     return new ResponseEntity<>(objectMapper.writeValueAsString(info), headers, HttpStatus.OK);
   }
 
