@@ -105,7 +105,7 @@
     <!-- plugins -->
     <version.jacoco-maven-plugin>0.8.2</version.jacoco-maven-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
-    <version.nexus-staging-maven-plugin>1.6.7</version.nexus-staging-maven-plugin>
+    <version.nexus-staging-maven-plugin>1.6.8</version.nexus-staging-maven-plugin>
   </properties>
 
   <dependencies>
