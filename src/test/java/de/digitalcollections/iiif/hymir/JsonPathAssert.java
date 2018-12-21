@@ -4,12 +4,12 @@
  * Latest assertj-json version was compiled with assertj-core in version 3.8.0, that is not compatible with >= 3.11.1.
  */
 package de.digitalcollections.iiif.hymir;
+
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.TypeRef;
-import org.assertj.core.api.*;
-
 import java.math.BigDecimal;
 import java.util.List;
+import org.assertj.core.api.*;
 
 /**
  * Assertions for {@link DocumentContext}.
