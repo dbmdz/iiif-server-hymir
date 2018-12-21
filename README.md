@@ -1,11 +1,11 @@
 # Hymir IIIF Server
 
-[![Build Status](https://travis-ci.org/dbmdz/iiif-server-hymir.svg?branch=master)](https://travis-ci.org/dbmdz/iiif-server-hymir)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![GitHub release](https://img.shields.io/github/release/dbmdz/iiif-server-hymir.svg?maxAge=2592000)](https://github.com/dbmdz/iiif-server-hymir/releases)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/54890c0e2bce4489ad0793658b2a4d0c)](https://www.codacy.com/app/ralf-eichinger/iiif-server-hymir?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dbmdz/iiif-server-hymir&amp;utm_campaign=Badge_Grade)
-[![codecov](https://codecov.io/gh/dbmdz/iiif-server-hymir/branch/master/graph/badge.svg)](https://codecov.io/gh/dbmdz/iiif-server-hymir)
-[![Maven Central](https://img.shields.io/maven-central/v/de.digitalcollections/iiif-server-hymir.svg?maxAge=2592000)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22iiif-server-hymir%22)
+[![Javadocs](https://javadoc.io/badge/de.digitalcollections/iiif-server-hymir.svg)](https://javadoc.io/doc/de.digitalcollections/iiif-server-hymir)
+[![Build Status](https://img.shields.io/travis/dbmdz/iiif-server-hymir/master.svg)](https://travis-ci.org/dbmdz/iiif-server-hymir)
+[![Codecov](https://img.shields.io/codecov/c/github/dbmdz/iiif-server-hymir/master.svg)](https://codecov.io/gh/dbmdz/iiif-server-hymir)
+[![MIT License](https://img.shields.io/github/license/dbmdz/iiif-server-hymir.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/release/dbmdz/iiif-server-hymir.svg)](https://github.com/dbmdz/iiif-server-hymir/releases)
+[![Maven Central](https://img.shields.io/maven-central/v/de.digitalcollections/iiif-server-hymir.svg)](https://search.maven.org/search?q=a:iiif-server-hymir)
 
 Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](https://github.com/dbmdz/iiif-apis) (Java implementations of the [IIIF specifications](http://iiif.io/technical-details/)). It can be used to serve images, presentation manifests and presentation collections.
 
