@@ -87,14 +87,10 @@ footer {
   display: block;
 }
 
-.navbar .navbar-right {
-  margin-right: 0;
-}
-
-.panel .table {
+.card .table {
   margin-bottom: 0;
 }
 
-.panel-body {
+.card-body {
   padding: 15px;
 }
