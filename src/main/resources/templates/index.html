@@ -7,26 +7,24 @@
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Hymir IIIF Server</h1>
-        <p>Use below forms to view resources provided by this server.</p>
+        <h1 class="display-4">Hymir IIIF Server</h1>
+        <p class="lead">Use below forms to view resources provided by this server.</p>
       </div>
 
       <div class="row">
-        <div class="col-sm-6">
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h3 class="panel-title">IIIF Image API 2.1</h3>
-            </div>
-            <div class="panel-body">
+        <div class="col-md-6">
+          <div class="card border-primary">
+            <div class="card-header bg-primary text-white">IIIF Image API 2.1</div>
+            <div class="card-body">
               <table class="table">
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/image/view}" method="post">
                       <h4>View image with OpenSeadragon</h4>
                       <div class="form-group">
-                        /image/ <input type="text" class="form-control" placeholder="identifier" name="identifier"> /view.html
+                        /image/ <input type="text" class="form-control form-control-sm" placeholder="identifier" name="identifier"> /view.html
                       </div>
-                      <button type="submit" class="btn btn-primary pull-right">view</button>
+                      <button type="submit" class="btn btn-primary ml-auto">view</button>
                     </form>
                   </td>
                 </tr>
@@ -34,21 +32,20 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-6">
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h3 class="panel-title">IIIF Presentation API 2.1</h3>
-            </div>
-            <div class="panel-body">
+
+        <div class="col-md-6">
+          <div class="card border-primary">
+            <div class="card-header bg-primary text-white">IIIF Presentation API 2.1</div>
+            <div class="card-body">
               <table class="table">
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/presentation/view}" method="post">
                       <h4>View object with Mirador</h4>
                       <div class="form-group">
-                        /presentation/ <input type="text" class="form-control" placeholder="identifier" name="identifier"> /view.html
+                        /presentation/ <input type="text" class="form-control form-control-sm" placeholder="identifier" name="identifier"> /view.html
                       </div>
-                      <button type="submit" class="btn btn-primary pull-right">view</button>
+                      <button type="submit" class="btn btn-primary ml-auto">view</button>
                     </form>
                   </td>
                 </tr>
@@ -57,9 +54,9 @@
                     <form class="form-inline" action="#" th:action="@{/presentation/manifest}" method="get">
                       <h4>View manifest as JSON</h4>
                       <div class="form-group">
-                        /presentation/v2/ <input type="text" class="form-control" placeholder="identifier" name="identifier"> /manifest
+                        /presentation/v2/ <input type="text" class="form-control form-control-sm" placeholder="identifier" name="identifier"> /manifest
                       </div>
-                      <button type="submit" class="btn btn-primary pull-right">view</button>
+                      <button type="submit" class="btn btn-primary ml-auto">view</button>
                     </form>
                   </td>
                 </tr>
@@ -68,9 +65,9 @@
                     <form class="form-inline" action="#" th:action="@{/presentation/collection}" method="get">
                       <h4>View collection as JSON</h4>
                       <div class="form-group">
-                        /presentation/v2/collection/ <input type="text" class="form-control" placeholder="name" name="name">
+                        /presentation/v2/collection/ <input type="text" class="form-control form-control-sm" placeholder="name" name="name">
                       </div>
-                      <button type="submit" class="btn btn-primary pull-right">view</button>
+                      <button type="submit" class="btn btn-primary ml-auto">view</button>
                     </form>
                   </td>
                 </tr>
@@ -78,7 +75,6 @@
             </div>
           </div>
         </div>
-      </div>
 
       <!-- Pre-load Mirador into the browser cache to reduce waiting time when opening viewer page -->
       <script async="true" defer="true" th:src="@{/webjars/mirador/2.6.0/mirador.min.js}"></script>
