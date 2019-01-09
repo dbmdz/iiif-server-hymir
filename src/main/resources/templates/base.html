@@ -14,9 +14,9 @@
     <title>Hymir IIIF Server</title>
 
     <!-- Bootstrap core CSS -->
-    <link th:href="@{/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/webjars/bootstrap/4.2.1/dist/css/bootstrap.min.css}" rel="stylesheet">
     <!-- Bootstrap theme -->
-    <link th:href="@{/webjars/bootstrap/3.3.7/dist/css/bootstrap-theme.min.css}" rel="stylesheet">
+    <link th:href="@{/webjars/bootstrap/4.2.1/dist/css/bootstrap-theme.min.css}" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link th:href="@{/webjars/ie10-viewport-bug-workaround/1.0.3/dist/ie10-viewport-bug-workaround.min.css}" rel="stylesheet">
 
@@ -32,26 +32,16 @@
 
   <body role="document">
 
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-light bg-light fixed-top navbar-expand-md">
       <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand logo" th:href="@{/}">
-            <img th:src="@{/images/hymir-logo-115x80.png}">
-          </a>
-        </div>
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse"
+                data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span>
+          &#x2630;</button> <a class="navbar-brand logo" th:href="@{/}"><img th:src="@{/images/hymir-logo-115x80.png}"></a>
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav ml-auto">
             <li th:class="${menu} == 'home' ? 'active'">
-              <a th:href="@{/}">Home</a>
+              <a class="nav-link" th:href="@{/}">Home</a>
             </li>
-            <!-- <li style="white-space: nowrap;"><a th:href="@{''(language=de)}">de</a>/<a th:href="@{''(language=en)}">en</a></li> -->
           </ul>
         </div>
       </div>
@@ -67,14 +57,14 @@
 
     <footer class="footer">
       <div class="container">
-        <p>visit us on <a href="https://github.com/dbmdz">GitHub</a></p>
+        <span class="text-muted">visit us on <a href="https://github.com/dbmdz">GitHub</a></span>
       </div>
     </footer>
 
   <th:block layout:fragment="basejs">
     <!--/*  Footer Ende  */-->
     <script th:src="@{/webjars/jquery/3.3.1/dist/jquery.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.2.1/dist/js/bootstrap.min.js}"></script>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script th:src="@{/webjars/ie10-viewport-bug-workaround/1.0.3/dist/ie10-viewport-bug-workaround.min.js}"></script>
