@@ -354,11 +354,6 @@
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
-      <artifactId>font-awesome</artifactId>
-      <version>${version.webjar-fontawesome}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
       <artifactId>jquery</artifactId>
       <version>${version.webjar-jquery}</version>
     </dependency>
