@@ -5,9 +5,11 @@
   <body>
     <section layout:fragment="content">
       <main>
-        <div class="panel panel-primary">
-          <div class="panel-heading">Viewing "<span th:text="@{__${infoUrl}__}">...</span>" in OpenSeadragon <span th:text="${iiifVersions.openseadragon}">osd version</span></div>
-          <div class="panel-body">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            Viewing "<span th:text="@{__${infoUrl}__}">...</span>" in OpenSeadragon <span th:text="${iiifVersions.openseadragon}">osd version</span>
+          </div>
+          <div class="card-body">
             <div id="preview" class="openseadragon" style="height: 600px;"></div>
           </div>
         </div>
