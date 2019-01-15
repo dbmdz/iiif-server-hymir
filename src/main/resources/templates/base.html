@@ -15,8 +15,6 @@
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/webjars/bootstrap/4.2.1/dist/css/bootstrap.min.css}" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link th:href="@{/webjars/bootstrap/4.2.1/dist/css/bootstrap-theme.min.css}" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link th:href="@{/webjars/ie10-viewport-bug-workaround/1.0.3/dist/ie10-viewport-bug-workaround.min.css}" rel="stylesheet">
 
@@ -47,13 +45,19 @@
       </div>
     </nav>
 
-    <div class="container theme-showcase" role="main">
+    <div class="container theme-showcase mb-5" role="main">
 
       <section layout:fragment="content">
         ...
       </section>
 
     </div> <!-- /container -->
+
+    <div class="container-fluid theme-showcase" role="main">
+      <section layout:fragment="content-fluid">
+      </section>
+    </div> <!-- /container -->
+
 
     <footer class="footer">
       <div class="container">
