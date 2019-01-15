@@ -2,22 +2,13 @@ body {
   padding-top: 65px;
 }
 
-.error-page p {
-  text-align: left;
+.navbar {
+  border-bottom: solid 1px #e5e5e5;
+  min-height: 45px;
 }
 
-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 40px;
-  background-color: #f5f5f5;
-
-  border-top: solid 1px #AAA;
-  color: #777;
-  padding-top: 10px;
-  text-align: center;
+.navbar-brand.logo img {
+  height: 30px;
 }
 
 .jumbotron {
@@ -25,72 +16,56 @@ footer {
   text-align: center;
 }
 
-.navbar {
-  background-color: white;
-  border-bottom: solid 1px #e5e5e5;
-  min-height: 45px;
-}
-
-.navbar-brand.logo img {
-  height: 30px;
-  margin-top: -5px;
-}
-
-.openseadragon {
-  border: solid 1px #e5e5e5;
-}
-
-.theme-dropdown .dropdown-menu {
-  position: static;
-  display: block;
-  margin-bottom: 20px;
-}
-
-.theme-showcase > p > .btn {
-  margin: 5px 0;
-}
-
-.theme-showcase .navbar .container {
-  width: auto;
-}
-
-#viewer {
-  background: #333;
-  width: 100%;
-  height: calc(100vh - 115px);
-  position: relative;
-}
-
-.window-manifest-title {
-  height: 1.25em;
-}
-
-#viewer .mirador-osd-annotation-controls * {
-  box-sizing: content-box;
-}
-
-#viewer .metadata-listing .metadata-item {
-  padding-top: 5px;
-}
-
-#viewer .metadata-listing .metadata-label,
-#viewer .metadata-listing .metadata-value {
-  display: inline;
-}
-
-#viewer .metadata-listing .metadata-label {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-#viewer .metadata-listing img {
-  display: block;
-}
-
 .card .table {
   margin-bottom: 0;
 }
 
-.card-body {
-  padding: 15px;
+#mirador-viewer {
+  background: #333;
+  height: calc(100vh - 115px);
+  position: relative;
+  width: 100%;
+}
+
+#mirador-viewer .window-manifest-title {
+  height: 1.25em;
+}
+
+#mirador-viewer .mirador-osd-annotation-controls * {
+  box-sizing: content-box;
+}
+
+#mirador-viewer .metadata-listing .metadata-item {
+  padding-top: 5px;
+}
+
+#mirador-viewer .metadata-listing .metadata-label,
+#mirador-viewer .metadata-listing .metadata-value {
+  display: inline;
+}
+
+#mirador-viewer .metadata-listing .metadata-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+#mirador-viewer .metadata-listing img {
+  display: block;
+}
+
+#openseadragon-viewer {
+  border: solid 1px #e5e5e5;
+  height: calc(100vh - 205px);
+}
+
+.error-page p {
+  text-align: left;
+}
+
+footer {
+  border-top: solid 1px #AAA;
+  bottom: 0;
+  position: fixed;
+  text-align: center;
+  width: 100%;
 }

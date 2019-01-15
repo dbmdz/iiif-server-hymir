@@ -3,8 +3,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{base}">
   <body>
-    <section layout:fragment="content">
-      <div class="card bg-light mb-3">
+    <section layout:fragment="content" class="mb-5">
+      <div class="card bg-light mt-2">
         <div class="card-header" th:text="#{error.page_title}">Ooops!</div>
         <div class="card-body">
           <h5 class="card-title" th:text="#{error.404.page_title}">Page not found</h5>

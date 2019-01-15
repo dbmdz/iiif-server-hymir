@@ -3,21 +3,21 @@
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   layout:decorate="~{base}">
   <body>
-    <section layout:fragment="content">
+    <section layout:fragment="content" class="mb-5">
       <main>
-        <div class="card mb-4">
+        <div class="card">
           <div class="card-header bg-primary text-white">
             Viewing "<span th:text="@{__${infoUrl}__}">...</span>" in OpenSeadragon <span th:text="${iiifVersions.openseadragon}">osd version</span>
           </div>
           <div class="card-body">
-            <div id="preview" class="openseadragon" style="height: 600px;"></div>
+            <div id="openseadragon-viewer"></div>
           </div>
         </div>
 
         <script th:src="@{/webjars/openseadragon/__${iiifVersions.openseadragon}__/build/openseadragon/openseadragon.min.js}"></script>
         <script type="application/javascript" th:inline="javascript">
           var viewer = OpenSeadragon({
-          id: "preview",
+          id: "openseadragon-viewer",
           /*<![CDATA[*/
           prefixUrl: /*[[@{/webjars/openseadragon/__${iiifVersions.openseadragon}__/build/openseadragon/images/}]]*/,
           /*]]>*/
