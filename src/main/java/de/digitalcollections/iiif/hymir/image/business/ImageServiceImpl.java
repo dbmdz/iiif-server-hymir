@@ -148,7 +148,9 @@ public class ImageServiceImpl implements ImageService {
     }
   }
 
-  /** Try to obtain a {@link ImageReader} for a given identifier **/
+  /**
+   * Try to obtain a {@link ImageReader} for a given identifier
+   */
   private ImageReader getReader(String identifier) throws ResourceNotFoundException, UnsupportedFormatException, IOException {
     if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
       throw new ResourceNotFoundException();
