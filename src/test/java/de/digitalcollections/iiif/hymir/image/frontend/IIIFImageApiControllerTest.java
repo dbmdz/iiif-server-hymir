@@ -512,4 +512,11 @@ public class IIIFImageApiControllerTest {
     String link = response.getHeaders().getFirst("Link").toString();
     assertThat(link).isEqualTo("<http://localhost:" + randomServerPort + "/image/" + IIIFImageApiController.VERSION + "/file-zoom/206,511,413,511/346,/0/default.jpg>;rel=\"canonical\"");
   }
+
+  @Test
+  public void testReadPNG() throws Exception {
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/png-file/full/full/0/default.png", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
 }

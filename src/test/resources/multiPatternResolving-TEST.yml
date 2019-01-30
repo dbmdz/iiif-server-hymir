@@ -4,6 +4,8 @@
   substitutions: ['classpath\:/mockdata/mock-page-106245331.jpg']
 - pattern: http-bsb
   substitutions: ['classpath\:/mockdata/mock-page-00044843.jpg']
+- pattern: png-file
+  substitutions: ['classpath\:mockdata/mock.png']
 - pattern: spec:/ial\?file\#with\[special\]ch@arac%ters
   substitutions: ['classpath\:mockdata/mock-page-106245331.jpg']
 - pattern: square
