@@ -103,7 +103,7 @@
     <version.webjar-respond>1.4.2</version.webjar-respond>
 
     <!-- plugins -->
-    <version.jacoco-maven-plugin>0.8.2</version.jacoco-maven-plugin>
+    <version.jacoco-maven-plugin>0.8.3</version.jacoco-maven-plugin>
     <version.maven-checkstyle-plugin>3.0.0</version.maven-checkstyle-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.nexus-staging-maven-plugin>1.6.8</version.nexus-staging-maven-plugin>
