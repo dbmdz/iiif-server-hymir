@@ -3,18 +3,17 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{base}">
   <body>
-    <section layout:fragment="content">
-
-      <div class="well">
-        <h3 th:text="#{error.page_title}">Ooops!</h3>
-
-        <h1 th:text="#{error.404.page_title}">Page not found</h1>
-
-        <p>
-          <a th:href="@{/}" class="btn btn-primary btn-lg">
-            <span th:text="#{error.404.button_text}">Take Me Home</span>
-          </a>
-        </p>
+    <section layout:fragment="content" class="mb-5">
+      <div class="card bg-light mt-2">
+        <div class="card-header" th:text="#{error.page_title}">Ooops!</div>
+        <div class="card-body">
+          <h5 class="card-title" th:text="#{error.404.page_title}">Page not found</h5>
+          <p class="card-text">
+            <a th:href="@{/}" class="btn btn-primary btn-lg">
+              <span th:text="#{error.404.button_text}">Take Me Home</span>
+            </a>
+          </p>
+        </div>
       </div>
     </section>
   </body>
