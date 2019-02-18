@@ -20,7 +20,7 @@ Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](
 - Support for Filesystem- and HTTP-Image-Repositories (own protocols can be added by providing specific resolver)
 - Pluggable Manifest generation: implement your own mapping from project specific structure metadata to a standard Manifest object.
 - Embedded IIIF Image Viewer (for out of the box viewing of served images): OpenSeadragon 2.3.1 (see "Usage" below)
-- Embedded IIIF Presentation Viewer: Mirador 2.6.0 (see "Usage" below)
+- Embedded IIIF Presentation Viewer: Mirador 2.7.0 (see "Usage" below)
 - Direct Manifest access (see "Usage" below)
 
 ### Supported image formats
