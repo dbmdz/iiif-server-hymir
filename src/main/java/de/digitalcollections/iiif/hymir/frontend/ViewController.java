@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class ViewController {
+
   @Autowired
   @Value("#{iiifVersions}")
   private Map<String, String> iiifVersions;
@@ -29,7 +31,6 @@ public class ViewController {
 
   @RequestMapping(value = "/image/{identifier}/view.html", method = RequestMethod.GET)
   public String viewImageGet(@PathVariable String identifier, Model model) {
-    model.addAttribute("iiifVersions", iiifVersions);
     model.addAttribute("infoUrl", "/image/" + IIIFImageApiController.VERSION + "/" + identifier + "/info.json");
     return "openseadragon/view";
   }
@@ -46,7 +47,6 @@ public class ViewController {
 
   @RequestMapping(value = "/presentation/view/{identifier}", method = RequestMethod.GET)
   public String viewPresentationGet(@PathVariable String identifier, Model model) {
-    model.addAttribute("iiifVersions", iiifVersions);
     model.addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
     return "mirador/view";
   }
@@ -59,5 +59,10 @@ public class ViewController {
   @RequestMapping(value = "/presentation/collection", method = RequestMethod.GET)
   public String viewPresentationCollection(@RequestParam String name) {
     return "redirect:/presentation/" + IIIFPresentationApiController.VERSION + "/collection/" + name;
+  }
+
+  @ModelAttribute("iiifVersions")
+  protected Map<String, String> getIIIFVersions() {
+    return iiifVersions;
   }
 }
