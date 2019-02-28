@@ -63,9 +63,6 @@ management:
     port: 9001
 
 resourceRepository:
-  managed:
-    namespace: 'dico'
-    folderpath: '/src/test/resources/repository'
   resolved:
     patterns:
       - pattern: file-zoom
