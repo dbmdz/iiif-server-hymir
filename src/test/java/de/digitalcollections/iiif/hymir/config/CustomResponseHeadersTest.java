@@ -13,10 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
-        properties = {"spring.profiles.active=TEST",
-                      "spring.config.name=application-customResponseHeaders-test"},
-        classes = {Application.class},
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+  properties = {"spring.profiles.active=TEST",
+                "spring.config.name=application-test"},
+  classes = {Application.class},
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CustomResponseHeadersTest {
 
   @Autowired
