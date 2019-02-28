@@ -2,6 +2,7 @@ package de.digitalcollections.iiif.hymir.presentation.backend.api;
 
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
+import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
@@ -11,6 +12,17 @@ import java.time.Instant;
  * Interface to be implemented by project/user of this library.
  */
 public interface PresentationRepository {
+
+  /**
+   * @param identifier unique identifier of the corresponding manifest
+   * @param name unique name of annotation list
+   * @param canvasId name of the corresponding canvas
+   * @return AnnotationList specified by name
+   * @throws ResolvingException if no annotation list found
+   * @throws ResourceNotFoundException if annotation list with given name can not be found
+   * @throws InvalidDataException if data is corrupted
+   */
+  AnnotationList getAnnotationList(String identifier, String name, String canvasId) throws ResolvingException, ResourceNotFoundException, InvalidDataException;
 
   /**
    * @param name unique name of collection

@@ -5,6 +5,7 @@ import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
+import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Canvas;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -134,6 +136,20 @@ public class IIIFPresentationApiController {
     Collection collection = presentationService.getCollection(identifier);
     LOGGER.info("Serving collection for {}", identifier);
     return collection;
+  }
+
+  @GetMapping(value = {"{identifier}/list/{name}/{canvasId}"}, produces = "application/json")
+  @ResponseBody
+  public AnnotationList getAnnotationList(@PathVariable String identifier, @PathVariable String name, @PathVariable String canvasId, HttpServletResponse resp)
+    throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    resp.addHeader("Access-Control-Allow-Origin", "*");
+
+    customResponseHeaders.forPresentationCollection().forEach(customResponseHeader -> {
+      resp.setHeader(customResponseHeader.getName(), customResponseHeader.getValue());
+    });
+
+    LOGGER.info("Serving annotation list for {}-{}_{}", name, identifier, canvasId);
+    return presentationService.getAnnotationList(identifier, name, canvasId);
   }
 
   /**

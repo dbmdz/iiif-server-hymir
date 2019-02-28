@@ -67,6 +67,11 @@ resourceRepository:
       - pattern: ^collection-(.*)$
         substitutions:
           - 'file:/var/local/iiif/presentation/collections/$1.json'
+      # Annotation list of transcriptions
+      - pattern: ^transcription-(.*)$
+        substitutions:
+          - 'file:/var/local/iiif/presentation/annotations/$1.json'
+
 server:
   error:
     include-exception: true
