@@ -1,7 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.business;
 
 import com.google.common.collect.Streams;
-import de.digitalcollections.commons.file.business.api.FileResourceService;
+import de.digitalcollections.commons.file.business.impl.resolved.ResolvedFileResourceServiceImpl;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
@@ -13,7 +13,6 @@ import de.digitalcollections.iiif.model.image.Size;
 import de.digitalcollections.iiif.model.image.TileInfo;
 import de.digitalcollections.model.api.identifiable.resource.FileResource;
 import de.digitalcollections.model.api.identifiable.resource.MimeType;
-import de.digitalcollections.model.api.identifiable.resource.enums.FileResourcePersistenceType;
 import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceIOException;
 import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReadParam;
@@ -44,7 +43,7 @@ import org.springframework.stereotype.Service;
 public class ImageServiceImpl implements ImageService {
 
   private final ImageSecurityService imageSecurityService;
-  private final FileResourceService fileResourceService;
+  private final ResolvedFileResourceServiceImpl fileResourceService;
 
   @Value("${custom.iiif.logo:}")
   private String logoUrl;
@@ -81,7 +80,7 @@ public class ImageServiceImpl implements ImageService {
   }
 
   public ImageServiceImpl(@Autowired(required = false) ImageSecurityService imageSecurityService,
-          @Autowired FileResourceService fileResourceService) {
+          @Autowired ResolvedFileResourceServiceImpl fileResourceService) {
     this.imageSecurityService = imageSecurityService;
     this.fileResourceService = fileResourceService;
   }
@@ -157,7 +156,7 @@ public class ImageServiceImpl implements ImageService {
     }
     FileResource fileResource;
     try {
-      fileResource = fileResourceService.get(identifier, FileResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
+      fileResource = fileResourceService.find(identifier, MimeType.MIME_IMAGE);
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }
@@ -341,7 +340,7 @@ public class ImageServiceImpl implements ImageService {
       throw new ResourceNotFoundException();
     }
     try {
-      FileResource res = fileResourceService.get(identifier, FileResourcePersistenceType.RESOLVED, MimeType.MIME_IMAGE);
+      FileResource res = fileResourceService.find(identifier, MimeType.MIME_IMAGE);
       return res.getLastModified().toInstant(ZoneOffset.UTC);
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();

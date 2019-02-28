@@ -45,6 +45,28 @@ management:
   server:
     port: 9001
 
+resourceRepository:
+  resolved:
+    patterns:
+      # An image pattern resolving example:
+      - pattern: ^(\d{8})_(\d{5})$
+        substitutions:
+          - 'file:/var/local/iiif/images/$1/original/image_$1_$2.tif'
+          - 'file:/var/local/iiif/images/$1/300/image_$1_$2.jpg'
+          - 'file:/var/local/iiif/images/$1/150/image_$1_$2.jpg'
+      # An manifest pattern resolving example:
+      - pattern: ^(\d{8})$
+        substitutions:
+          - 'file:/var/local/iiif/presentation/manifests/manifest_$1.json'
+      # For the official IIIF Image API Validator
+      - pattern: 67352ccc-d1b0-11e1-89ae-279075081939
+        substitutions:
+          - 'classpath:validation.jp2'
+          - 'classpath:validation.png'
+      # Collection manifests ('collection-' pattern-prefix is statically added to requested collection name to disambigued from other patterns)
+      - pattern: ^collection-(.*)$
+        substitutions:
+          - 'file:/var/local/iiif/presentation/collections/$1.json'
 server:
   error:
     include-exception: true
