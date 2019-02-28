@@ -173,17 +173,17 @@
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
+      <artifactId>dc-commons-file</artifactId>
+      <version>${version.dc-commons}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-server</artifactId>
       <version>${version.dc-commons}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-springboot</artifactId>
-      <version>${version.dc-commons}</version>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections.commons</groupId>
-      <artifactId>dc-commons-file</artifactId>
       <version>${version.dc-commons}</version>
     </dependency>
     <dependency>
