@@ -5,6 +5,7 @@ import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.backend.api.PresentationRepository;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationSecurityService;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
+import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
@@ -24,6 +25,11 @@ public class PresentationServiceImpl implements PresentationService {
           @Autowired(required = false) PresentationSecurityService presentationSecurityService) {
     this.presentationRepository = presentationRepository;
     this.presentationSecurityService = presentationSecurityService;
+  }
+
+  @Override
+  public AnnotationList getAnnotationList(String identifier, String name, String canvasId) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    return presentationRepository.getAnnotationList(identifier, name, canvasId);
   }
 
   @Override

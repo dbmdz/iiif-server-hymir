@@ -5,6 +5,7 @@ import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.backend.api.PresentationRepository;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
+import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.model.api.identifiable.resource.FileResource;
@@ -37,6 +38,24 @@ public class PresentationRepositoryImpl implements PresentationRepository {
 
   @Autowired
   private ResolvedFileResourceServiceImpl resourceService;
+
+  @Override
+  public AnnotationList getAnnotationList(String identifier, String name, String canvasId) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    String annotationListName = name + "-" + identifier + "_" + canvasId;
+    FileResource resource;
+    try {
+      resource = resourceService.find(annotationListName, MimeType.MIME_APPLICATION_JSON);
+    } catch (ResourceIOException ex) {
+      LOGGER.error("Error getting annotation list for name {}", annotationListName, ex);
+      throw new ResolvingException("No annotation list for name " + annotationListName);
+    }
+    try {
+      return objectMapper.readValue(resourceService.getInputStream(resource), AnnotationList.class);
+    } catch (IOException ex) {
+      LOGGER.error("Could not retrieve annotation list {}", annotationListName, ex);
+      throw new InvalidDataException("Annotation list " + annotationListName + " can not be parsed", ex);
+    }
+  }
 
   @Override
   public Collection getCollection(String name) throws ResolvingException, ResourceNotFoundException, InvalidDataException {

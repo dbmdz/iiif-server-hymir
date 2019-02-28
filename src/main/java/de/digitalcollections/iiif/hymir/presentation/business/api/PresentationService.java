@@ -2,6 +2,7 @@ package de.digitalcollections.iiif.hymir.presentation.business.api;
 
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
+import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Canvas;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
@@ -16,6 +17,15 @@ import java.time.Instant;
  * Service for IIIF Presentation API functionality.
  */
 public interface PresentationService {
+
+  /**
+   * @param name unique name of annotation list
+   * @return AnnotationList specified by name
+   * @throws ResolvingException if no annotation list found
+   * @throws ResourceNotFoundException if annotation list with given name can not be found
+   * @throws InvalidDataException if data is corrupted
+   */
+  AnnotationList getAnnotationList(String identifier, String name, String canvasId) throws ResolvingException, ResourceNotFoundException, InvalidDataException;
 
   /**
    * @param name unique name of collection
