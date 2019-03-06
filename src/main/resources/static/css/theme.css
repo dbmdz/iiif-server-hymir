@@ -11,15 +11,6 @@ body {
   height: 30px;
 }
 
-.jumbotron {
-  margin-top: 10px;
-  text-align: center;
-}
-
-.card .table {
-  margin-bottom: 0;
-}
-
 #mirador-viewer {
   background: #333;
   height: calc(100vh - 115px);
@@ -66,6 +57,4 @@ footer {
   border-top: solid 1px #AAA;
   bottom: 0;
   position: fixed;
-  text-align: center;
-  width: 100%;
 }
