@@ -53,13 +53,13 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
     http.authorizeRequests()
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class)).permitAll()
-            .requestMatchers(EndpointRequest.to("version")).permitAll()
-            .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
-            .antMatchers("/**").permitAll()
-            .and()
-            .httpBasic();
+      .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+      .requestMatchers(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class)).permitAll()
+      .requestMatchers(EndpointRequest.to("jolokia", "prometheus", "version")).permitAll()
+      .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
+      .antMatchers("/**").permitAll()
+      .and()
+      .httpBasic();
   }
 
   private PasswordEncoder passwordEncoderDummy() {
