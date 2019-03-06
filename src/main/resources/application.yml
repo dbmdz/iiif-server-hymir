@@ -28,6 +28,7 @@ javamelody:
     # log http requests:
     log: false
     monitoring-path: '/monitoring/javamelody'
+    storage-directory: '/local/javamelody-hymir'
     url-exclude-pattern: '^(/webjars|/jsondoc|/monitoring).*'
 
 management:
