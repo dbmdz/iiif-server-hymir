@@ -13,11 +13,11 @@ info:
       source: '@maven.compiler.source@'
       target: '@maven.compiler.target@'
     project:
-      name: '@project.name@'
-      groupId: '@project.groupId@'
       artifactId: '@project.artifactId@'
-      version: '@project.version@'
       buildDetails: '@versionName@'
+      groupId: '@project.groupId@'
+      name: '@project.name@'
+      version: '@project.version@'
 
 javamelody:
   enabled: true
@@ -99,12 +99,12 @@ spring:
 ---
 
 # PROD
-spring:
-  profiles: PROD
-  thymeleaf:
-    cache: true
-
 server:
   error:
     include-exception: false
     include-stacktrace: 'never'
+
+spring:
+  profiles: PROD
+  thymeleaf:
+    cache: true
