@@ -78,6 +78,12 @@ server:
     include-stacktrace: always
   port: 9000
   server-header: "@project.name@ v@project.version@"
+  tomcat:
+    accesslog:
+      directory: "/var/log/digitalcollections"
+      enabled: true
+      prefix: access_log_hymir
+      rename-on-rotate: true
 
 spring:
   messages:
