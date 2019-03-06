@@ -6,7 +6,7 @@
     <section layout:fragment="content" class="mb-5">
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div class="jumbotron mt-2">
+      <div class="jumbotron mt-2 text-center">
         <h1 class="display-4">Hymir IIIF Server</h1>
         <p class="lead" th:text="#{intro_text}">...</p>
       </div>
@@ -16,7 +16,7 @@
           <div class="card border-primary">
             <div class="card-header bg-primary text-white">IIIF Image API 2.1</div>
             <div class="card-body">
-              <table class="table">
+              <table class="mb-0 table">
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/image/view}" method="post">
@@ -37,7 +37,7 @@
           <div class="card border-primary">
             <div class="card-header bg-primary text-white">IIIF Presentation API 2.1</div>
             <div class="card-body">
-              <table class="table">
+              <table class="mb-0 table">
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/presentation/view}" method="post">
