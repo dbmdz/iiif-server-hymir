@@ -8,7 +8,7 @@
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron mt-2">
         <h1 class="display-4">Hymir IIIF Server</h1>
-        <p class="lead">Use below forms to view resources provided by this server.</p>
+        <p class="lead" th:text="#{intro_text}">...</p>
       </div>
 
       <div class="row">
@@ -20,11 +20,11 @@
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/image/view}" method="post">
-                      <h4>View image with OpenSeadragon</h4>
+                      <h4 th:text="#{view_image}">...</h4>
                       <div class="form-group">
                         /image/ <input type="text" class="form-control form-control-sm" placeholder="identifier" name="identifier"> /view.html
                       </div>
-                      <button type="submit" class="btn btn-primary ml-auto">view</button>
+                      <button th:text="#{view}" type="submit" class="btn btn-primary ml-auto">...</button>
                     </form>
                   </td>
                 </tr>
@@ -41,33 +41,33 @@
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/presentation/view}" method="post">
-                      <h4>View object with Mirador</h4>
+                      <h4 th:text="#{view_object}">...</h4>
                       <div class="form-group">
                         /presentation/ <input type="text" class="form-control form-control-sm" placeholder="identifier" name="identifier"> /view.html
                       </div>
-                      <button type="submit" class="btn btn-primary ml-auto">view</button>
+                      <button th:text="#{view}" type="submit" class="btn btn-primary ml-auto">...</button>
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/presentation/manifest}" method="get">
-                      <h4>View manifest as JSON</h4>
+                      <h4 th:text="#{view_manifest}">...</h4>
                       <div class="form-group">
                         /presentation/v2/ <input type="text" class="form-control form-control-sm" placeholder="identifier" name="identifier"> /manifest
                       </div>
-                      <button type="submit" class="btn btn-primary ml-auto">view</button>
+                      <button th:text="#{view}" type="submit" class="btn btn-primary ml-auto">...</button>
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <form class="form-inline" action="#" th:action="@{/presentation/collection}" method="get">
-                      <h4>View collection as JSON</h4>
+                      <h4 th:text="#{view_collection}">View collection as JSON</h4>
                       <div class="form-group">
                         /presentation/v2/collection/ <input type="text" class="form-control form-control-sm" placeholder="name" name="name">
                       </div>
-                      <button type="submit" class="btn btn-primary ml-auto">view</button>
+                      <button th:text="#{view}" type="submit" class="btn btn-primary ml-auto">...</button>
                     </form>
                   </td>
                 </tr>

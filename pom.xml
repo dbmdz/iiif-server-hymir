@@ -187,6 +187,11 @@
       <version>${version.dc-commons}</version>
     </dependency>
     <dependency>
+      <groupId>de.digitalcollections.commons</groupId>
+      <artifactId>dc-commons-springmvc</artifactId>
+      <version>${version.dc-commons}</version>
+    </dependency>
+    <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
       <artifactId>imageio-turbojpeg</artifactId>
       <version>${version.imageio-jnr}</version>
