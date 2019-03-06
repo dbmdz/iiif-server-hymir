@@ -81,7 +81,9 @@ server:
 
 spring:
   messages:
-    basename: messages,messages-overlay,messages-commons
+    basename: 'messages, messages-commons'
+    cache-duration: 5
+    encoding: 'UTF-8'
     fallback-to-system-locale: false
   profiles:
     active: local
