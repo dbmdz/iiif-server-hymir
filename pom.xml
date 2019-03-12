@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.2.RELEASE</version>
+    <version>2.1.3.RELEASE</version>
   </parent>
 
   <name>DigitalCollections: Hymir IIIF Server</name>
@@ -78,9 +78,9 @@
     <version.assertj-json>1.2.0</version.assertj-json>
     <version.commons-cli>1.4</version.commons-cli>
     <version.dc-commons>3.0.1</version.dc-commons>
-    <version.guava>27.0.1-jre</version.guava>
-    <version.iiif-apis>0.3.6-SNAPSHOT</version.iiif-apis>
-    <version.imageio-jnr>0.2.8</version.imageio-jnr>
+    <version.guava>27.1-jre</version.guava>
+    <version.iiif-apis>0.3.6</version.iiif-apis>
+    <version.imageio-jnr>0.3.0</version.imageio-jnr>
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
     <version.json-simple>1.1.1</version.json-simple>
     <version.logstash-logback-encoder>5.3</version.logstash-logback-encoder>
