@@ -70,6 +70,13 @@ public class CustomResponseHeaders {
     return result;
   }
 
+  public List<ResponseHeader> forPresentationAnnotationList() {
+    List<ResponseHeader> result = new ArrayList<>();
+    Optional.ofNullable(all).ifPresent(result::addAll);
+    Optional.ofNullable(presentation.get("annotationList")).ifPresent(result::addAll);
+    return result;
+  }
+
   public static class ResponseHeader {
 
     private String name;

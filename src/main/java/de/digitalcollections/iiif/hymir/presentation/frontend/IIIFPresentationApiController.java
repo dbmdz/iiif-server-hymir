@@ -144,7 +144,7 @@ public class IIIFPresentationApiController {
     throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     resp.addHeader("Access-Control-Allow-Origin", "*");
 
-    customResponseHeaders.forPresentationCollection().forEach(customResponseHeader -> {
+    customResponseHeaders.forPresentationAnnotationList().forEach(customResponseHeader -> {
       resp.setHeader(customResponseHeader.getName(), customResponseHeader.getValue());
     });
 
