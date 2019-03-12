@@ -60,7 +60,7 @@ public class ImageServiceImpl implements ImageService {
   @Value("${custom.iiif.image.maxHeight:65500}")
   private int maxHeight;
 
-  private class DecodedImage {
+  private static class DecodedImage {
 
     /** Decoded image **/
     final BufferedImage img;
