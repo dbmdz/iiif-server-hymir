@@ -98,7 +98,6 @@ spring:
     user:
       name: admin
       password: secret
-      roles: ACTUATOR
   thymeleaf:
     cache: false
     mode: HTML
