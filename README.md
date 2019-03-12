@@ -7,7 +7,7 @@
 [![GitHub release](https://img.shields.io/github/release/dbmdz/iiif-server-hymir.svg)](https://github.com/dbmdz/iiif-server-hymir/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/de.digitalcollections/iiif-server-hymir.svg)](https://search.maven.org/search?q=a:iiif-server-hymir)
 
-Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](https://github.com/dbmdz/iiif-apis) (Java implementations of the [IIIF specifications](http://iiif.io/technical-details/)). It can be used to serve images, presentation manifests and presentation collections.
+Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](https://github.com/dbmdz/iiif-apis) (Java implementations of the [IIIF specifications](http://iiif.io/technical-details/)). It can be used to serve images, presentation manifests, presentation collections and presentation annotation lists.
 
 ## Features
 
@@ -55,10 +55,9 @@ $ java -jar hymir-<version>-exec.jar
 ```
 Logging: to console
 
-Image, manifest and collection file resolving: see [here](src/main/resources/multiPatternResolving-local.yml) (using directories under `/var/local/iiif`)
+Image, manifest, collection and annotation list file resolving: see [here](src/main/resources/application.yml#L49) (using directories under `/var/local/iiif`)
 
 Application configuration: see [here](src/main/resources/application.yml) (`local` profile section at beginning of file)
-
 
 - in production
 
@@ -68,7 +67,7 @@ $ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
 
 Logging: to file `./hymir.log` in [Logstash](https://www.elastic.co/de/products/logstash)-JSON format
 
-Image, manifest and collection file resolving: see [here](src/main/resources/multiPatternResolving-PROD.yml) (using directories under `/var/local/iiif`)
+Image, manifest, collection and annotation list file resolving: see [here](src/main/resources/application.yml#L49) (using directories under `/var/local/iiif`)
 
 Application configuration: see [here](src/main/resources/application.yml) (`PROD` profile section overriding some values at bottom of file)
 
@@ -289,6 +288,7 @@ If you already put your custom `application.yml` file in place (see above), it i
 - Image API: info.json requests
 - Presentation API: manifest requests (includes canvas and range requests)
 - Presentation API: collection requests
+- Presentation API: Annotation list requests
 
 Customized response headers are placed in the `custom.iiif.headers`-section of your `application.yml` configuration file, e.g.:
 
@@ -313,6 +313,7 @@ custom:
           - name: 'mani2'
             value: 'mani-value2'
         collection: null
+        annotationList: null
 ```
 
 If you want to override a header that is set by default (e.g. `Access-Control-Allow-Origin=*`), you just have to configure it with another value, e.g.:
