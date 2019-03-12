@@ -86,6 +86,7 @@
     <version.javamelody>1.76.0</version.javamelody>
     <version.json-simple>1.1.1</version.json-simple>
     <version.logstash-logback-encoder>5.3</version.logstash-logback-encoder>
+    <version.spotbugs>3.1.12</version.spotbugs>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.twelvemonkeys>3.3.2</version.twelvemonkeys> <!-- 3.4.1 -->
     <version.webjar-bootstrap>4.3.1</version.webjar-bootstrap>
@@ -108,6 +109,7 @@
     <version.maven-checkstyle-plugin>3.0.0</version.maven-checkstyle-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.nexus-staging-maven-plugin>1.6.8</version.nexus-staging-maven-plugin>
+    <version.spotbugs-maven-plugin>3.1.11</version.spotbugs-maven-plugin>
   </properties>
 
   <dependencies>
@@ -130,6 +132,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-parameter-names</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <version>${version.spotbugs}</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -397,6 +404,26 @@
     </resources>
 
     <plugins>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${version.spotbugs-maven-plugin}</version>
+        <dependencies>
+          <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+          <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>${version.spotbugs}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>

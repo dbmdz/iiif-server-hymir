@@ -3,6 +3,7 @@ package de.digitalcollections.iiif.hymir;
 import de.digitalcollections.iiif.hymir.cli.Cli;
 import de.digitalcollections.iiif.hymir.cli.CliException;
 import de.digitalcollections.iiif.hymir.cli.ExitStatus;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.PrintWriter;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class Application {
     return new ResourceBanner(resource);
   }
 
+  @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING", justification = "The PrintWriter constructor with charset is not supported in Java 8")
   private static void processArguments(String[] args) {
     Cli cli;
     try {
