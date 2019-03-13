@@ -19,7 +19,7 @@ Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](
 - Highly customizable image storage and identifier resolving: Access to images over project specific Resolver-plugin mechanism.
 - Support for Filesystem- and HTTP-Image-Repositories (own protocols can be added by providing specific resolver)
 - Pluggable Manifest generation: implement your own mapping from project specific structure metadata to a standard Manifest object.
-- Embedded IIIF Image Viewer (for out of the box viewing of served images): OpenSeadragon 2.3.1 (see "Usage" below)
+- Embedded IIIF Image Viewer (for out of the box viewing of served images): OpenSeadragon 2.4.0 (see "Usage" below)
 - Embedded IIIF Presentation Viewer: Mirador 2.7.0 (see "Usage" below)
 - Direct Manifest access (see "Usage" below)
 
@@ -53,6 +53,7 @@ Run the downloaded application:
 ```sh
 $ java -jar hymir-<version>-exec.jar
 ```
+
 Logging: to console
 
 Image, manifest, collection and annotation list file resolving: see [here](src/main/resources/application.yml#L49) (using directories under `/var/local/iiif`)
@@ -74,16 +75,10 @@ Application configuration: see [here](src/main/resources/application.yml) (`PROD
 - in production with custom logging configuration file:
 
 ```sh
-$ java -Dlogging.config=file:/etc/hymir/logback-spring.xml -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
+$ java -jar hymir-4.0.0-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml  --spring.profiles.active=PROD
 ```
 
 Read <https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html> and <https://logback.qos.ch/manual/configuration.html>.
-
-- in production with custom file resolving rules (to specify images, manifest and collection locations):
-
-```sh
-$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD --rules=file:/etc/hymir/rules.yml
-```
 
 - in production with custom configuration file `application.yml`:
 
@@ -96,13 +91,13 @@ $ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
 - in production with a custom server port (e.g. port 8080):
 
 ```sh
-$ java -Dserver.port=8080 -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
+$ java -jar hymir-4.0.0-exec.jar --server.port=8080 --spring.profiles.active=PROD
 ```
 
 Complete parametrized example:
 
 ```sh
-$ java -Dserver.port=8080 -Dlogging.config=file:/etc/hymir/logback-spring.xml -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD --rules=file:/etc/hymir/rules.yml
+$ java -jar hymir-4.0.0-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml --server.port=8080 --spring.profiles.active=PROD
 ```
 
 (and `application.yml` beside jar file).
@@ -116,43 +111,46 @@ Access Hymir GUI (e.g. http://localhost:9000/).
 Based on unique resource identifiers the server tries to resolve identifiers to a `file:` or `http:` path.
 The resolving rules (one rule per line) are configurable with regular expressions in YML-files.
 
-You can pass the path to your custom resolving rules with the `--rules=/path/to/rules.yml` option.
+You can pass the path to your custom resolving rules with the `--spring.config.additional-location=/path/to/rules.yml` option.
 
 Example file `rules.yml`:
 
 ```yaml
-# This configuration file defines a list of patterns with one ore more substitutions.
-# These are used for resolving IDs to a concrete URI, e.g. on the file system, the
-# classpath or even a remote HTTP endpoint.
-# You can specify multiple substitutions, the resolver will try to match them against
-# the desired MIME type and return all that matches
-# The repository will then verify which of these URIs are actually readable and return
-# the first matching substitution.
-# In the example below, we have two MIME types (tiff/jpeg) and for JPEG two resolutions
-# in decreasing order of quality, so that the higher-resolution image will be chosen
-# if it is available.
-# An image pattern resolving example:
-- pattern: ^(\d{8})_(\d{5})$
-  substitutions:
-    - 'file:/var/local/iiif/images/$1/original/image_$1_$2.tif'
-    - 'file:/var/local/iiif/images/$1/300/image_$1_$2.jpg'
-    - 'file:/var/local/iiif/images/$1/150/image_$1_$2.jpg'
+resourceRepository:
+  resolved:
+    patterns:
+      # This configuration file defines a list of patterns with one ore more substitutions.
+      # These are used for resolving IDs to a concrete URI, e.g. on the file system, the
+      # classpath or even a remote HTTP endpoint.
+      # You can specify multiple substitutions, the resolver will try to match them against
+      # the desired MIME type and return all that matches
+      # The repository will then verify which of these URIs are actually readable and return
+      # the first matching substitution.
+      # In the example below, we have two MIME types (tiff/jpeg) and for JPEG two resolutions
+      # in decreasing order of quality, so that the higher-resolution image will be chosen
+      # if it is available.
+      # An image pattern resolving example:
+      - pattern: ^(\d{8})_(\d{5})$
+        substitutions:
+          - 'file:/var/local/iiif/images/$1/original/image_$1_$2.tif'
+          - 'file:/var/local/iiif/images/$1/300/image_$1_$2.jpg'
+          - 'file:/var/local/iiif/images/$1/150/image_$1_$2.jpg'
 
-# An manifest pattern resolving example:
-- pattern: ^(\d{8})$
-  substitutions:
-    - 'file:/var/local/iiif/presentation/manifests/manifest_$1.json'
+      # An manifest pattern resolving example:
+      - pattern: ^(\d{8})$
+        substitutions:
+          - 'file:/var/local/iiif/presentation/manifests/manifest_$1.json'
 
-# For the official IIIF Image API Validator
-- pattern: 67352ccc-d1b0-11e1-89ae-279075081939
-  substitutions:
-    - 'classpath:validation.jp2'
-    - 'classpath:validation.png'
+      # For the official IIIF Image API Validator
+      - pattern: 67352ccc-d1b0-11e1-89ae-279075081939
+        substitutions:
+          - 'classpath:validation.jp2'
+          - 'classpath:validation.png'
 
-# Collection manifests ('collection-' pattern-prefix is statically added to requested collection name to disambigued from other patterns)
-- pattern: ^collection-(.*)$
-  substitutions:
-    - 'file:/var/local/iiif/presentation/collections/$1.json'
+      # Collection manifests ('collection-' pattern-prefix is statically added to requested collection name to disambigued from other patterns)
+      - pattern: ^collection-(.*)$
+        substitutions:
+          - 'file:/var/local/iiif/presentation/collections/$1.json'
 ```
 
 ### Serve images
@@ -186,7 +184,7 @@ You can configure another url prefix on server startup using system property `cu
 Example:
 
 ```sh
-$ java -Dcustom.iiif.image.urlPrefix='/iiifImage/' -jar target/hymir-4.0.0-exec.jar --rules=file:/etc/hymir/rules.yml --spring.profiles.active=local
+$ java -jar target/hymir-4.0.0-exec.jar --custom.iiif.image.urlPrefix='/iiifImage/' --spring.config.additional-location=file:/etc/hymir/rules.yml --spring.profiles.active=local
 ```
 
 Resulting URL: `http://localhost:9000/iiifImage/00113391_00001/full/300,/0/default.jpg`
@@ -222,7 +220,7 @@ You can configure another url prefix on server startup using system property `cu
 Example:
 
 ```sh
-$ java -Dcustom.iiif.presentation.urlPrefix='/iiifPresentation/' -jar target/hymir-4.0.0-exec.jar --rules=file:/etc/hymir/rules.yml --spring.profiles.active=local
+$ java -jar target/hymir-4.0.0-exec.jar --custom.iiif.presentation.urlPrefix='/iiifPresentation/' --spring.config.additional-location=file:/etc/hymir/rules.yml --spring.profiles.active=local
 ```
 
 Resulting URL: `http://localhost:9000/iiifPresentation/00113391/manifest`
