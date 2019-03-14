@@ -1,11 +1,9 @@
 package de.digitalcollections.iiif.hymir.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.actuate.info.InfoEndpoint;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -36,30 +34,27 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
     return firewall;
   }
 
-  @Autowired
-  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication().passwordEncoder(passwordEncoderDummy()).withUser(User.withUsername(actuatorUsername).password(actuatorPassword).roles("ACTUATOR"));
-  }
-
   @Override
-  public void configure(WebSecurity web) throws Exception {
-    super.configure(web);
-    web.ignoring().antMatchers(javamelodyMonitoringPath);
-    // We need to loosen the firewall settings to allow various urlencoded characters in identifiers
-    web.httpFirewall(looseFirewall());
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.inMemoryAuthentication().passwordEncoder(passwordEncoderDummy())
+        .withUser(User.withUsername(actuatorUsername).password(actuatorPassword).roles("ACTUATOR"));
   }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable();
-    http.authorizeRequests()
-      .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-      .requestMatchers(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class)).permitAll()
-      .requestMatchers(EndpointRequest.to("jolokia", "prometheus", "version")).permitAll()
-      .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
-      .antMatchers("/**").permitAll()
-      .and()
-      .httpBasic();
+    // Monitoring:
+    // see https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints
+    http.antMatcher("/monitoring/**").authorizeRequests()
+        .requestMatchers(EndpointRequest.to(InfoEndpoint.class, HealthEndpoint.class)).permitAll()
+        .requestMatchers(EndpointRequest.to("jolokia", "prometheus", "version")).permitAll()
+        .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR").and().httpBasic();
+  }
+
+  @Override
+  public void configure(WebSecurity web) throws Exception {
+    // We need to loosen the firewall settings to allow various urlencoded characters in identifiers
+    web.httpFirewall(looseFirewall());
+    web.ignoring().antMatchers(javamelodyMonitoringPath);
   }
 
   private PasswordEncoder passwordEncoderDummy() {
