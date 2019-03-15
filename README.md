@@ -44,6 +44,53 @@ Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](
 
 Download `hymir-<version>-exec.jar` from the GitHub [releases](https://github.com/dbmdz/iiif-server-hymir/releases) page.
 
+### Using the TurboJPEG backend for JPEG files
+
+By default, a Java-based image processing backend is used. If you want better
+performance, it is recommended to use the native image processing backend
+that is based on TurboJPEG. For this, you will have to install the TurboJPEG
+native library, on Ubuntu `libturbojpeg`.
+
+Debian:
+
+```sh
+$ sudo apt-get install libturbojpeg
+```
+
+### Adding JPEG2000 support
+
+By default, a Java-based image processing backend is used which has no support for JPEG2000.
+For adding JPEG2000 support, you will have to install the libopenjp2 native library.
+
+Debian:
+
+```sh
+$ sudo apt-cache search libopenjp2
+libopenjp2-7 - Kompressions-/Dekompressions-Bibliothek für das Bildformat JPEG 2000
+libopenjp2-tools - Kommandozeilenwerkzeuge zur Verwendung der JPEG 2000-Bibliothek
+libopenjp2-7-dev - development files for OpenJPEG, a JPEG 2000 image library
+$ sudo apt-get install libopenjp2-7
+```
+
+### Creating logging and monitoring directories
+
+Create directories for
+
+- hymir application logging (configured in logback-spring.xml), e.g. `/var/log/hymir`
+- hymir access logs (default: `/var/log/digitalcollections`)
+- javamelody monitoring logging (default: `/local/javamelody-hymir`)
+
+Example (use more restricted access rights than in this example):
+
+```sh
+$ sudo mkdir /var/log/hymir
+$ sudo chmod 777 /var/log/hymir
+$ sudo mkdir /var/log/digitalcollections
+$ sudo chmod 777 /var/log/digitalcollections
+$ sudo mkdir -p /local/javamelody-hymir
+$ sudo chmod 777 /local/javamelody-hymir
+```
+
 ## Usage
 
 Run the downloaded application:
@@ -113,7 +160,13 @@ The resolving rules (one rule per line) are configurable with regular expression
 
 You can pass the path to your custom resolving rules with the `--spring.config.additional-location=/path/to/rules.yml` option.
 
-Example file `rules.yml`:
+Example:
+
+```sh
+$ java -jar hymir-4.0.0-exec.jar --spring.config.additional-location=file:/etc/hymir/rules.yml
+```
+
+Example file `/etc/hymir/rules.yml`:
 
 ```yaml
 resourceRepository:
@@ -220,7 +273,7 @@ You can configure another url prefix on server startup using system property `cu
 Example:
 
 ```sh
-$ java -jar target/hymir-4.0.0-exec.jar --custom.iiif.presentation.urlPrefix='/iiifPresentation/' --spring.config.additional-location=file:/etc/hymir/rules.yml --spring.profiles.active=local
+$ java -jar hymir-4.0.0-exec.jar --custom.iiif.presentation.urlPrefix='/iiifPresentation/' --spring.config.additional-location=file:/etc/hymir/rules.yml --spring.profiles.active=local
 ```
 
 Resulting URL: `http://localhost:9000/iiifPresentation/00113391/manifest`
@@ -255,12 +308,59 @@ Default logging configuration is specified in the file `logback-spring.xml` pack
 
 If you want human readable logging to console use `--spring.profiles.active=local` on start command line or define a custom `logback-spring.xml` config location (see "Usage" section above).
 
-### Using the TurboJPEG backend
+Example: Custom config file with human readable logging
 
-By default, a Java-based image processing backend is used. If you want better
-performance, it is recommended to use the native image processing backend
-that is based on TurboJPEG. For this, you will have to install the TurboJPEG
-native library, on Ubuntu `libturbojpeg`.
+```sh
+$ java -jar hymir-4.0.0-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml
+```
+
+Example file `/etc/hymir/logback-spring.xml`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- see https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html#_profile_specific_configuration -->
+  <springProfile name="PROD">
+    <appender name="default" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>/var/log/hymir/hymir.log</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>/var/log/hymir/hymir.%d{yyyy-MM-dd}.log</fileNamePattern>
+      </rollingPolicy>
+      <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>/var/log/hymir/hymir.%d{yyyy-MM}.%i.log.gz</fileNamePattern>
+        <maxFileSize>100MB</maxFileSize>
+        <maxHistory>90</maxHistory>
+        <totalSizeCap>5GB</totalSizeCap>
+      </rollingPolicy>
+      <encoder>
+        <pattern>[%d{ISO8601} %5p] %40.40c:%4L [%-8t] - %m%n</pattern>
+      </encoder>
+      <!--
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <customFields>{"service":"hymir-server", "group":"rest", "instance":"${instance.name:-default}"}</customFields>
+      </encoder>
+      -->
+    </appender>
+  </springProfile>
+  
+  <springProfile name="local">
+    <appender name="default" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>[%d{ISO8601} %5p] %40.40c:%4L [%-8t] - %m%n</pattern>
+      </encoder>
+    </appender>
+  </springProfile>
+
+  <logger name="de.digitalcollections.iiif.hymir.presentation.backend" level="error" />
+  <logger name="de.digitalcollections.iiif.hymir.presentation.business" level="error" />
+  <logger name="de.digitalcollections.commons" level="error" />
+
+  <root level="info">
+    <appender-ref ref="default" />
+  </root>
+
+</configuration>
+```
 
 ### Custom configuration file `application.yml`
 
@@ -330,7 +430,54 @@ custom:
 
 ## Administration
 
+### Monitoring
+
 Monitoring endpoints under http://localhost:9001/monitoring (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
+
+To change monitoring port, e.g. to `8081` use `management.server.port` option:
+
+```sh
+$ java -jar hymir-4.0.0-exec.jar --management.server.port=8081
+```
+
+### Out Of Memory handling
+
+In case the IIIF server runs out of memory it should quit - use java options for this. (To be restarted automatically install it as systemd service, see below.)
+
+```sh
+$ java -jar hymir-4.0.0-exec.jar -XX:+ExitOnOutOfMemoryError -XX:+CrashOnOutOfMemoryError
+```
+
+### Configure IIIF service as systemd service
+
+In Linux production environments it is a best practice to install the IIIF server as a systemd service / daemon.
+
+Therefore create a user `iiif`, a service file, add it as service and enable it:
+
+```sh
+$ sudo nano /etc/systemd/system/iiif-hymir.service
+[Unit]
+Description=IIIF Hymir Server
+After=syslog.target
+
+[Service]
+User=iiif
+ExecStart=/usr/bin/java -jar /opt/hymir-4.0.0-exec.jar \
+    -XX:+ExitOnOutOfMemoryError -XX:+CrashOnOutOfMemoryError \
+    --spring.config.additional-location=file:/etc/hymir/rules.yml \
+    --spring.profiles.active=PROD \
+    --logging.config=file:/etc/hymir/logback-spring.xml \
+    --server.port=8080 \
+    --management.server.port=8081
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable iiif-hymir.service
+$ sudo systemctl start iiif-hymir.service
+```
 
 ## Users
 
