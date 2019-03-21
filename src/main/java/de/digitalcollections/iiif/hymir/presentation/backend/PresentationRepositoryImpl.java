@@ -50,7 +50,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       throw new ResolvingException("No annotation list for name " + annotationListName);
     }
     try {
-      return objectMapper.readValue(resourceService.getInputStream(resource), AnnotationList.class);
+      return objectMapper.readValue(getResourceJson(resource.getUri()), AnnotationList.class);
     } catch (IOException ex) {
       LOGGER.error("Could not retrieve annotation list {}", annotationListName, ex);
       throw new InvalidDataException("Annotation list " + annotationListName + " can not be parsed", ex);
@@ -69,7 +69,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       throw new ResolvingException("No collection for name " + name);
     }
     try {
-      return objectMapper.readValue(resourceService.getInputStream(resource), Collection.class);
+      return objectMapper.readValue(getResourceJson(resource.getUri()), Collection.class);
     } catch (IOException ex) {
       LOGGER.info("Could not retrieve collection {}", collectionName, ex);
       throw new InvalidDataException("Collection for name " + collectionName + " can not be parsed", ex);
@@ -86,7 +86,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       throw new ResolvingException("No manifest for identifier " + identifier);
     }
     try {
-      return objectMapper.readValue(resourceService.getInputStream(resource), Manifest.class);
+      return objectMapper.readValue(getResourceJson(resource.getUri()), Manifest.class);
     } catch (IOException ex) {
       LOGGER.error("Manifest {} can not be parsed", identifier, ex);
       throw new InvalidDataException("Manifest " + identifier + " can not be parsed", ex);
