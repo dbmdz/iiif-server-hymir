@@ -3,7 +3,6 @@ package de.digitalcollections.iiif.hymir.config;
 import de.digitalcollections.commons.springmvc.interceptors.CurrentUrlAsModelAttributeHandlerInterceptor;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,9 +39,7 @@ public class SpringConfigWeb implements WebMvcConfigurer {
 
   @Bean
   public LocaleResolver localeResolver() {
-    SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-    localeResolver.setDefaultLocale(Locale.ENGLISH);
-    return localeResolver;
+    return new SessionLocaleResolver();
   }
 
   @Bean
