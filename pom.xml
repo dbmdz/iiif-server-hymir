@@ -14,7 +14,7 @@
 
   <groupId>de.digitalcollections</groupId>
   <artifactId>iiif-server-hymir</artifactId>
-  <version>4.0.3</version>
+  <version>4.0.4</version>
   <packaging>jar</packaging>
 
   <url>https://github.com/dbmdz/iiif-server-hymir</url>
@@ -100,7 +100,7 @@
     <version.webjar-mirador-keyboardnavigation>1.1.0</version.webjar-mirador-keyboardnavigation>
     <version.webjar-mirador-physicalruler>1.3.4</version.webjar-mirador-physicalruler>
     <version.webjar-mirador-sharebuttons>1.0.2</version.webjar-mirador-sharebuttons>
-    <version.webjar-mirador-viewfromurl>1.1.0</version.webjar-mirador-viewfromurl>
+    <version.webjar-mirador-viewfromurl>1.2.0</version.webjar-mirador-viewfromurl>
     <version.webjar-openseadragon>2.4.0</version.webjar-openseadragon>
     <version.webjar-respond>1.4.2</version.webjar-respond>
 
