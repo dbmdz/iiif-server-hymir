@@ -44,6 +44,12 @@ body {
   display: block;
 }
 
+#mirador-viewer .mirador-osd-next,
+#mirador-viewer .mirador-osd-previous,
+#mirador-viewer .mirador-osd-toggle-bottom-panel {
+  color: white;
+}
+
 #openseadragon-viewer {
   border: solid 1px #e5e5e5;
   height: calc(100vh - 205px);
