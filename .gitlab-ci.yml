@@ -5,17 +5,17 @@ variables:
 
 verify:
   extends: .verify
-  except:
-    variables:
-      - $NO_OPENJDK8
   script: mvn $MAVEN_CLI_OPTS -Dspring.profiles.active=$MAVEN_ACTIVE_PROFILE -P$MAVEN_VERIFY_PROFILE verify
 
 verify:openjdk11:
   extends: .verify
   image: "$BUILD_IMAGE_ANSIBLE_MAVEN_JDK11"
-  except:
-    variables:
-      - $NO_OPENJDK11
   script: mvn $MAVEN_CLI_OPTS -Dspring.profiles.active=$MAVEN_ACTIVE_PROFILE -P$MAVEN_VERIFY_PROFILE verify
+  variables:
+    JAVA_HOME: "/usr/lib/jvm/java-11-openjdk-amd64"
+
+verify:openjdk11:libturbjpeg:
+  extends: .verify
+  image: "$BUILD_IMAGE_ANSIBLE_MAVEN_JDK11_LIBTURBOJPEG"
   variables:
     JAVA_HOME: "/usr/lib/jvm/java-11-openjdk-amd64"
