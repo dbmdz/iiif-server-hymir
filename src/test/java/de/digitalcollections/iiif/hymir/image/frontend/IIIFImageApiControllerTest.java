@@ -22,6 +22,7 @@ import jnr.ffi.LibraryLoader;
 import jnr.ffi.Runtime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class IIIFImageApiControllerTest {
     TestConfiguration.setDefaults();
   }
 
+  @Tag("libturbojpeg-needed")
   @Test
   public void testTurboJpegInstalled() {
     libturbojpeg lib = LibraryLoader.create(libturbojpeg.class)
@@ -96,6 +98,7 @@ public class IIIFImageApiControllerTest {
   }
 
   /* 5. Information Request */
+  @Tag("libturbojpeg-needed")
   @Test
   public void testImageInfo() throws Exception {
     HttpHeaders requestHeaders = new HttpHeaders();
