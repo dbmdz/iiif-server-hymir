@@ -140,8 +140,6 @@ public class IIIFImageApiControllerTest {
     assertThat(ctx).jsonPathAsString("$.attribution").isEqualTo("Test Attribution");
   }
 
-  // TODO: find out why this does not work without libturbojpeg installed
-  @Tag("libturbojpeg-needed")
   @Test
   public void testInfoRedirect() throws Exception {
     ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/abcdef", String.class);
