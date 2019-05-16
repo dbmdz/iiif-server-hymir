@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ViewController {
 
   @Autowired
-  @Value("#{iiifVersions}")
-  private Map<String, String> iiifVersions;
+  @Value("#{webjarVersions}")
+  private Map<String, String> webjarVersions;
 
   @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
   public String viewHomepage(Model model) {
@@ -61,8 +61,8 @@ public class ViewController {
     return "redirect:/presentation/" + IIIFPresentationApiController.VERSION + "/collection/" + name;
   }
 
-  @ModelAttribute("iiifVersions")
-  protected Map<String, String> getIIIFVersions() {
-    return iiifVersions;
+  @ModelAttribute("webjarVersions")
+  protected Map<String, String> getWebjarVersions() {
+    return webjarVersions;
   }
 }

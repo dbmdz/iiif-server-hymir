@@ -43,16 +43,16 @@ public class SpringConfigWeb implements WebMvcConfigurer {
   }
 
   @Bean
-  public Map<String, String> iiifVersions() {
+  public Map<String, String> webjarVersions() {
     Map<String, String> versions;
     Map<String, String> customVersions;
     Yaml yaml = new Yaml();
-    try (InputStream in = this.getClass().getResourceAsStream("/iiif-versions.yml")) {
+    try (InputStream in = this.getClass().getResourceAsStream("/webjar-versions.yml")) {
       versions = (Map<String, String>) yaml.load(in);
     } catch (IOException exception) {
       throw new IllegalStateException(exception);
     }
-    try (InputStream in = this.getClass().getResourceAsStream("/iiif-versions-custom.yml")) {
+    try (InputStream in = this.getClass().getResourceAsStream("/webjar-versions-custom.yml")) {
       customVersions = (Map<String, String>) yaml.load(in);
       if (customVersions != null) {
         customVersions.forEach(versions::putIfAbsent);
