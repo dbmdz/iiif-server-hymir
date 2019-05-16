@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,15 +32,14 @@ public class ExtendedViewController {
   private static final Logger LOGGER = LoggerFactory.getLogger(ExtendedViewController.class);
 
   @Autowired
-  @Value("#{iiifVersions}")
-  private Map<String, String> iiifVersions;
+  @Value("#{webjarVersions}")
+  private Map<String, String> webjarVersions;
 
   @Autowired
   private PresentationService presentationService;
 
   @RequestMapping(value = "/presentation/{identifier}/view.html", method = RequestMethod.GET)
   public String viewExtendedPresentationGet(@PathVariable String identifier, Model model) {
-    model.addAttribute("iiifVersions", iiifVersions);
     model.addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
     return "mirador/view";
   }
@@ -58,7 +58,7 @@ public class ExtendedViewController {
    */
   @RequestMapping(value = "/presentation/{version}/{objectIdentifier}/canvas/{canvasName}/view", method = RequestMethod.GET)
   public String viewCanvasGet(@PathVariable String version, @PathVariable String objectIdentifier, @PathVariable String canvasName, Model model, HttpServletRequest request)
-          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     HttpLoggingUtilities.addRequestClientInfoToMDC(request);
     MDC.put("manifestId", objectIdentifier);
     MDC.put("canvasName", canvasName);
@@ -84,7 +84,6 @@ public class ExtendedViewController {
       MDC.clear();
     }
 
-    model.addAttribute("iiifVersions", iiifVersions);
     return "mirador/view_canvas";
   }
 
@@ -97,5 +96,10 @@ public class ExtendedViewController {
     } else {
       return URI.create(requestUrl);
     }
+  }
+
+  @ModelAttribute("webjarVersions")
+  protected Map<String, String> getWebjarVersions() {
+    return webjarVersions;
   }
 }

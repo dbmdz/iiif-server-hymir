@@ -7,19 +7,19 @@
       <main>
         <div class="card">
           <div class="card-header bg-primary text-white">
-            <span th:text="#{resource}">...</span> "<span th:text="@{__${infoUrl}__}">...</span>" in OpenSeadragon <span th:text="${iiifVersions.openseadragon}">osd version</span>
+            <span th:text="#{resource}">...</span> "<span th:text="@{__${infoUrl}__}">...</span>" in OpenSeadragon <span th:text="${webjarVersions.openseadragon}">osd version</span>
           </div>
           <div class="card-body">
             <div id="openseadragon-viewer"></div>
           </div>
         </div>
 
-        <script th:src="@{/webjars/openseadragon/__${iiifVersions.openseadragon}__/build/openseadragon/openseadragon.min.js}"></script>
+        <script th:src="@{/webjars/openseadragon/__${webjarVersions.openseadragon}__/build/openseadragon/openseadragon.min.js}"></script>
         <script type="application/javascript" th:inline="javascript">
           var viewer = OpenSeadragon({
           id: "openseadragon-viewer",
           /*<![CDATA[*/
-          prefixUrl: /*[[@{/webjars/openseadragon/__${iiifVersions.openseadragon}__/build/openseadragon/images/}]]*/,
+          prefixUrl: /*[[@{/webjars/openseadragon/__${webjarVersions.openseadragon}__/build/openseadragon/images/}]]*/,
           /*]]>*/
           tileWidth: 64,
           /*<![CDATA[*/

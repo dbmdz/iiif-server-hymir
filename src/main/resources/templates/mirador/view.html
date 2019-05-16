@@ -6,11 +6,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/mirador/${iiifVersions.mirador}/css/mirador-combined.css|}">
-    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-canvaslink/${iiifVersions['mirador-canvaslink']}/canvasLink.min.css|}">
-    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-downloadmenu/${iiifVersions['mirador-downloadmenu']}/downloadMenu.min.css|}">
-    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-imagecropper/${iiifVersions['mirador-imagecropper']}/imageCropper.css|}">
-    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-sharebuttons/${iiifVersions['mirador-sharebuttons']}/shareButtons.css|}">
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/mirador/${webjarVersions.mirador}/css/mirador-combined.css|}">
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-canvaslink/${webjarVersions['mirador-canvaslink']}/canvasLink.min.css|}">
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-downloadmenu/${webjarVersions['mirador-downloadmenu']}/downloadMenu.min.css|}">
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-imagecropper/${webjarVersions['mirador-imagecropper']}/imageCropper.css|}">
+    <link rel="stylesheet" type="text/css" th:href="@{|/webjars/dbmdz__mirador-sharebuttons/${webjarVersions['mirador-sharebuttons']}/shareButtons.css|}">
     <style type="text/css">
       body { font-size: 14px; }
     </style>
@@ -27,14 +27,14 @@
     </section>
 
     <th:block layout:fragment="morejs">
-      <script th:src="@{|/webjars/mirador/${iiifVersions.mirador}/mirador.min.js|}"></script>
-      <script th:src="@{|/webjars/dbmdz__mirador-canvaslink/${iiifVersions['mirador-canvaslink']}/canvasLink.min.js|}"></script>
-      <script th:src="@{|/webjars/dbmdz__mirador-downloadmenu/${iiifVersions['mirador-downloadmenu']}/downloadMenu.min.js|}"></script>
-      <script th:src="@{|/webjars/dbmdz__mirador-imagecropper/${iiifVersions['mirador-imagecropper']}/imageCropper.js|}"></script>
-      <script th:src="@{|/webjars/dbmdz__mirador-keyboardnavigation/${iiifVersions['mirador-keyboardnavigation']}/keyboardNavigation.min.js|}"></script>
-      <script th:src="@{|/webjars/dbmdz__mirador-physicalruler/${iiifVersions['mirador-physicalruler']}/physicalRuler.js|}"></script>
-      <script th:src="@{|/webjars/dbmdz__mirador-sharebuttons/${iiifVersions['mirador-sharebuttons']}/shareButtons.js|}"></script>
-      <script th:src="@{|/webjars/dbmdz__mirador-viewfromurl/${iiifVersions['mirador-viewfromurl']}/viewFromUrl.min.js|}"></script>
+      <script th:src="@{|/webjars/mirador/${webjarVersions.mirador}/mirador.min.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-canvaslink/${webjarVersions['mirador-canvaslink']}/canvasLink.min.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-downloadmenu/${webjarVersions['mirador-downloadmenu']}/downloadMenu.min.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-imagecropper/${webjarVersions['mirador-imagecropper']}/imageCropper.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-keyboardnavigation/${webjarVersions['mirador-keyboardnavigation']}/keyboardNavigation.min.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-physicalruler/${webjarVersions['mirador-physicalruler']}/physicalRuler.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-sharebuttons/${webjarVersions['mirador-sharebuttons']}/shareButtons.js|}"></script>
+      <script th:src="@{|/webjars/dbmdz__mirador-viewfromurl/${webjarVersions['mirador-viewfromurl']}/viewFromUrl.min.js|}"></script>
       <script type="text/javascript" th:inline="javascript">
         $(function(){
           Mirador({
@@ -42,7 +42,7 @@
               'name': 'Local Storage',
               'module': 'LocalStorageEndpoint'
             },
-            'buildPath': /*[[@{/webjars/mirador/__${iiifVersions.mirador}__/}]]*/,
+            'buildPath': /*[[@{/webjars/mirador/__${webjarVersions.mirador}__/}]]*/,
             'data': [{
               /*<![CDATA[*/
               'manifestUri': /*[[@{__${presentationUri}__/manifest}]]*/
