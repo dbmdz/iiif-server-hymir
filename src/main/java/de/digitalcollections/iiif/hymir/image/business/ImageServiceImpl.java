@@ -171,19 +171,27 @@ public class ImageServiceImpl implements ImageService {
   @Override
   public void readImageInfo(String identifier, de.digitalcollections.iiif.model.image.ImageService info)
           throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException {
-    enrichInfo(getReader(identifier), info);
-    if (!this.logoUrl.isEmpty()) {
-      info.addLogo(this.logoUrl);
-    }
-    if (!this.attribution.isEmpty()) {
-      info.addAttribution(this.attribution);
-    }
-    if (!this.license.isEmpty()) {
-      info.addLicense(this.license);
-    } else if (this.imageSecurityService != null) {
-      URI license = this.imageSecurityService.getLicense(identifier);
-      if (license != null) {
-        info.addLicense(license.toString());
+    ImageReader r = null;
+    try {
+      r = getReader(identifier);
+      enrichInfo(r, info);
+      if (!this.logoUrl.isEmpty()) {
+        info.addLogo(this.logoUrl);
+      }
+      if (!this.attribution.isEmpty()) {
+        info.addAttribution(this.attribution);
+      }
+      if (!this.license.isEmpty()) {
+        info.addLicense(this.license);
+      } else if (this.imageSecurityService != null) {
+        URI license = this.imageSecurityService.getLicense(identifier);
+        if (license != null) {
+          info.addLicense(license.toString());
+        }
+      }
+    } finally {
+      if (r != null) {
+        r.dispose();
       }
     }
   }
@@ -215,52 +223,60 @@ public class ImageServiceImpl implements ImageService {
 
   /** Decode an image **/
   private DecodedImage readImage(String identifier, ImageApiSelector selector, ImageApiProfile profile) throws IOException, ResourceNotFoundException, UnsupportedFormatException, InvalidParametersException {
-    ImageReader reader = getReader(identifier);
-
-    if ((selector.getRotation().getRotation() % 90) != 0) {
-      throw new UnsupportedOperationException("Can only rotate by multiples of 90 degrees.");
-    }
-
-    Dimension nativeDimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
-    Rectangle targetRegion;
+    ImageReader reader = null;
     try {
-      targetRegion = selector.getRegion().resolve(nativeDimensions);
-    } catch (ResolvingException e) {
-      throw new InvalidParametersException(e);
-    }
-    Dimension croppedDimensions = new Dimension(targetRegion.width, targetRegion.height);
-    Dimension targetSize;
-    try {
-      targetSize = selector.getSize().resolve(croppedDimensions, profile);
-    } catch (ResolvingException e) {
-      throw new InvalidParametersException(e);
-    }
+      reader = getReader(identifier);
 
-    // Determine the closest resolution to the target that can be decoded directly
-    double targetScaleFactor = (double) targetSize.width / targetRegion.getWidth();
-    double decodeScaleFactor = 1.0;
-    int imageIndex = 0;
-    for (int idx = 0; idx < reader.getNumImages(true); idx++) {
-      double factor = (double) reader.getWidth(idx) / nativeDimensions.width;
-      if (factor < targetScaleFactor) {
-        continue;
+      if ((selector.getRotation().getRotation() % 90) != 0) {
+        throw new UnsupportedOperationException("Can only rotate by multiples of 90 degrees.");
       }
-      if (Math.abs(targetScaleFactor - factor) < Math.abs(targetScaleFactor - decodeScaleFactor)) {
-        decodeScaleFactor = factor;
-        imageIndex = idx;
+
+      Dimension nativeDimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
+      Rectangle targetRegion;
+      try {
+        targetRegion = selector.getRegion().resolve(nativeDimensions);
+      } catch (ResolvingException e) {
+        throw new InvalidParametersException(e);
+      }
+      Dimension croppedDimensions = new Dimension(targetRegion.width, targetRegion.height);
+      Dimension targetSize;
+      try {
+        targetSize = selector.getSize().resolve(croppedDimensions, profile);
+      } catch (ResolvingException e) {
+        throw new InvalidParametersException(e);
+      }
+
+      // Determine the closest resolution to the target that can be decoded directly
+      double targetScaleFactor = (double) targetSize.width / targetRegion.getWidth();
+      double decodeScaleFactor = 1.0;
+      int imageIndex = 0;
+      for (int idx = 0; idx < reader.getNumImages(true); idx++) {
+        double factor = (double) reader.getWidth(idx) / nativeDimensions.width;
+        if (factor < targetScaleFactor) {
+          continue;
+        }
+        if (Math.abs(targetScaleFactor - factor) < Math.abs(targetScaleFactor - decodeScaleFactor)) {
+          decodeScaleFactor = factor;
+          imageIndex = idx;
+        }
+      }
+      ImageReadParam readParam = getReadParam(reader, selector, decodeScaleFactor);
+      int rotation = (int) selector.getRotation().getRotation();
+      if (readParam instanceof TurboJpegImageReadParam
+          && ((TurboJpegImageReadParam) readParam).getRotationDegree() != 0) {
+        if (rotation == 90 || rotation == 270) {
+          int w = targetSize.width;
+          targetSize.width = targetSize.height;
+          targetSize.height = w;
+        }
+        rotation = 0;
+      }
+      return new DecodedImage(reader.read(imageIndex, readParam), targetSize, rotation);
+    } finally {
+      if (reader != null) {
+        reader.dispose();
       }
     }
-    ImageReadParam readParam = getReadParam(reader, selector, decodeScaleFactor);
-    int rotation = (int) selector.getRotation().getRotation();
-    if (readParam instanceof TurboJpegImageReadParam && ((TurboJpegImageReadParam) readParam).getRotationDegree() != 0) {
-      if (rotation == 90 || rotation == 270) {
-        int w = targetSize.width;
-        targetSize.width = targetSize.height;
-        targetSize.height = w;
-      }
-      rotation = 0;
-    }
-    return new DecodedImage(reader.read(imageIndex, readParam), targetSize, rotation);
   }
 
   /** Apply transformations to an decoded image **/
