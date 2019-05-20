@@ -7,16 +7,13 @@ import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationSe
 import de.digitalcollections.iiif.hymir.presentation.frontend.IIIFPresentationApiController;
 import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,10 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ExtendedViewController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ExtendedViewController.class);
-
-  @Autowired
-  @Value("#{webjarVersions}")
-  private Map<String, String> webjarVersions;
 
   @Autowired
   private PresentationService presentationService;
@@ -96,10 +89,5 @@ public class ExtendedViewController {
     } else {
       return URI.create(requestUrl);
     }
-  }
-
-  @ModelAttribute("webjarVersions")
-  protected Map<String, String> getWebjarVersions() {
-    return webjarVersions;
   }
 }

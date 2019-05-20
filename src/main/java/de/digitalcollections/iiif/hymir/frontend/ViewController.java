@@ -2,12 +2,8 @@ package de.digitalcollections.iiif.hymir.frontend;
 
 import de.digitalcollections.iiif.hymir.image.frontend.IIIFImageApiController;
 import de.digitalcollections.iiif.hymir.presentation.frontend.IIIFPresentationApiController;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 public class ViewController {
-
-  @Autowired
-  @Value("#{webjarVersions}")
-  private Map<String, String> webjarVersions;
 
   @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
   public String viewHomepage(Model model) {
@@ -59,10 +51,5 @@ public class ViewController {
   @RequestMapping(value = "/presentation/collection", method = RequestMethod.GET)
   public String viewPresentationCollection(@RequestParam String name) {
     return "redirect:/presentation/" + IIIFPresentationApiController.VERSION + "/collection/" + name;
-  }
-
-  @ModelAttribute("webjarVersions")
-  protected Map<String, String> getWebjarVersions() {
-    return webjarVersions;
   }
 }
