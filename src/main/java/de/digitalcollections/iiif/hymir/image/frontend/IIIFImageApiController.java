@@ -133,8 +133,6 @@ public class IIIFImageApiController {
       return null;
     } else {
       headers.add("Link", String.format("<%s>;rel=\"canonical\"", canonicalUrl));
-      final String mimeType = selector.getFormat().getMimeType().getTypeName();
-      headers.setContentType(MediaType.parseMediaType(mimeType));
 
       String filename = path.replaceFirst("/image/", "").replace('/', '_').replace(',', '_');
       headers.set("Content-Disposition", "inline; filename=" + filename);
@@ -149,6 +147,8 @@ public class IIIFImageApiController {
       customResponseHeaders.forImageTile().forEach(customResponseHeader -> {
         headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
       });
+      final String mimeType = selector.getFormat().getMimeType().getTypeName();
+      headers.setContentType(MediaType.parseMediaType(mimeType));
       return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }

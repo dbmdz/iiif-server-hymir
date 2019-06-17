@@ -38,7 +38,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
@@ -520,6 +519,13 @@ public class IIIFImageApiControllerTest {
   public void testReadPNG() throws Exception {
     ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/png-file/full/full/0/default.png", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  public void testNonExisting() {
+    ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/idontexist/full/full/0/default.png", String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getHeaders().getContentType()).isNotEqualTo(MediaType.IMAGE_PNG);
   }
 
 }
