@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -168,7 +167,7 @@ public class ImageServiceImpl implements ImageService {
           .orElseThrow(UnsupportedFormatException::new);
       reader.setInput(iis);
       return reader;
-    } catch (FileNotFoundException e) {
+    } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }
   }
