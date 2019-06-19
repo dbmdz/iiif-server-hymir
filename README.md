@@ -372,7 +372,7 @@ Your custom `application.yml` does not have to replace all default properties. I
 To get the default configuration file, you should download the `hymir-<release-version>.jar` file (NOT containing `-exec` in filename) from <https://github.com/dbmdz/iiif-server-hymir/releases> and unpack the contained `application.yml` with:
 
 ```sh
-$ java xfv hymir-4.0.0.jar application.yml
+$ jar xfv hymir-4.0.0.jar application.yml
 ```
 
 Now put the file beside the executable Hymir jar and edit it according to your requirements.
