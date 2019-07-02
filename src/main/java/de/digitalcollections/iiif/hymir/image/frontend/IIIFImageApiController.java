@@ -37,19 +37,19 @@ public class IIIFImageApiController {
   @Value("${custom.iiif.image.canonicalRedirect:true}")
   private boolean isCanonicalRedirectEnabled;
 
-  @Autowired
-  protected CustomResponseHeaders customResponseHeaders;
+  protected final CustomResponseHeaders customResponseHeaders;
 
   private final ImageService imageService;
   private final IiifObjectMapper objectMapper;
 
-  @Autowired
-  private MetricsService metricsService;
+  private final MetricsService metricsService;
 
   @Autowired
-  public IIIFImageApiController(ImageService imageService, IiifObjectMapper objectMapper) {
+  public IIIFImageApiController(ImageService imageService, IiifObjectMapper objectMapper, CustomResponseHeaders customResponseHeaders, MetricsService metricsService) {
     this.imageService = imageService;
     this.objectMapper = objectMapper;
+    this.customResponseHeaders = customResponseHeaders;
+    this.metricsService = metricsService;
   }
 
   void setCanonicalRedirectEnabled(boolean canonicalRedirectEnabled) {
