@@ -1,6 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
 import de.digitalcollections.commons.springboot.metrics.MetricsService;
+import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
@@ -13,8 +14,6 @@ import de.digitalcollections.model.api.identifiable.resource.exceptions.Resource
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
@@ -91,7 +90,7 @@ public class IIIFImageApiController {
       @PathVariable String quality, @PathVariable String format,
       HttpServletRequest request, HttpServletResponse response, WebRequest webRequest)
       throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException, ResourceNotFoundException {
-    if (isInsecure(identifier)) {
+    if (UrlRules.isInsecure(identifier)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new byte[]{});
     }
     HttpHeaders headers = new HttpHeaders();
@@ -161,7 +160,7 @@ public class IIIFImageApiController {
   @RequestMapping(value = "{identifier}/info.json", method = {RequestMethod.GET, RequestMethod.HEAD})
   public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
                                         WebRequest webRequest) throws Exception {
-    if (isInsecure(identifier)) {
+    if (UrlRules.isInsecure(identifier)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
     }
     long duration = System.currentTimeMillis();
@@ -200,13 +199,9 @@ public class IIIFImageApiController {
     return new ResponseEntity<>(objectMapper.writeValueAsString(info), headers, HttpStatus.OK);
   }
 
-  private boolean isInsecure(String identifier) {
-    return identifier != null && (identifier.contains("..") || URLDecoder.decode(identifier, StandardCharsets.UTF_8).contains(".."));
-  }
-
   @RequestMapping(value = "{identifier}", method = {RequestMethod.GET, RequestMethod.HEAD})
   public String getInfoRedirect(@PathVariable String identifier, HttpServletResponse response) {
-    if (isInsecure(identifier)) {
+    if (UrlRules.isInsecure(identifier)) {
       response.setStatus(400);
       return null;
     }
