@@ -1,6 +1,7 @@
 package de.digitalcollections.iiif.hymir.presentation.frontend;
 
 import de.digitalcollections.commons.springboot.metrics.MetricsService;
+import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
@@ -51,6 +52,10 @@ public class IIIFPresentationApiController {
   @ResponseBody
   public Manifest getManifest(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
           throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    if (UrlRules.isInsecure(identifier)) {
+      resp.setStatus(400);
+      return null;
+    }
     // Return 304 if the manifest has seen no modifications since the requested time
     long modified = presentationService.getManifestModificationDate(identifier).toEpochMilli();
     if (request.checkNotModified(modified)) {
@@ -73,6 +78,10 @@ public class IIIFPresentationApiController {
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.HEAD)
   public void checkManifest(@PathVariable String identifier, HttpServletResponse resp)
           throws ResolvingException, ResourceNotFoundException {
+    if (UrlRules.isInsecure(identifier)) {
+      resp.setStatus(400);
+      return;
+    }
     Instant modDate = presentationService.getManifestModificationDate(identifier);
     resp.setDateHeader("Last-Modified", modDate.toEpochMilli());
     resp.addHeader("Access-Control-Allow-Origin", "*");
@@ -87,6 +96,10 @@ public class IIIFPresentationApiController {
   @ResponseBody
   public Canvas getCanvas(@PathVariable String manifestId, @PathVariable String canvasId, HttpServletRequest req, HttpServletResponse resp)
           throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    if (UrlRules.anyIsInsecure(manifestId, canvasId)) {
+      resp.setStatus(400);
+      return null;
+    }
     resp.addHeader("Access-Control-Allow-Origin", "*");
 
     customResponseHeaders.forPresentationManifest().forEach(customResponseHeader -> {
@@ -99,6 +112,10 @@ public class IIIFPresentationApiController {
   @ResponseBody
   public Range getRange(@PathVariable String manifestId, @PathVariable String rangeId, HttpServletRequest req, HttpServletResponse resp)
           throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    if (UrlRules.anyIsInsecure(manifestId, rangeId)) {
+      resp.setStatus(400);
+      return null;
+    }
     resp.addHeader("Access-Control-Allow-Origin", "*");
 
     customResponseHeaders.forPresentationManifest().forEach(customResponseHeader -> {
@@ -111,6 +128,10 @@ public class IIIFPresentationApiController {
   @ResponseBody
   public Sequence getSequence(@PathVariable String manifestId, @PathVariable String sequenceId, HttpServletRequest req, HttpServletResponse resp)
           throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    if (UrlRules.anyIsInsecure(manifestId, sequenceId)) {
+      resp.setStatus(400);
+      return null;
+    }
     resp.addHeader("Access-Control-Allow-Origin", "*");
 
     customResponseHeaders.forPresentationManifest().forEach(customResponseHeader -> {
@@ -124,6 +145,10 @@ public class IIIFPresentationApiController {
   @ResponseBody
   public Collection getCollection(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
           throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    if (UrlRules.isInsecure(identifier)) {
+      resp.setStatus(400);
+      return null;
+    }
     long modified = presentationService.getCollectionModificationDate(identifier).toEpochMilli();
     resp.addHeader("Access-Control-Allow-Origin", "*");
 
@@ -142,6 +167,10 @@ public class IIIFPresentationApiController {
   @ResponseBody
   public AnnotationList getAnnotationList(@PathVariable String identifier, @PathVariable String name, @PathVariable String canvasId, HttpServletResponse resp)
     throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    if (UrlRules.anyIsInsecure(identifier, name, canvasId)) {
+      resp.setStatus(400);
+      return null;
+    }
     resp.addHeader("Access-Control-Allow-Origin", "*");
 
     customResponseHeaders.forPresentationAnnotationList().forEach(customResponseHeader -> {
