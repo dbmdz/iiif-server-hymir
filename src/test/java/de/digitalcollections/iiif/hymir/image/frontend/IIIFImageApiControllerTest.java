@@ -16,7 +16,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -40,8 +45,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.ResponseExtractor;
-import org.springframework.web.client.RestClientException;
 
 import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -560,10 +563,30 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getBody()).isNullOrEmpty();
   }
 
-  private URI createUri(String identifier, String path) {
-    String encodedIdentifier = URLEncoder.encode(identifier, StandardCharsets.UTF_8);
-    return URI.create("/image/" + IIIFImageApiController.VERSION + "/" + encodedIdentifier + path);
+  @Test
+  void getImageRepresentationShouldNotAllowRootPaths() throws UnsupportedEncodingException {
+    String url = createUrl("/etc/passwords", "/full/full/0/default.jpg");
+    ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+    assertThat(response.getStatusCode()).is(BAD_REQUEST);
+    assertThat(response.getBody()).isNullOrEmpty();
   }
+
+  @Test
+  void getInfoShouldNotAllowRootPaths() {
+    String url = createUrl("/etc/passwords", "/info.json");
+    ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+    assertThat(response.getStatusCode()).is(BAD_REQUEST);
+    assertThat(response.getBody()).isNullOrEmpty();
+  }
+
+  @Test
+  void getInfoRedirectShouldNotAllowRootPaths() {
+    String url = createUrl("/etc/passwords", "");
+    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.HEAD, HttpEntity.EMPTY, String.class);
+    assertThat(response.getStatusCode()).is(BAD_REQUEST);
+    assertThat(response.getBody()).isNullOrEmpty();
+  }
+
 
   private String createUrl(String identifier, String path) {
     String encodedIdentifier = URLEncoder.encode(identifier, StandardCharsets.UTF_8);
