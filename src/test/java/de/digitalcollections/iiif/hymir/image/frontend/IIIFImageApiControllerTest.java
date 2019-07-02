@@ -12,14 +12,18 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import jnr.ffi.LibraryLoader;
 import jnr.ffi.Runtime;
+import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -36,17 +40,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestClientException;
 
 import static de.digitalcollections.iiif.hymir.HymirAssertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
-  properties = {"spring.profiles.active=TEST",
-                "spring.config.name=application-test"},
-  classes = {Application.class, TestConfiguration.class},
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    properties = {"spring.profiles.active=TEST",
+                  "spring.config.name=application-test"},
+    classes = {Application.class, TestConfiguration.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFImageApiControllerTest {
+
+  static final Condition<HttpStatus> BAD_REQUEST = new Condition<>(value -> value.value() == 400, "400 BAD_REQUEST");
 
   @LocalServerPort
   int randomServerPort;
@@ -70,7 +78,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testTurboJpegInstalled() {
     libturbojpeg lib = LibraryLoader.create(libturbojpeg.class)
-            .load("turbojpeg");
+                                    .load("turbojpeg");
     Runtime runtime = Runtime.getRuntime(lib);
 
     assertThat(runtime).isNotNull();
@@ -110,8 +118,8 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getHeaders().get("header1")).containsExactly("value1");
 
     assertThat(response.getHeaders().get("Link")).containsExactly(
-            "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
-            "<http://iiif.io/api/image/2/level2.json>;rel=\"profile\"");
+        "<http://iiif.io/api/image/2/context.json>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+        "<http://iiif.io/api/image/2/level2.json>;rel=\"profile\"");
     DocumentContext ctx = JsonPath.parse(response.getBody());
     assertThat(ctx).jsonPathAsInteger("$.width").isEqualTo(989);
     assertThat(ctx).jsonPathAsInteger("$.height").isEqualTo(1584);
@@ -124,7 +132,7 @@ public class IIIFImageApiControllerTest {
     assertThat(ctx).jsonPathAsString("$.profile[0]").isEqualTo("http://iiif.io/api/image/2/level2.json");
 
     assertThatThrownBy(() -> ctx.read("$.profile[1].formats.qualities"))
-            .isInstanceOf(JsonPathException.class);
+        .isInstanceOf(JsonPathException.class);
     assertThat(ctx).jsonPathAsListOf("$.profile[1].formats", String.class).isNotEmpty();
   }
 
@@ -155,8 +163,8 @@ public class IIIFImageApiControllerTest {
     HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add("Referer", "http://localhost/foobar");
     ResponseEntity<byte[]> response = restTemplate.exchange(
-            "/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/bitonal.png",
-            HttpMethod.GET, new HttpEntity<>(requestHeaders), byte[].class);
+        "/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/bitonal.png",
+        HttpMethod.GET, new HttpEntity<>(requestHeaders), byte[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -170,8 +178,8 @@ public class IIIFImageApiControllerTest {
     HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add("Referer", "http://localhost/foobar");
     ResponseEntity<byte[]> response = restTemplate.exchange(
-            "/image/" + IIIFImageApiController.VERSION + "/http-google/full/full/0/default.png",
-            HttpMethod.GET, new HttpEntity<>(requestHeaders), byte[].class);
+        "/image/" + IIIFImageApiController.VERSION + "/http-google/full/full/0/default.png",
+        HttpMethod.GET, new HttpEntity<>(requestHeaders), byte[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getHeaders().getLastModified()).isNotNull();
@@ -187,8 +195,8 @@ public class IIIFImageApiControllerTest {
     HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add("Referer", "http://localhost/foobar");
     ResponseEntity<byte[]> response = restTemplate.exchange(
-            "/image/" + IIIFImageApiController.VERSION + "/http-google/full/full/0/default.png",
-            HttpMethod.GET, new HttpEntity<>(requestHeaders), byte[].class);
+        "/image/" + IIIFImageApiController.VERSION + "/http-google/full/full/0/default.png",
+        HttpMethod.GET, new HttpEntity<>(requestHeaders), byte[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.IMAGE_PNG);
@@ -208,8 +216,8 @@ public class IIIFImageApiControllerTest {
     HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.setOrigin("http://im.a.foreign.er");
     ResponseEntity<String> response = restTemplate.exchange(
-            "/image/" + IIIFImageApiController.VERSION + "/http-google/info.json",
-            HttpMethod.GET, new HttpEntity<>(requestHeaders), String.class);
+        "/image/" + IIIFImageApiController.VERSION + "/http-google/info.json",
+        HttpMethod.GET, new HttpEntity<>(requestHeaders), String.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getHeaders().getAccessControlAllowOrigin()).isEqualTo("*");
@@ -264,8 +272,8 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testCropWithAbsoluteValues() throws Exception {
     ResponseEntity<byte[]> response = restTemplate.exchange(
-            "/image/" + IIIFImageApiController.VERSION + "/file-zoom/20,20,50,50/full/0/default.jpg",
-            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+        "/image/" + IIIFImageApiController.VERSION + "/file-zoom/20,20,50,50/full/0/default.jpg",
+        HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -362,8 +370,8 @@ public class IIIFImageApiControllerTest {
     HttpHeaders requestHeaders = new HttpHeaders();
     requestHeaders.add("Referer", "http://localhost/foobar");
     ResponseEntity<byte[]> response = restTemplate.exchange(
-            "/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/gray.jpg",
-            HttpMethod.GET, new HttpEntity<>(requestHeaders), byte[].class);
+        "/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/gray.jpg",
+        HttpMethod.GET, new HttpEntity<>(requestHeaders), byte[].class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -377,12 +385,12 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testMirror() throws Exception {
     ResponseEntity<byte[]> responseRegular = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/0/default.jpg",
-            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+                                                                   HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(responseRegular.getStatusCode()).isEqualTo(HttpStatus.OK);
     byte[] imgDataRegular = responseRegular.getBody();
 
     ResponseEntity<byte[]> responseMirror = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/!0/default.jpg",
-            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+                                                                  HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(responseMirror.getStatusCode()).isEqualTo(HttpStatus.OK);
     byte[] imgDataMirror = responseMirror.getBody();
 
@@ -397,7 +405,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testRotation() throws Exception {
     ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/http-google/0,0,1500,2048/750,/90/default.jpg",
-            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+                                                            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     byte[] imgData = response.getBody();
@@ -441,7 +449,7 @@ public class IIIFImageApiControllerTest {
   @Test
   public void testScaleWithMissingHeigth() throws Exception {
     ResponseEntity<byte[]> response = restTemplate.exchange("/image/" + IIIFImageApiController.VERSION + "/file-zoom/full/200,/0/default.jpg",
-            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
+                                                            HttpMethod.GET, HttpEntity.EMPTY, byte[].class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     byte[] imgData = response.getBody();
@@ -494,7 +502,7 @@ public class IIIFImageApiControllerTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     DocumentContext ctx = JsonPath.parse(response.getBody());
     assertThat(ctx).jsonPathAsString("$.@id")
-            .isEqualTo("http://localhost/image/" + IIIFImageApiController.VERSION + "/spec%3A%2Fial%3Ffile%23with%5Bspecial%5Dch%40arac%25ters");
+                   .isEqualTo("http://localhost/image/" + IIIFImageApiController.VERSION + "/spec%3A%2Fial%3Ffile%23with%5Bspecial%5Dch%40arac%25ters");
   }
 
   @Test
@@ -526,6 +534,40 @@ public class IIIFImageApiControllerTest {
     ResponseEntity<String> response = restTemplate.getForEntity("/image/" + IIIFImageApiController.VERSION + "/idontexist/full/full/0/default.png", String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     assertThat(response.getHeaders().getContentType()).isNotEqualTo(MediaType.IMAGE_PNG);
+  }
+
+  @Test
+  void getImageRepresentationShouldNotAllowPathTraversal() throws UnsupportedEncodingException {
+    String url = createUrl("../png-file", "/full/full/0/default.jpg");
+    ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+    assertThat(response.getStatusCode()).is(BAD_REQUEST);
+    assertThat(response.getBody()).isNullOrEmpty();
+  }
+
+  @Test
+  void getInfoShouldNotAllowPathTraversal() {
+    String url = createUrl("../png-file", "/info.json");
+    ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+    assertThat(response.getStatusCode()).is(BAD_REQUEST);
+    assertThat(response.getBody()).isNullOrEmpty();
+  }
+
+  @Test
+  void getInfoRedirectShouldNotAllowPathTraversal() {
+    String url = createUrl("../png-file", "");
+    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.HEAD, HttpEntity.EMPTY, String.class);
+    assertThat(response.getStatusCode()).is(BAD_REQUEST);
+    assertThat(response.getBody()).isNullOrEmpty();
+  }
+
+  private URI createUri(String identifier, String path) {
+    String encodedIdentifier = URLEncoder.encode(identifier, StandardCharsets.UTF_8);
+    return URI.create("/image/" + IIIFImageApiController.VERSION + "/" + encodedIdentifier + path);
+  }
+
+  private String createUrl(String identifier, String path) {
+    String encodedIdentifier = URLEncoder.encode(identifier, StandardCharsets.UTF_8);
+    return "/image/" + IIIFImageApiController.VERSION + "/" + encodedIdentifier + path;
   }
 
 }

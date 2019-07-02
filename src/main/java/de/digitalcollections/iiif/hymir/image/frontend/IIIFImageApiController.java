@@ -13,7 +13,10 @@ import de.digitalcollections.model.api.identifiable.resource.exceptions.Resource
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,11 +86,14 @@ public class IIIFImageApiController {
 
   @RequestMapping(value = "{identifier}/{region}/{size}/{rotation}/{quality}.{format}")
   public ResponseEntity<byte[]> getImageRepresentation(
-          @PathVariable String identifier, @PathVariable String region,
-          @PathVariable String size, @PathVariable String rotation,
-          @PathVariable String quality, @PathVariable String format,
-          HttpServletRequest request, HttpServletResponse response, WebRequest webRequest)
-          throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException, ResourceNotFoundException {
+      @PathVariable String identifier, @PathVariable String region,
+      @PathVariable String size, @PathVariable String rotation,
+      @PathVariable String quality, @PathVariable String format,
+      HttpServletRequest request, HttpServletResponse response, WebRequest webRequest)
+      throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException, ResourceNotFoundException {
+    if (isInsecure(identifier)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new byte[]{});
+    }
     HttpHeaders headers = new HttpHeaders();
     String path;
     if (request.getPathInfo() != null) {
@@ -114,15 +120,14 @@ public class IIIFImageApiController {
     } catch (ResolvingException e) {
       throw new InvalidParametersException(e);
     }
-    de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
-            "http://foo.org/" + identifier);
+    var info = new de.digitalcollections.iiif.model.image.ImageService("http://foo.org/" + identifier);
     imageService.readImageInfo(identifier, info);
     ImageApiProfile profile = ImageApiProfile.merge(info.getProfiles());
     String canonicalForm;
     try {
       canonicalForm = selector.getCanonicalForm(
-              new Dimension(info.getWidth(), info.getHeight()),
-              profile, ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
+          new Dimension(info.getWidth(), info.getHeight()),
+          profile, ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
     } catch (ResolvingException e) {
       throw new InvalidParametersException(e);
     }
@@ -155,7 +160,10 @@ public class IIIFImageApiController {
 
   @RequestMapping(value = "{identifier}/info.json", method = {RequestMethod.GET, RequestMethod.HEAD})
   public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
-          WebRequest webRequest) throws Exception {
+                                        WebRequest webRequest) throws Exception {
+    if (isInsecure(identifier)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+    }
     long duration = System.currentTimeMillis();
     long modified = imageService.getImageModificationDate(identifier).toEpochMilli();
     webRequest.checkNotModified(modified);
@@ -166,8 +174,9 @@ public class IIIFImageApiController {
       path = req.getServletPath();
     }
     String baseUrl = getUrlBase(req);
-    de.digitalcollections.iiif.model.image.ImageService info = new de.digitalcollections.iiif.model.image.ImageService(
-            baseUrl + path.replace("/info.json", "").replace(identifier, URLEncoder.encode(identifier, "UTF-8")));
+    String imageIdentifier = baseUrl + path.replace("/info.json", "")
+                                           .replace(identifier, URLEncoder.encode(identifier, StandardCharsets.UTF_8));
+    var info = new de.digitalcollections.iiif.model.image.ImageService(imageIdentifier);
     imageService.readImageInfo(identifier, info);
     duration = System.currentTimeMillis() - duration;
     metricsService.increaseCounterWithDurationAndPercentiles("generations", "infojson", duration);
@@ -179,8 +188,8 @@ public class IIIFImageApiController {
     } else {
       headers.set("Content-Type", "application/json");
       headers.add("Link", "<http://iiif.io/api/image/2/context.json>; "
-              + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
-              + "type=\"application/ld+json\"");
+                          + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
+                          + "type=\"application/ld+json\"");
     }
     headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
     headers.add("Access-Control-Allow-Origin", "*");
@@ -191,8 +200,16 @@ public class IIIFImageApiController {
     return new ResponseEntity<>(objectMapper.writeValueAsString(info), headers, HttpStatus.OK);
   }
 
+  private boolean isInsecure(String identifier) {
+    return identifier != null && (identifier.contains("..") || URLDecoder.decode(identifier, StandardCharsets.UTF_8).contains(".."));
+  }
+
   @RequestMapping(value = "{identifier}", method = {RequestMethod.GET, RequestMethod.HEAD})
   public String getInfoRedirect(@PathVariable String identifier, HttpServletResponse response) {
+    if (isInsecure(identifier)) {
+      response.setStatus(400);
+      return null;
+    }
     response.setHeader("Access-Control-Allow-Origin", "*");
     return "redirect:/image/" + VERSION + "/" + identifier + "/info.json";
   }
