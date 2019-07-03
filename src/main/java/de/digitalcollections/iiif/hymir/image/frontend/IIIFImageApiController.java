@@ -1,11 +1,11 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
 import de.digitalcollections.commons.springboot.metrics.MetricsService;
-import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
+import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
