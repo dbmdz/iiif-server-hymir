@@ -1,11 +1,11 @@
 package de.digitalcollections.iiif.hymir.presentation.frontend;
 
 import de.digitalcollections.commons.springboot.metrics.MetricsService;
-import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
+import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Canvas;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
