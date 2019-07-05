@@ -1,5 +1,6 @@
 package de.digitalcollections.iiif.hymir.config;
 
+import de.digitalcollections.commons.file.config.SpringConfigCommonsFile;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,16 +11,14 @@ import javax.imageio.ImageWriter;
 import javax.imageio.spi.IIORegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * Backend configuration.
  */
 @Configuration
-@ComponentScan(basePackages = {
-    "de.digitalcollections.commons.file.config"
-})
+@Import(SpringConfigCommonsFile.class)
 public class SpringConfigBackendImage {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SpringConfigBackendImage.class);

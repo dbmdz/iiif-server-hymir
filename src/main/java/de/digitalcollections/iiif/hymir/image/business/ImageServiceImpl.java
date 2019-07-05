@@ -1,7 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.business;
 
 import com.google.common.collect.Streams;
-import de.digitalcollections.commons.file.business.impl.resolved.ResolvedFileResourceServiceImpl;
+import de.digitalcollections.commons.file.business.api.FileResourceService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
@@ -43,7 +43,7 @@ import org.springframework.stereotype.Service;
 public class ImageServiceImpl implements ImageService {
 
   private final ImageSecurityService imageSecurityService;
-  private final ResolvedFileResourceServiceImpl fileResourceService;
+  private final FileResourceService fileResourceService;
 
   @Value("${custom.iiif.logo:}")
   private String logoUrl;
@@ -80,7 +80,7 @@ public class ImageServiceImpl implements ImageService {
   }
 
   public ImageServiceImpl(@Autowired(required = false) ImageSecurityService imageSecurityService,
-          @Autowired ResolvedFileResourceServiceImpl fileResourceService) {
+                          @Autowired FileResourceService fileResourceService) {
     this.imageSecurityService = imageSecurityService;
     this.fileResourceService = fileResourceService;
   }
@@ -89,12 +89,12 @@ public class ImageServiceImpl implements ImageService {
   private void enrichInfo(ImageReader reader, de.digitalcollections.iiif.model.image.ImageService info) throws IOException {
     ImageApiProfile profile = new ImageApiProfile();
     profile.addFeature(
-            ImageApiProfile.Feature.PROFILE_LINK_HEADER,
-            ImageApiProfile.Feature.CANONICAL_LINK_HEADER,
-            ImageApiProfile.Feature.REGION_SQUARE,
-            ImageApiProfile.Feature.ROTATION_BY_90S,
-            ImageApiProfile.Feature.MIRRORING,
-            ImageApiProfile.Feature.SIZE_ABOVE_FULL);
+      ImageApiProfile.Feature.PROFILE_LINK_HEADER,
+      ImageApiProfile.Feature.CANONICAL_LINK_HEADER,
+      ImageApiProfile.Feature.REGION_SQUARE,
+      ImageApiProfile.Feature.ROTATION_BY_90S,
+      ImageApiProfile.Feature.MIRRORING,
+      ImageApiProfile.Feature.SIZE_ABOVE_FULL);
     profile.addFormat(ImageApiProfile.Format.GIF);
 
     // Indicate to the client if we cannot deliver full resolution versions of the image
@@ -163,8 +163,8 @@ public class ImageServiceImpl implements ImageService {
     try {
       ImageInputStream iis = ImageIO.createImageInputStream(fileResourceService.getInputStream(fileResource));
       ImageReader reader = Streams.stream(ImageIO.getImageReaders(iis))
-          .findFirst()
-          .orElseThrow(UnsupportedFormatException::new);
+        .findFirst()
+        .orElseThrow(UnsupportedFormatException::new);
       reader.setInput(iis);
       return reader;
     } catch (ResourceIOException e) {
@@ -174,7 +174,7 @@ public class ImageServiceImpl implements ImageService {
 
   @Override
   public void readImageInfo(String identifier, de.digitalcollections.iiif.model.image.ImageService info)
-          throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException {
+    throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException, IOException {
     ImageReader r = null;
     try {
       r = getReader(identifier);
@@ -213,10 +213,10 @@ public class ImageServiceImpl implements ImageService {
     // IIIF regions are always relative to the native size, while ImageIO regions are always relative to the decoded
     // image size, hence the conversion
     Rectangle decodeRegion = new Rectangle(
-            (int) Math.ceil(targetRegion.getX() * decodeScaleFactor),
-            (int) Math.ceil(targetRegion.getY() * decodeScaleFactor),
-            (int) Math.ceil(targetRegion.getWidth() * decodeScaleFactor),
-            (int) Math.ceil(targetRegion.getHeight() * decodeScaleFactor));
+      (int) Math.ceil(targetRegion.getX() * decodeScaleFactor),
+      (int) Math.ceil(targetRegion.getY() * decodeScaleFactor),
+      (int) Math.ceil(targetRegion.getWidth() * decodeScaleFactor),
+      (int) Math.ceil(targetRegion.getHeight() * decodeScaleFactor));
     readParam.setSourceRegion(decodeRegion);
     // TurboJpegImageReader can rotate during decoding
     if (selector.getRotation().getRotation() != 0 && reader instanceof TurboJpegImageReader) {
@@ -285,7 +285,7 @@ public class ImageServiceImpl implements ImageService {
 
   /** Apply transformations to an decoded image **/
   private BufferedImage transformImage(BufferedImage inputImage, Dimension targetSize, int rotation, boolean mirror,
-          ImageApiProfile.Quality quality) {
+                                       ImageApiProfile.Quality quality) {
     BufferedImage img = inputImage;
     final int inType = img.getType();
     boolean needsAdditionalScaling = !new Dimension(img.getWidth(), img.getHeight()).equals(targetSize);
@@ -340,13 +340,13 @@ public class ImageServiceImpl implements ImageService {
 
   @Override
   public void processImage(String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
-          throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException, ResourceNotFoundException, IOException {
+    throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException, ResourceNotFoundException, IOException {
     DecodedImage img = readImage(identifier, selector, profile);
     BufferedImage outImg = transformImage(img.img, img.targetSize, img.rotation, selector.getRotation().isMirror(), selector.getQuality());
 
     ImageWriter writer = Streams.stream(ImageIO.getImageWriters(new ImageTypeSpecifier(outImg), selector.getFormat().name()))
-            .findFirst()
-            .orElseThrow(UnsupportedFormatException::new);
+      .findFirst()
+      .orElseThrow(UnsupportedFormatException::new);
     ImageOutputStream ios = ImageIO.createImageOutputStream(os);
     writer.setOutput(ios);
     writer.write(null, new IIOImage(outImg, null, null), null);
