@@ -48,10 +48,10 @@ public class IIIFPresentationApiController {
   // We set the header ourselves, since using @CrossOrigin doesn't expose "*", but always sets the requesting domain
   // @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.GET,
-          produces = "application/json")
+                  produces = "application/json")
   @ResponseBody
   public Manifest getManifest(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     if (UrlRules.isInsecure(identifier)) {
       resp.setStatus(400);
       return null;
@@ -77,7 +77,7 @@ public class IIIFPresentationApiController {
 
   @RequestMapping(value = {"{identifier}/manifest", "{identifier}"}, method = RequestMethod.HEAD)
   public void checkManifest(@PathVariable String identifier, HttpServletResponse resp)
-          throws ResolvingException, ResourceNotFoundException {
+      throws ResolvingException, ResourceNotFoundException {
     if (UrlRules.isInsecure(identifier)) {
       resp.setStatus(400);
       return;
@@ -95,7 +95,7 @@ public class IIIFPresentationApiController {
   @RequestMapping(value = {"{manifestId}/canvas/{canvasId}"}, method = RequestMethod.GET)
   @ResponseBody
   public Canvas getCanvas(@PathVariable String manifestId, @PathVariable String canvasId, HttpServletRequest req, HttpServletResponse resp)
-          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     if (UrlRules.anyIsInsecure(manifestId, canvasId)) {
       resp.setStatus(400);
       return null;
@@ -111,7 +111,7 @@ public class IIIFPresentationApiController {
   @RequestMapping(value = {"{manifestId}/range/{rangeId}"}, method = RequestMethod.GET)
   @ResponseBody
   public Range getRange(@PathVariable String manifestId, @PathVariable String rangeId, HttpServletRequest req, HttpServletResponse resp)
-          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     if (UrlRules.anyIsInsecure(manifestId, rangeId)) {
       resp.setStatus(400);
       return null;
@@ -127,7 +127,7 @@ public class IIIFPresentationApiController {
   @RequestMapping(value = {"{manifestId}/sequence/{sequenceId}"}, method = RequestMethod.GET)
   @ResponseBody
   public Sequence getSequence(@PathVariable String manifestId, @PathVariable String sequenceId, HttpServletRequest req, HttpServletResponse resp)
-          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     if (UrlRules.anyIsInsecure(manifestId, sequenceId)) {
       resp.setStatus(400);
       return null;
@@ -141,10 +141,10 @@ public class IIIFPresentationApiController {
   }
 
   @RequestMapping(value = {"collection/{identifier}"}, method = {RequestMethod.GET, RequestMethod.HEAD},
-          produces = "application/json")
+                  produces = "application/json")
   @ResponseBody
   public Collection getCollection(@PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-          throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     if (UrlRules.isInsecure(identifier)) {
       resp.setStatus(400);
       return null;
@@ -166,7 +166,7 @@ public class IIIFPresentationApiController {
   @GetMapping(value = {"{identifier}/list/{name}/{canvasId}"}, produces = "application/json")
   @ResponseBody
   public AnnotationList getAnnotationList(@PathVariable String identifier, @PathVariable String name, @PathVariable String canvasId, HttpServletResponse resp)
-    throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     if (UrlRules.anyIsInsecure(identifier, name, canvasId)) {
       resp.setStatus(400);
       return null;
