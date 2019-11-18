@@ -24,9 +24,6 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
   @Value("${spring.security.user.password}")
   private String actuatorPassword;
 
-  @Value("${javamelody.init-parameters.monitoring-path:/monitoring}")
-  private String javamelodyMonitoringPath;
-
   @Bean
   public HttpFirewall looseFirewall() {
     DefaultHttpFirewall firewall = new DefaultHttpFirewall();
@@ -54,7 +51,6 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) throws Exception {
     // We need to loosen the firewall settings to allow various urlencoded characters in identifiers
     web.httpFirewall(looseFirewall());
-    web.ignoring().antMatchers(javamelodyMonitoringPath);
   }
 
   private PasswordEncoder passwordEncoderDummy() {
