@@ -72,13 +72,12 @@ libopenjp2-7-dev - development files for OpenJPEG, a JPEG 2000 image library
 $ sudo apt-get install libopenjp2-7
 ```
 
-### Creating logging and monitoring directories
+### Creating logging directories
 
 Create directories for
 
 - hymir application logging (configured in logback-spring.xml), e.g. `/var/log/hymir`
 - hymir access logs (default: `/var/log/digitalcollections`)
-- javamelody monitoring logging (default: `/local/javamelody-hymir`)
 
 Example (use more restricted access rights than in this example):
 
@@ -87,8 +86,6 @@ $ sudo mkdir /var/log/hymir
 $ sudo chmod 777 /var/log/hymir
 $ sudo mkdir /var/log/digitalcollections
 $ sudo chmod 777 /var/log/digitalcollections
-$ sudo mkdir -p /local/javamelody-hymir
-$ sudo chmod 777 /local/javamelody-hymir
 ```
 
 ## Usage

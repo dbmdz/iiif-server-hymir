@@ -43,7 +43,7 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
     // see https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints
     http.antMatcher("/monitoring/**").authorizeRequests()
         .requestMatchers(EndpointRequest.to(InfoEndpoint.class, HealthEndpoint.class)).permitAll()
-        .requestMatchers(EndpointRequest.to("jolokia", "prometheus", "version")).permitAll()
+        .requestMatchers(EndpointRequest.to("prometheus", "version")).permitAll()
         .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR").and().httpBasic();
   }
 
