@@ -150,9 +150,9 @@ Access Hymir GUI (e.g. http://localhost:9000/).
 
 ## Configuration
 
-### Running Hymir behind a webserver
+### Running Hymir behind a proxy server
 
-If you are running Hymir behind a proxy server, it is important to configure the proxy server to set the `X-Forwared-For` and `X-Forwarded-Proto` headers, because they are used e.g. in rendering absolute URLs in `info.json` response content.
+If you are running Hymir behind a proxy server, it is important to configure the proxy server to set the `X-Forwarded-For` and `X-Forwarded-Proto` headers, because they are used e.g. in rendering absolute URLs in `info.json` response content.
 
 For NGinx this can be configured like this:
 
