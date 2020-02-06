@@ -150,6 +150,23 @@ Access Hymir GUI (e.g. http://localhost:9000/).
 
 ## Configuration
 
+### Running Hymir behind a webserver
+
+For loadbalancing IIIF work onto a number of Hymir-servers it is a common solution to put a loadbalancing webserver in front of them (or even in front of one)
+to forward (upstream) requests in a load-sensible way to them (the "workers").
+
+If you choose to do so, it is important to configure the webserver to set the `X-Forwared-For` header, because this is used e.g. in rendering absolute URLs in `info.json`-content.
+
+For NGinx this can be configured like this:
+
+```
+proxy_set_header Host $http_host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+proxy_set_header X-Request-Id $request_id;
+```
+
 ### Image and presentation manifest resolving
 
 Based on unique resource identifiers the server tries to resolve identifiers to a `file:` or `http:` path.
