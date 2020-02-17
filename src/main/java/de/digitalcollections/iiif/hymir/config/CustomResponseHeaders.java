@@ -97,6 +97,5 @@ public class CustomResponseHeaders {
     public void setValue(String value) {
       this.value = value;
     }
-
   }
 }

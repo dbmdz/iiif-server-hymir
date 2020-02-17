@@ -105,7 +105,7 @@
 
     <!-- plugins -->
     <version.jacoco-maven-plugin>0.8.5</version.jacoco-maven-plugin>
-    <version.maven-checkstyle-plugin>3.1.0</version.maven-checkstyle-plugin>
+    <version.maven-fmt-plugin>2.9</version.maven-fmt-plugin>
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.maven-surefire-plugin>3.0.0-M4</version.maven-surefire-plugin>
     <version.nexus-staging-maven-plugin>1.6.8</version.nexus-staging-maven-plugin>
@@ -395,6 +395,18 @@
 
     <plugins>
       <plugin>
+        <groupId>com.coveo</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>${version.maven-fmt-plugin}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>format</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>${version.spotbugs-maven-plugin}</version>
@@ -408,27 +420,6 @@
         </dependencies>
         <executions>
           <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${version.maven-checkstyle-plugin}</version>
-        <executions>
-          <execution>
-            <id>validate</id>
-            <phase>validate</phase>
-            <configuration>
-              <configLocation>https://raw.githubusercontent.com/dbmdz/development/master/code-quality/checkstyle.xml</configLocation>
-              <encoding>UTF-8</encoding>
-              <consoleOutput>true</consoleOutput>
-              <failsOnError>true</failsOnError>
-              <linkXRef>false</linkXRef>
-            </configuration>
             <goals>
               <goal>check</goal>
             </goals>

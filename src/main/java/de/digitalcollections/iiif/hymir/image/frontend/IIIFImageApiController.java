@@ -47,7 +47,11 @@ public class IIIFImageApiController {
   private final MetricsService metricsService;
 
   @Autowired
-  public IIIFImageApiController(ImageService imageService, IiifObjectMapper objectMapper, CustomResponseHeaders customResponseHeaders, MetricsService metricsService) {
+  public IIIFImageApiController(
+      ImageService imageService,
+      IiifObjectMapper objectMapper,
+      CustomResponseHeaders customResponseHeaders,
+      MetricsService metricsService) {
     this.imageService = imageService;
     this.objectMapper = objectMapper;
     this.customResponseHeaders = customResponseHeaders;
@@ -61,7 +65,7 @@ public class IIIFImageApiController {
   /**
    * Get the base URL for all Image API URLs from the request.
    *
-   * This will handle cases such as reverse-proxying and SSL-termination on the frontend server
+   * <p>This will handle cases such as reverse-proxying and SSL-termination on the frontend server
    */
   private String getUrlBase(HttpServletRequest request) {
     String scheme = request.getHeader("X-Forwarded-Proto");
@@ -85,13 +89,19 @@ public class IIIFImageApiController {
 
   @RequestMapping(value = "{identifier}/{region}/{size}/{rotation}/{quality}.{format}")
   public ResponseEntity<byte[]> getImageRepresentation(
-      @PathVariable String identifier, @PathVariable String region,
-      @PathVariable String size, @PathVariable String rotation,
-      @PathVariable String quality, @PathVariable String format,
-      HttpServletRequest request, HttpServletResponse response, WebRequest webRequest)
-      throws UnsupportedFormatException, UnsupportedOperationException, IOException, InvalidParametersException, ResourceNotFoundException {
+      @PathVariable String identifier,
+      @PathVariable String region,
+      @PathVariable String size,
+      @PathVariable String rotation,
+      @PathVariable String quality,
+      @PathVariable String format,
+      HttpServletRequest request,
+      HttpServletResponse response,
+      WebRequest webRequest)
+      throws UnsupportedFormatException, UnsupportedOperationException, IOException,
+          InvalidParametersException, ResourceNotFoundException {
     if (UrlRules.isInsecure(identifier)) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new byte[]{});
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new byte[] {});
     }
     HttpHeaders headers = new HttpHeaders();
     String path;
@@ -119,18 +129,22 @@ public class IIIFImageApiController {
     } catch (ResolvingException e) {
       throw new InvalidParametersException(e);
     }
-    var info = new de.digitalcollections.iiif.model.image.ImageService("http://foo.org/" + identifier);
+    var info =
+        new de.digitalcollections.iiif.model.image.ImageService("http://foo.org/" + identifier);
     imageService.readImageInfo(identifier, info);
     ImageApiProfile profile = ImageApiProfile.merge(info.getProfiles());
     String canonicalForm;
     try {
-      canonicalForm = selector.getCanonicalForm(
-          new Dimension(info.getWidth(), info.getHeight()),
-          profile, ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
+      canonicalForm =
+          selector.getCanonicalForm(
+              new Dimension(info.getWidth(), info.getHeight()),
+              profile,
+              ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
     } catch (ResolvingException e) {
       throw new InvalidParametersException(e);
     }
-    String canonicalUrl = getUrlBase(request) + path.substring(0, path.indexOf(identifier)) + canonicalForm;
+    String canonicalUrl =
+        getUrlBase(request) + path.substring(0, path.indexOf(identifier)) + canonicalForm;
     if (this.isCanonicalRedirectEnabled && !canonicalForm.equals(selector.toString())) {
       response.setHeader("Link", String.format("<%s>;rel=\"canonical\"", canonicalUrl));
       response.sendRedirect(canonicalUrl);
@@ -140,7 +154,10 @@ public class IIIFImageApiController {
 
       String filename = path.replaceFirst("/image/", "").replace('/', '_').replace(',', '_');
       headers.set("Content-Disposition", "inline; filename=" + filename);
-      headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
+      headers.add(
+          "Link",
+          String.format(
+              "<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
 
       ByteArrayOutputStream os = new ByteArrayOutputStream();
       long duration = System.currentTimeMillis();
@@ -148,18 +165,24 @@ public class IIIFImageApiController {
       duration = System.currentTimeMillis() - duration;
       metricsService.increaseCounterWithDurationAndPercentiles("image", "process", duration);
 
-      customResponseHeaders.forImageTile().forEach(customResponseHeader -> {
-        headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
-      });
+      customResponseHeaders
+          .forImageTile()
+          .forEach(
+              customResponseHeader -> {
+                headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
+              });
       final String mimeType = selector.getFormat().getMimeType().getTypeName();
       headers.setContentType(MediaType.parseMediaType(mimeType));
       return new ResponseEntity<>(os.toByteArray(), headers, HttpStatus.OK);
     }
   }
 
-  @RequestMapping(value = "{identifier}/info.json", method = {RequestMethod.GET, RequestMethod.HEAD})
-  public ResponseEntity<String> getInfo(@PathVariable String identifier, HttpServletRequest req,
-                                        WebRequest webRequest) throws Exception {
+  @RequestMapping(
+      value = "{identifier}/info.json",
+      method = {RequestMethod.GET, RequestMethod.HEAD})
+  public ResponseEntity<String> getInfo(
+      @PathVariable String identifier, HttpServletRequest req, WebRequest webRequest)
+      throws Exception {
     if (UrlRules.isInsecure(identifier)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
     }
@@ -173,8 +196,10 @@ public class IIIFImageApiController {
       path = req.getServletPath();
     }
     String baseUrl = getUrlBase(req);
-    String imageIdentifier = baseUrl + path.replace("/info.json", "")
-                                           .replace(identifier, URLEncoder.encode(identifier, StandardCharsets.UTF_8));
+    String imageIdentifier =
+        baseUrl
+            + path.replace("/info.json", "")
+                .replace(identifier, URLEncoder.encode(identifier, StandardCharsets.UTF_8));
     var info = new de.digitalcollections.iiif.model.image.ImageService(imageIdentifier);
     imageService.readImageInfo(identifier, info);
     duration = System.currentTimeMillis() - duration;
@@ -186,20 +211,30 @@ public class IIIFImageApiController {
       headers.set("Content-Type", contentType);
     } else {
       headers.set("Content-Type", "application/json");
-      headers.add("Link", "<http://iiif.io/api/image/2/context.json>; "
-                          + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
-                          + "type=\"application/ld+json\"");
+      headers.add(
+          "Link",
+          "<http://iiif.io/api/image/2/context.json>; "
+              + "rel=\"http://www.w3.org/ns/json-ld#context\"; "
+              + "type=\"application/ld+json\"");
     }
-    headers.add("Link", String.format("<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
+    headers.add(
+        "Link",
+        String.format(
+            "<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
     headers.add("Access-Control-Allow-Origin", "*");
 
-    customResponseHeaders.forImageInfo().forEach(customResponseHeader -> {
-      headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
-    });
+    customResponseHeaders
+        .forImageInfo()
+        .forEach(
+            customResponseHeader -> {
+              headers.set(customResponseHeader.getName(), customResponseHeader.getValue());
+            });
     return new ResponseEntity<>(objectMapper.writeValueAsString(info), headers, HttpStatus.OK);
   }
 
-  @RequestMapping(value = "{identifier}", method = {RequestMethod.GET, RequestMethod.HEAD})
+  @RequestMapping(
+      value = "{identifier}",
+      method = {RequestMethod.GET, RequestMethod.HEAD})
   public String getInfoRedirect(@PathVariable String identifier, HttpServletResponse response) {
     if (UrlRules.isInsecure(identifier)) {
       response.setStatus(400);

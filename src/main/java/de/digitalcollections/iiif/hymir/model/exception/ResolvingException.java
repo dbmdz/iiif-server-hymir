@@ -12,7 +12,8 @@ public class ResolvingException extends Exception {
     super(message);
   }
 
-  public ResolvingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+  public ResolvingException(
+      String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }
 

@@ -33,18 +33,26 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication().passwordEncoder(passwordEncoderDummy())
+    auth.inMemoryAuthentication()
+        .passwordEncoder(passwordEncoderDummy())
         .withUser(User.withUsername(actuatorUsername).password(actuatorPassword).roles("ACTUATOR"));
   }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // Monitoring:
-    // see https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints
-    http.antMatcher("/monitoring/**").authorizeRequests()
-        .requestMatchers(EndpointRequest.to(InfoEndpoint.class, HealthEndpoint.class)).permitAll()
-        .requestMatchers(EndpointRequest.to("prometheus", "version")).permitAll()
-        .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR").and().httpBasic();
+    // see
+    // https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints
+    http.antMatcher("/monitoring/**")
+        .authorizeRequests()
+        .requestMatchers(EndpointRequest.to(InfoEndpoint.class, HealthEndpoint.class))
+        .permitAll()
+        .requestMatchers(EndpointRequest.to("prometheus", "version"))
+        .permitAll()
+        .requestMatchers(EndpointRequest.toAnyEndpoint())
+        .hasRole("ACTUATOR")
+        .and()
+        .httpBasic();
   }
 
   @Override
@@ -66,5 +74,4 @@ public class SpringConfigSecurity extends WebSecurityConfigurerAdapter {
       }
     };
   }
-
 }

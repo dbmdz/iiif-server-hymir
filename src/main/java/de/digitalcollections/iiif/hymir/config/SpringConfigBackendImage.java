@@ -13,19 +13,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Backend configuration.
- */
+/** Backend configuration. */
 @Configuration
-@ComponentScan(basePackages = {
-    "de.digitalcollections.commons.file.config"
-})
+@ComponentScan(basePackages = {"de.digitalcollections.commons.file.config"})
 public class SpringConfigBackendImage {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SpringConfigBackendImage.class);
 
   static {
-    ImageIO.setUseCache(false);  // Use Heap memory for caching instead of disk
+    ImageIO.setUseCache(false); // Use Heap memory for caching instead of disk
 
     deregisterSunImageSpis();
     String[] readerMimeTypes = ImageIO.getReaderMIMETypes();
@@ -57,13 +53,22 @@ public class SpringConfigBackendImage {
   private static void deregisterSunImageSpis() {
     IIORegistry registry = IIORegistry.getDefaultInstance();
 
-    // We need to disable using the com.sun.imageio.* classes for tiff and jpeg due to strange runtime bugs.
+    // We need to disable using the com.sun.imageio.* classes for tiff and jpeg due to strange
+    // runtime bugs.
     // But we can just rely on the TwelveMonkeys imageio packages 🎉
-    // gif and png support is not provided by TwelveMonkeys (https://github.com/haraldk/TwelveMonkeys/issues/137)
-    // so we do not need to disable PNGImage{Reader,Writer}Spi and GIFImage{Reader, Writer}Spi for the com.sun.imageio.* classes here.
-    Set<String> spis = new HashSet<>(Arrays.asList("com.sun.imageio.plugins.tiff.TIFFImageReaderSpi", "com.sun.imageio.plugins.tiff.TIFFImageWriterSpi",
-        "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi", "com.sun.imageio.plugins.jpeg.JPEGImageWriterSpi",
-        "com.sun.imageio.plugins.bmp.BMPImageReaderSpi", "com.sun.imageio.plugins.bmp.BMPImageWriterSpi"));
+    // gif and png support is not provided by TwelveMonkeys
+    // (https://github.com/haraldk/TwelveMonkeys/issues/137)
+    // so we do not need to disable PNGImage{Reader,Writer}Spi and GIFImage{Reader, Writer}Spi for
+    // the com.sun.imageio.* classes here.
+    Set<String> spis =
+        new HashSet<>(
+            Arrays.asList(
+                "com.sun.imageio.plugins.tiff.TIFFImageReaderSpi",
+                "com.sun.imageio.plugins.tiff.TIFFImageWriterSpi",
+                "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+                "com.sun.imageio.plugins.jpeg.JPEGImageWriterSpi",
+                "com.sun.imageio.plugins.bmp.BMPImageReaderSpi",
+                "com.sun.imageio.plugins.bmp.BMPImageWriterSpi"));
     for (String spi : spis) {
       try {
         Object spiProvider = registry.getServiceProviderByClass(Class.forName(spi));

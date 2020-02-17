@@ -21,37 +21,44 @@ public class PresentationServiceImpl implements PresentationService {
   private final PresentationSecurityService presentationSecurityService;
 
   @Autowired
-  public PresentationServiceImpl(PresentationRepository presentationRepository,
-          @Autowired(required = false) PresentationSecurityService presentationSecurityService) {
+  public PresentationServiceImpl(
+      PresentationRepository presentationRepository,
+      @Autowired(required = false) PresentationSecurityService presentationSecurityService) {
     this.presentationRepository = presentationRepository;
     this.presentationSecurityService = presentationSecurityService;
   }
 
   @Override
-  public AnnotationList getAnnotationList(String identifier, String name, String canvasId) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+  public AnnotationList getAnnotationList(String identifier, String name, String canvasId)
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return presentationRepository.getAnnotationList(identifier, name, canvasId);
   }
 
   @Override
-  public Collection getCollection(String name) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+  public Collection getCollection(String name)
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     return presentationRepository.getCollection(name);
   }
 
   @Override
-  public Manifest getManifest(String identifier) throws ResolvingException, ResourceNotFoundException, InvalidDataException {
-    if (presentationSecurityService != null && !presentationSecurityService.isAccessAllowed(identifier)) {
+  public Manifest getManifest(String identifier)
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+    if (presentationSecurityService != null
+        && !presentationSecurityService.isAccessAllowed(identifier)) {
       throw new ResolvingException(); // TODO maybe throw an explicitely access disallowed exception
     }
     return presentationRepository.getManifest(identifier);
   }
 
   @Override
-  public Instant getManifestModificationDate(String identifier) throws ResolvingException, ResourceNotFoundException {
+  public Instant getManifestModificationDate(String identifier)
+      throws ResolvingException, ResourceNotFoundException {
     return presentationRepository.getManifestModificationDate(identifier);
   }
 
   @Override
-  public Instant getCollectionModificationDate(String identifier) throws ResolvingException, ResourceNotFoundException {
+  public Instant getCollectionModificationDate(String identifier)
+      throws ResolvingException, ResourceNotFoundException {
     return presentationRepository.getCollectionModificationDate(identifier);
   }
 }

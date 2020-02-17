@@ -16,9 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@ComponentScan(basePackages = {
-  "de.digitalcollections.commons.file.config"
-})
+@ComponentScan(basePackages = {"de.digitalcollections.commons.file.config"})
 public class TestConfiguration implements WebMvcConfigurer {
 
   @Bean
@@ -42,24 +40,25 @@ public class TestConfiguration implements WebMvcConfigurer {
   }
 
   public static void setDefaults() {
-    com.jayway.jsonpath.Configuration.setDefaults(new com.jayway.jsonpath.Configuration.Defaults() {
-      private final JsonProvider jsonProvider = new JacksonJsonProvider();
-      private final MappingProvider mappingProvider = new JacksonMappingProvider();
+    com.jayway.jsonpath.Configuration.setDefaults(
+        new com.jayway.jsonpath.Configuration.Defaults() {
+          private final JsonProvider jsonProvider = new JacksonJsonProvider();
+          private final MappingProvider mappingProvider = new JacksonMappingProvider();
 
-      @Override
-      public JsonProvider jsonProvider() {
-        return jsonProvider;
-      }
+          @Override
+          public JsonProvider jsonProvider() {
+            return jsonProvider;
+          }
 
-      @Override
-      public MappingProvider mappingProvider() {
-        return mappingProvider;
-      }
+          @Override
+          public MappingProvider mappingProvider() {
+            return mappingProvider;
+          }
 
-      @Override
-      public Set<Option> options() {
-        return EnumSet.noneOf(Option.class);
-      }
-    });
+          @Override
+          public Set<Option> options() {
+            return EnumSet.noneOf(Option.class);
+          }
+        });
   }
 }

@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-/**
- * Adds the webjar versions read from yaml files as global model attribute.
- */
+/** Adds the webjar versions read from yaml files as global model attribute. */
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
