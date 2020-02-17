@@ -8,9 +8,7 @@ import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.time.Instant;
 
-/**
- * Interface to be implemented by project/user of this library.
- */
+/** Interface to be implemented by project/user of this library. */
 public interface PresentationRepository {
 
   /**
@@ -22,7 +20,8 @@ public interface PresentationRepository {
    * @throws ResourceNotFoundException if annotation list with given name can not be found
    * @throws InvalidDataException if data is corrupted
    */
-  AnnotationList getAnnotationList(String identifier, String name, String canvasId) throws ResolvingException, ResourceNotFoundException, InvalidDataException;
+  AnnotationList getAnnotationList(String identifier, String name, String canvasId)
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException;
 
   /**
    * @param name unique name of collection
@@ -31,7 +30,8 @@ public interface PresentationRepository {
    * @throws ResourceNotFoundException if Collection with given name can not be found
    * @throws InvalidDataException if collection contains invalid data
    */
-  Collection getCollection(String name) throws ResolvingException, ResourceNotFoundException, InvalidDataException;
+  Collection getCollection(String name)
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException;
 
   /**
    * @param identifier unique id for IIIF resource
@@ -40,13 +40,16 @@ public interface PresentationRepository {
    * @throws ResourceNotFoundException if Manifest with given identifier can not be found
    * @throws InvalidDataException if manifest contains invalid data
    */
-  Manifest getManifest(String identifier) throws ResolvingException, ResourceNotFoundException, InvalidDataException;
+  Manifest getManifest(String identifier)
+      throws ResolvingException, ResourceNotFoundException, InvalidDataException;
 
-  default Instant getManifestModificationDate(String identifier) throws ResolvingException, ResourceNotFoundException {
+  default Instant getManifestModificationDate(String identifier)
+      throws ResolvingException, ResourceNotFoundException {
     return null;
   }
 
-  default Instant getCollectionModificationDate(String identifier) throws ResolvingException, ResourceNotFoundException {
+  default Instant getCollectionModificationDate(String identifier)
+      throws ResolvingException, ResourceNotFoundException {
     return null;
   }
 }

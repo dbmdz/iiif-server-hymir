@@ -24,7 +24,8 @@ public class SpringConfigWeb implements WebMvcConfigurer {
     localeChangeInterceptor.setParamName("language");
     registry.addInterceptor(localeChangeInterceptor);
 
-    CurrentUrlAsModelAttributeHandlerInterceptor currentUrlAsModelAttributeHandlerInterceptor = new CurrentUrlAsModelAttributeHandlerInterceptor();
+    CurrentUrlAsModelAttributeHandlerInterceptor currentUrlAsModelAttributeHandlerInterceptor =
+        new CurrentUrlAsModelAttributeHandlerInterceptor();
     currentUrlAsModelAttributeHandlerInterceptor.deleteParams("language");
     registry.addInterceptor(currentUrlAsModelAttributeHandlerInterceptor);
   }

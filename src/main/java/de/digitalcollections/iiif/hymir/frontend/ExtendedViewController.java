@@ -21,24 +21,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Controller for serving viewer page.
  *
- * Provides direct access to viewer for external call. Can be overwritten with custom behaviour.
+ * <p>Provides direct access to viewer for external call. Can be overwritten with custom behaviour.
  */
 @Controller
 public class ExtendedViewController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ExtendedViewController.class);
 
-  @Autowired
-  private PresentationService presentationService;
+  @Autowired private PresentationService presentationService;
 
   @RequestMapping(value = "/presentation/{identifier}/view.html", method = RequestMethod.GET)
   public String viewExtendedPresentationGet(@PathVariable String identifier, Model model) {
-    model.addAttribute("presentationUri", "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
+    model.addAttribute(
+        "presentationUri",
+        "/presentation/" + IIIFPresentationApiController.VERSION + "/" + identifier);
     return "mirador/view";
   }
 
   /**
-   * Direct link for viewing a specified canvas (page) used for citation.https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00107186/canvas/1
+   * Direct link for viewing a specified canvas (page) used for
+   * citation.https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00107186/canvas/1
+   *
    * @param version api version
    * @param objectIdentifier object identifier
    * @param canvasName name of canvas
@@ -49,8 +52,15 @@ public class ExtendedViewController {
    * @throws ResourceNotFoundException if manifest not found
    * @throws InvalidDataException if manifest can't be read
    */
-  @RequestMapping(value = "/presentation/{version}/{objectIdentifier}/canvas/{canvasName}/view", method = RequestMethod.GET)
-  public String viewCanvasGet(@PathVariable String version, @PathVariable String objectIdentifier, @PathVariable String canvasName, Model model, HttpServletRequest request)
+  @RequestMapping(
+      value = "/presentation/{version}/{objectIdentifier}/canvas/{canvasName}/view",
+      method = RequestMethod.GET)
+  public String viewCanvasGet(
+      @PathVariable String version,
+      @PathVariable String objectIdentifier,
+      @PathVariable String canvasName,
+      Model model,
+      HttpServletRequest request)
       throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     HttpLoggingUtilities.addRequestClientInfoToMDC(request);
     MDC.put("manifestId", objectIdentifier);

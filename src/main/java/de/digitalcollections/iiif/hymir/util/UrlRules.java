@@ -17,9 +17,9 @@ public class UrlRules {
     }
     String decodedIdentifier = URLDecoder.decode(identifier, StandardCharsets.UTF_8);
     return identifier.contains("..")
-           || decodedIdentifier.contains("..")
-           || identifier.startsWith("/")
-           || decodedIdentifier.startsWith("/");
+        || decodedIdentifier.contains("..")
+        || identifier.startsWith("/")
+        || decodedIdentifier.startsWith("/");
   }
 
   /**
@@ -36,5 +36,4 @@ public class UrlRules {
     }
     return false;
   }
-
 }

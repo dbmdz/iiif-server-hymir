@@ -1,5 +1,7 @@
 package de.digitalcollections.iiif.hymir.config;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.digitalcollections.iiif.hymir.Application;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders.ResponseHeader;
 import java.util.List;
@@ -9,18 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
-  properties = {"spring.profiles.active=TEST",
-                "spring.config.name=application-test"},
-  classes = {Application.class},
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    properties = {"spring.profiles.active=TEST", "spring.config.name=application-test"},
+    classes = {Application.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CustomResponseHeadersTest {
 
-  @Autowired
-  private CustomResponseHeaders headers;
+  @Autowired private CustomResponseHeaders headers;
 
   @Test
   public void testCustomResponseHeadersConfiguration() {
@@ -37,5 +35,4 @@ public class CustomResponseHeadersTest {
     assertThat(headers.forPresentationManifest().size()).isEqualTo(3);
     assertThat(headers.forPresentationCollection().size()).isEqualTo(1);
   }
-
 }

@@ -1,5 +1,7 @@
 package de.digitalcollections.iiif.hymir.presentation.frontend;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.digitalcollections.iiif.hymir.Application;
 import de.digitalcollections.iiif.hymir.TestConfiguration;
 import de.digitalcollections.iiif.hymir.presentation.business.PresentationServiceImpl;
@@ -14,27 +16,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
-  properties = {"spring.profiles.active=TEST",
-                "spring.config.name=application-test"},
-  classes = {Application.class, TestConfiguration.class},
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    properties = {"spring.profiles.active=TEST", "spring.config.name=application-test"},
+    classes = {Application.class, TestConfiguration.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IIIFPresentationApiControllerTest {
 
-  @LocalServerPort
-  private int randomServerPort;
+  @LocalServerPort private int randomServerPort;
 
-  @Autowired
-  protected IIIFPresentationApiController iiifController;
+  @Autowired protected IIIFPresentationApiController iiifController;
 
-  @Autowired
-  protected PresentationServiceImpl presentationService;
+  @Autowired protected PresentationServiceImpl presentationService;
 
-  @Autowired
-  private TestRestTemplate restTemplate;
+  @Autowired private TestRestTemplate restTemplate;
 
   @BeforeAll
   public static void beforeAll() {
@@ -44,13 +39,23 @@ public class IIIFPresentationApiControllerTest {
 
   @Test
   public void testInvalidDataInManifest() {
-    ResponseEntity<String> response = restTemplate.getForEntity("/presentation/" + IIIFPresentationApiController.VERSION + "/manifest-invalid-data/manifest", String.class);
+    ResponseEntity<String> response =
+        restTemplate.getForEntity(
+            "/presentation/"
+                + IIIFPresentationApiController.VERSION
+                + "/manifest-invalid-data/manifest",
+            String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @Test
   public void testManifest() {
-    ResponseEntity<String> response = restTemplate.getForEntity("/presentation/" + IIIFPresentationApiController.VERSION + "/manifest-valid-data/manifest", String.class);
+    ResponseEntity<String> response =
+        restTemplate.getForEntity(
+            "/presentation/"
+                + IIIFPresentationApiController.VERSION
+                + "/manifest-valid-data/manifest",
+            String.class);
     assertThat(response.getHeaders().get("mani1")).containsExactly("mani-value1");
     assertThat(response.getHeaders().get("mani2")).containsExactly("mani-value2");
   }
