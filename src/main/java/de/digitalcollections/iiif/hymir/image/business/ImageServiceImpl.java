@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.time.Instant;
 import java.time.ZoneOffset;
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -43,7 +42,48 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
+
+  /**
+   * @param image buffered image to check for alpha channel
+   * @return true, if image contains alpha channel
+   * @see <a
+   *     href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/ColorModel.html#hasAlpha--">Javadoc
+   *     ColorModel</a>
+   */
+  public static boolean containsAlphaChannel(BufferedImage image) {
+    return image.getColorModel().hasAlpha();
+  }
+
+  /**
+   * @param image buffered image to check for transparent pixels
+   * @return true, if image contains transparent pixels
+   */
+  public static boolean containsTransparency(BufferedImage image) {
+    for (int i = 0; i < image.getHeight(); i++) {
+      for (int j = 0; j < image.getWidth(); j++) {
+        if (isTransparent(image, j, i)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @param image buffered image to check for transparent pixels
+   * @param x x coordinate of pixel to check
+   * @param y y coordinate of pixel to check
+   * @return
+   * @see <a
+   *     href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html#getRGB-int-int-">Javadoc
+   *     BufferedImage</a>
+   */
+  public static boolean isTransparent(BufferedImage image, int x, int y) {
+    int pixel = image.getRGB(x, y);
+    return (pixel >> 24) == 0x00;
+  }
 
   private final ImageSecurityService imageSecurityService;
   private final ResolvedFileResourceServiceImpl fileResourceService;
@@ -62,31 +102,6 @@ public class ImageServiceImpl implements ImageService {
 
   @Value("${custom.iiif.image.maxHeight:65500}")
   private int maxHeight;
-
-  @Value("${custom.iiif.image.checkAlphaChannel:false}")
-  private boolean checkAlphaChannel;
-
-  @Value("${custom.iiif.image.checkTransparency:false}")
-  private boolean checkTransparency;
-
-  private static class DecodedImage {
-
-    /** Decoded image * */
-    final BufferedImage img;
-
-    /** Final target size for scaling * */
-    final Dimension targetSize;
-
-    /** Rotation needed after decoding? * */
-    final int rotation;
-
-    // Small value type to hold information about decoding results
-    protected DecodedImage(BufferedImage img, Dimension targetSize, int rotation) {
-      this.img = img;
-      this.targetSize = targetSize;
-      this.rotation = rotation;
-    }
-  }
 
   public ImageServiceImpl(
       @Autowired(required = false) ImageSecurityService imageSecurityService,
@@ -383,18 +398,24 @@ public class ImageServiceImpl implements ImageService {
           ResourceNotFoundException, IOException {
     DecodedImage decodedImage = readImage(identifier, selector, profile);
 
-    boolean containsAlphaChannel = false;
-    if (checkAlphaChannel) {
-      containsAlphaChannel = containsAlphaChannel(decodedImage.img);
-      LOGGER.debug("image contains alpha channel: " + containsAlphaChannel);
-      // no further consequences in handling image with alpha channel implemented, yet
-    }
-
-    boolean containsTransparency = false;
-    if (checkTransparency) {
-      containsTransparency = containsTransparency(decodedImage.img);
-      LOGGER.debug("image contains transparency: " + containsTransparency);
-      // no further consequences in handling image with transparency implemented, yet
+    boolean containsAlphaChannel = containsAlphaChannel(decodedImage.img);
+    LOGGER.debug("image contains alpha channel: " + containsAlphaChannel);
+    if (containsAlphaChannel) {
+      int type = decodedImage.img.getType();
+      LOGGER.debug("image is of type: " + type);
+      if (BufferedImage.TYPE_INT_ARGB != type) {
+        // make sure to preserve transparency (e.g. of PNGs)
+        // see https://github.com/rkalla/imgscalr section "Working with GIFs"
+        BufferedImage convertedImage =
+            new BufferedImage(
+                decodedImage.img.getWidth(),
+                decodedImage.img.getHeight(),
+                BufferedImage.TYPE_INT_ARGB);
+        convertedImage.getGraphics().drawImage(decodedImage.img, 0, 0, null);
+        convertedImage.getGraphics().dispose();
+        decodedImage =
+            new DecodedImage(convertedImage, decodedImage.targetSize, decodedImage.rotation);
+      }
     }
 
     BufferedImage outImg =
@@ -413,7 +434,7 @@ public class ImageServiceImpl implements ImageService {
             .orElseThrow(UnsupportedFormatException::new);
     ImageOutputStream ios = ImageIO.createImageOutputStream(os);
     writer.setOutput(ios);
-    writer.write(null, new IIOImage(outImg, null, null), null);
+    writer.write(outImg);
     writer.dispose();
     ios.flush();
   }
@@ -429,46 +450,6 @@ public class ImageServiceImpl implements ImageService {
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }
-  }
-
-  /**
-   * @param image buffered image to check for alpha channel
-   * @return true, if image contains alpha channel
-   * @see <a
-   *     href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/ColorModel.html#hasAlpha--">Javadoc
-   *     ColorModel</a>
-   */
-  public boolean containsAlphaChannel(BufferedImage image) {
-    return image.getColorModel().hasAlpha();
-  }
-
-  /**
-   * @param image buffered image to check for transparent pixels
-   * @return true, if image contains transparent pixels
-   */
-  public boolean containsTransparency(BufferedImage image) {
-    for (int i = 0; i < image.getHeight(); i++) {
-      for (int j = 0; j < image.getWidth(); j++) {
-        if (isTransparent(image, j, i)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * @param image buffered image to check for transparent pixels
-   * @param x x coordinate of pixel to check
-   * @param y y coordinate of pixel to check
-   * @return
-   * @see <a
-   *     href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html#getRGB-int-int-">Javadoc
-   *     BufferedImage</a>
-   */
-  public boolean isTransparent(BufferedImage image, int x, int y) {
-    int pixel = image.getRGB(x, y);
-    return (pixel >> 24) == 0x00;
   }
 
   public String getLogoUrl() {
@@ -509,5 +490,24 @@ public class ImageServiceImpl implements ImageService {
 
   public void setMaxHeight(int maxHeight) {
     this.maxHeight = maxHeight;
+  }
+
+  private static class DecodedImage {
+
+    /** Decoded image * */
+    final BufferedImage img;
+
+    /** Final target size for scaling * */
+    final Dimension targetSize;
+
+    /** Rotation needed after decoding? * */
+    final int rotation;
+
+    // Small value type to hold information about decoding results
+    protected DecodedImage(BufferedImage img, Dimension targetSize, int rotation) {
+      this.img = img;
+      this.targetSize = targetSize;
+      this.rotation = rotation;
+    }
   }
 }
