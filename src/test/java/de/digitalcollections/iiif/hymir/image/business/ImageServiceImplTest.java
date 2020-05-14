@@ -12,20 +12,18 @@ import org.springframework.util.ResourceUtils;
 
 public class ImageServiceImplTest {
 
-  ImageServiceImpl instance = new ImageServiceImpl(null, null);
-
   @Test
   public void testContainsAlphaChannel() throws FileNotFoundException, IOException {
     File file = ResourceUtils.getFile("classpath:test-alpha-transparency-yes.png");
     BufferedImage image = ImageIO.read(file);
     boolean expResult = true;
-    boolean result = instance.containsAlphaChannel(image);
+    boolean result = ImageServiceImpl.containsAlphaChannel(image);
     assertEquals(expResult, result);
 
     file = ResourceUtils.getFile("classpath:test-alpha-transparency-no.png");
     image = ImageIO.read(file);
     expResult = false;
-    result = instance.containsAlphaChannel(image);
+    result = ImageServiceImpl.containsAlphaChannel(image);
     assertEquals(expResult, result);
   }
 
@@ -34,13 +32,13 @@ public class ImageServiceImplTest {
     File file = ResourceUtils.getFile("classpath:test-alpha-transparency-yes.png");
     BufferedImage image = ImageIO.read(file);
     boolean expResult = true;
-    boolean result = instance.containsTransparency(image);
+    boolean result = ImageServiceImpl.containsTransparency(image);
     assertEquals(expResult, result);
 
     file = ResourceUtils.getFile("classpath:test-alpha-transparency-no.png");
     image = ImageIO.read(file);
     expResult = false;
-    result = instance.containsTransparency(image);
+    result = ImageServiceImpl.containsTransparency(image);
     assertEquals(expResult, result);
   }
 }
