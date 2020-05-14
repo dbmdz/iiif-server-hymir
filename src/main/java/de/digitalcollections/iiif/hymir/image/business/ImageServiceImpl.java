@@ -35,12 +35,15 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import org.imgscalr.Scalr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
 
   private final ImageSecurityService imageSecurityService;
   private final ResolvedFileResourceServiceImpl fileResourceService;
@@ -59,6 +62,12 @@ public class ImageServiceImpl implements ImageService {
 
   @Value("${custom.iiif.image.maxHeight:65500}")
   private int maxHeight;
+
+  @Value("${custom.iiif.image.checkAlphaChannel:false}")
+  private boolean checkAlphaChannel;
+
+  @Value("${custom.iiif.image.checkTransparency:false}")
+  private boolean checkTransparency;
 
   private static class DecodedImage {
 
@@ -372,12 +381,27 @@ public class ImageServiceImpl implements ImageService {
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
       throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
           ResourceNotFoundException, IOException {
-    DecodedImage img = readImage(identifier, selector, profile);
+    DecodedImage decodedImage = readImage(identifier, selector, profile);
+
+    boolean containsAlphaChannel = false;
+    if (checkAlphaChannel) {
+      containsAlphaChannel = containsAlphaChannel(decodedImage.img);
+      LOGGER.debug("image contains alpha channel: " + containsAlphaChannel);
+      // no further consequences in handling image with alpha channel implemented, yet
+    }
+
+    boolean containsTransparency = false;
+    if (checkTransparency) {
+      containsTransparency = containsTransparency(decodedImage.img);
+      LOGGER.debug("image contains transparency: " + containsTransparency);
+      // no further consequences in handling image with transparency implemented, yet
+    }
+
     BufferedImage outImg =
         transformImage(
-            img.img,
-            img.targetSize,
-            img.rotation,
+            decodedImage.img,
+            decodedImage.targetSize,
+            decodedImage.rotation,
             selector.getRotation().isMirror(),
             selector.getQuality());
 
@@ -405,6 +429,46 @@ public class ImageServiceImpl implements ImageService {
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }
+  }
+
+  /**
+   * @param image buffered image to check for alpha channel
+   * @return true, if image contains alpha channel
+   * @see <a
+   *     href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/ColorModel.html#hasAlpha--">Javadoc
+   *     ColorModel</a>
+   */
+  public boolean containsAlphaChannel(BufferedImage image) {
+    return image.getColorModel().hasAlpha();
+  }
+
+  /**
+   * @param image buffered image to check for transparent pixels
+   * @return true, if image contains transparent pixels
+   */
+  public boolean containsTransparency(BufferedImage image) {
+    for (int i = 0; i < image.getHeight(); i++) {
+      for (int j = 0; j < image.getWidth(); j++) {
+        if (isTransparent(image, j, i)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @param image buffered image to check for transparent pixels
+   * @param x x coordinate of pixel to check
+   * @param y y coordinate of pixel to check
+   * @return
+   * @see <a
+   *     href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html#getRGB-int-int-">Javadoc
+   *     BufferedImage</a>
+   */
+  public boolean isTransparent(BufferedImage image, int x, int y) {
+    int pixel = image.getRGB(x, y);
+    return (pixel >> 24) == 0x00;
   }
 
   public String getLogoUrl() {

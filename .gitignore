@@ -16,3 +16,4 @@ libjpeg-turbo/configure
 libjpeg-turbo/java/Makefile.in
 libjpeg-turbo/ltmain.sh
 /nb-configuration.xml
+/nbproject/
