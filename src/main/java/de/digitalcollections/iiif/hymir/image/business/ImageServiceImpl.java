@@ -56,35 +56,6 @@ public class ImageServiceImpl implements ImageService {
     return image.getColorModel().hasAlpha();
   }
 
-  /**
-   * @param image buffered image to check for transparent pixels
-   * @return true, if image contains transparent pixels
-   */
-  public static boolean containsTransparency(BufferedImage image) {
-    for (int i = 0; i < image.getHeight(); i++) {
-      for (int j = 0; j < image.getWidth(); j++) {
-        if (isTransparent(image, j, i)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * @param image buffered image to check for transparent pixels
-   * @param x x coordinate of pixel to check
-   * @param y y coordinate of pixel to check
-   * @return
-   * @see <a
-   *     href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html#getRGB-int-int-">Javadoc
-   *     BufferedImage</a>
-   */
-  public static boolean isTransparent(BufferedImage image, int x, int y) {
-    int pixel = image.getRGB(x, y);
-    return (pixel >> 24) == 0x00;
-  }
-
   private final ImageSecurityService imageSecurityService;
   private final ResolvedFileResourceServiceImpl fileResourceService;
 
