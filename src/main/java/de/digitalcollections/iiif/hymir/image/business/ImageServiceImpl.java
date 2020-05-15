@@ -1,7 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.business;
 
 import com.google.common.collect.Streams;
-import de.digitalcollections.commons.file.business.impl.resolved.ResolvedFileResourceServiceImpl;
+import de.digitalcollections.commons.file.business.api.FileResourceService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
@@ -57,7 +57,7 @@ public class ImageServiceImpl implements ImageService {
   }
 
   private final ImageSecurityService imageSecurityService;
-  private final ResolvedFileResourceServiceImpl fileResourceService;
+  private final FileResourceService fileResourceService;
 
   @Value("${custom.iiif.logo:}")
   private String logoUrl;
@@ -76,7 +76,7 @@ public class ImageServiceImpl implements ImageService {
 
   public ImageServiceImpl(
       @Autowired(required = false) ImageSecurityService imageSecurityService,
-      @Autowired ResolvedFileResourceServiceImpl fileResourceService) {
+      @Autowired FileResourceService fileResourceService) {
     this.imageSecurityService = imageSecurityService;
     this.fileResourceService = fileResourceService;
   }
@@ -479,6 +479,6 @@ public class ImageServiceImpl implements ImageService {
       this.img = img;
       this.targetSize = targetSize;
       this.rotation = rotation;
-    }
+}
   }
 }

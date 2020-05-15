@@ -14,7 +14,7 @@
 
   <groupId>de.digitalcollections</groupId>
   <artifactId>iiif-server-hymir</artifactId>
-  <version>4.1.4-SNAPSHOT</version>
+  <version>4.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <url>https://github.com/dbmdz/iiif-server-hymir</url>
@@ -78,7 +78,10 @@
 
     <version.assertj-json>1.2.0</version.assertj-json>
     <version.commons-cli>1.4</version.commons-cli>
-    <version.dc-commons>4.0.3</version.dc-commons>
+    <version.dc-commons-file>5.0.1</version.dc-commons-file>
+    <version.dc-commons-server>4.1.1</version.dc-commons-server>
+    <version.dc-commons-springboot>4.1.1</version.dc-commons-springboot>
+    <version.dc-commons-springmvc>4.1.2</version.dc-commons-springmvc>
     <version.guava>29.0-jre</version.guava>
     <version.iiif-apis>0.3.8</version.iiif-apis>
     <version.imageio-jnr>0.4.4</version.imageio-jnr>
@@ -183,22 +186,22 @@
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-file</artifactId>
-      <version>${version.dc-commons}</version>
+      <version>${version.dc-commons-file}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-server</artifactId>
-      <version>${version.dc-commons}</version>
+      <version>${version.dc-commons-server}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-springboot</artifactId>
-      <version>${version.dc-commons}</version>
+      <version>${version.dc-commons-springboot}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-springmvc</artifactId>
-      <version>${version.dc-commons}</version>
+      <version>${version.dc-commons-springmvc}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
