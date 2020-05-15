@@ -38,7 +38,7 @@ Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](
 ## Prerequisites
 
 - Server with minimum 4GB RAM.
-- Java 8
+- Java 11
 
 ## Installation
 
@@ -107,7 +107,7 @@ Application configuration: see [here](src/main/resources/application.yml) (`loca
 - in production
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
+$ java -jar hymir-<version>-exec.jar --spring.profiles.active=PROD
 ```
 
 Logging: to file `./hymir.log` in [Logstash](https://www.elastic.co/de/products/logstash)-JSON format
@@ -119,7 +119,7 @@ Application configuration: see [here](src/main/resources/application.yml) (`PROD
 - in production with custom logging configuration file:
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml  --spring.profiles.active=PROD
+$ java -jar hymir-<version>-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml  --spring.profiles.active=PROD
 ```
 
 Read <https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html> and <https://logback.qos.ch/manual/configuration.html>.
@@ -129,19 +129,19 @@ Read <https://docs.spring.io/spring-boot/docs/current/reference/html/boot-featur
 (Custom `application.yml` placed beside jar-file. No explicit command line option needed.)
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --spring.profiles.active=PROD
+$ java -jar hymir-<version>-exec.jar --spring.profiles.active=PROD
 ```
 
 - in production with a custom server port (e.g. port 8080):
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --server.port=8080 --spring.profiles.active=PROD
+$ java -jar hymir-<version>-exec.jar --server.port=8080 --spring.profiles.active=PROD
 ```
 
 Complete parametrized example:
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml --server.port=8080 --spring.profiles.active=PROD
+$ java -jar hymir-<version>-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml --server.port=8080 --spring.profiles.active=PROD
 ```
 
 (and `application.yml` beside jar file).
@@ -171,7 +171,7 @@ You can pass the path to your custom resolving rules with the `--spring.config.a
 Example:
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --spring.config.additional-location=file:/etc/hymir/rules.yml
+$ java -jar hymir-<version>-exec.jar --spring.config.additional-location=file:/etc/hymir/rules.yml
 ```
 
 Example file `/etc/hymir/rules.yml`:
@@ -245,7 +245,7 @@ You can configure another url prefix on server startup using system property `cu
 Example:
 
 ```sh
-$ java -jar target/hymir-4.0.0-exec.jar --custom.iiif.image.urlPrefix='/iiifImage/' --spring.config.additional-location=file:/etc/hymir/rules.yml --spring.profiles.active=local
+$ java -jar target/hymir-<version>-exec.jar --custom.iiif.image.urlPrefix='/iiifImage/' --spring.config.additional-location=file:/etc/hymir/rules.yml --spring.profiles.active=local
 ```
 
 Resulting URL: `http://localhost:9000/iiifImage/00113391_00001/full/300,/0/default.jpg`
@@ -281,7 +281,7 @@ You can configure another url prefix on server startup using system property `cu
 Example:
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --custom.iiif.presentation.urlPrefix='/iiifPresentation/' --spring.config.additional-location=file:/etc/hymir/rules.yml --spring.profiles.active=local
+$ java -jar hymir-<version>-exec.jar --custom.iiif.presentation.urlPrefix='/iiifPresentation/' --spring.config.additional-location=file:/etc/hymir/rules.yml --spring.profiles.active=local
 ```
 
 Resulting URL: `http://localhost:9000/iiifPresentation/00113391/manifest`
@@ -319,7 +319,7 @@ If you want human readable logging to console use `--spring.profiles.active=loca
 Example: Custom config file with human readable logging
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml
+$ java -jar hymir-<version>-exec.jar --logging.config=file:/etc/hymir/logback-spring.xml
 ```
 
 Example file `/etc/hymir/logback-spring.xml`:
@@ -380,7 +380,7 @@ Your custom `application.yml` does not have to replace all default properties. I
 To get the default configuration file, you should download the `hymir-<release-version>.jar` file (NOT containing `-exec` in filename) from <https://github.com/dbmdz/iiif-server-hymir/releases> and unpack the contained `application.yml` with:
 
 ```sh
-$ jar xfv hymir-4.0.0.jar application.yml
+$ jar xfv hymir-<version>.jar application.yml
 ```
 
 Now put the file beside the executable Hymir jar and edit it according to your requirements.
@@ -445,7 +445,7 @@ Monitoring endpoints under http://localhost:9001/monitoring (HAL-Browser-GUI), a
 To change monitoring port, e.g. to `8081` use `management.server.port` option:
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar --management.server.port=8081
+$ java -jar hymir-<version>-exec.jar --management.server.port=8081
 ```
 
 ### Out Of Memory handling
@@ -453,7 +453,7 @@ $ java -jar hymir-4.0.0-exec.jar --management.server.port=8081
 In case the IIIF server runs out of memory it should quit - use java options for this. (To be restarted automatically install it as systemd service, see below.)
 
 ```sh
-$ java -jar hymir-4.0.0-exec.jar -XX:+ExitOnOutOfMemoryError -XX:+CrashOnOutOfMemoryError
+$ java -jar hymir-<version>-exec.jar -XX:+ExitOnOutOfMemoryError -XX:+CrashOnOutOfMemoryError
 ```
 
 ### Configure IIIF service as systemd service
@@ -470,7 +470,7 @@ After=syslog.target
 
 [Service]
 User=iiif
-ExecStart=/usr/bin/java -jar /opt/hymir-4.0.0-exec.jar \
+ExecStart=/usr/bin/java -jar /opt/hymir-<version>-exec.jar \
     -XX:+ExitOnOutOfMemoryError -XX:+CrashOnOutOfMemoryError \
     --spring.config.additional-location=file:/etc/hymir/rules.yml \
     --spring.profiles.active=PROD \
@@ -497,7 +497,7 @@ $ sudo systemctl start iiif-hymir.service
 ## Development
 
 * Install git client
-* Install Java JDK 1.8 or above
+* Install Java JDK 11 or above
 * Install Apache Maven buildttool
 
 ```sh

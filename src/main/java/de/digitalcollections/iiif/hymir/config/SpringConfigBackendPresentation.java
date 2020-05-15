@@ -1,9 +1,10 @@
 package de.digitalcollections.iiif.hymir.config;
 
-import org.springframework.context.annotation.ComponentScan;
+import de.digitalcollections.commons.file.config.SpringConfigCommonsFile;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /** Backend configuration. */
 @Configuration
-@ComponentScan(basePackages = {"de.digitalcollections.commons.file.config"})
+@Import(SpringConfigCommonsFile.class)
 public class SpringConfigBackendPresentation {}
