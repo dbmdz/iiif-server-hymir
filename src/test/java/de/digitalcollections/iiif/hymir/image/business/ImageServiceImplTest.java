@@ -26,19 +26,4 @@ public class ImageServiceImplTest {
     result = ImageServiceImpl.containsAlphaChannel(image);
     assertEquals(expResult, result);
   }
-
-  @Test
-  public void testContainsTransparency() throws FileNotFoundException, IOException {
-    File file = ResourceUtils.getFile("classpath:test-alpha-transparency-yes.png");
-    BufferedImage image = ImageIO.read(file);
-    boolean expResult = true;
-    boolean result = ImageServiceImpl.containsTransparency(image);
-    assertEquals(expResult, result);
-
-    file = ResourceUtils.getFile("classpath:test-alpha-transparency-no.png");
-    image = ImageIO.read(file);
-    expResult = false;
-    result = ImageServiceImpl.containsTransparency(image);
-    assertEquals(expResult, result);
-  }
 }
