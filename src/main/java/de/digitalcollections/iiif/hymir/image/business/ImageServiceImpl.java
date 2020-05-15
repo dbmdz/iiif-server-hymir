@@ -479,6 +479,6 @@ public class ImageServiceImpl implements ImageService {
       this.img = img;
       this.targetSize = targetSize;
       this.rotation = rotation;
-}
+    }
   }
 }
