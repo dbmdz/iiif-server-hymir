@@ -25,14 +25,14 @@ Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](
 
 ### Supported image formats
 
-| Format    | Reading  | Writing | Dependencies                               |
-| --------- | -------- | ------- | ------------------------------------------ |
-|   JPEG    |   [x]    |   [x]   |   libturbojpeg (optional, but recommended) |
-|  JPEG2000 |   [x]    |   [ ]   |   libopenjp2 (>= 2.3 recommended)          |
-|    TIFF   |   [x]    |   [x]   |                                            |
-|    PNG    |   [x]    |   [x]   |                                            |
-|    BMP    |   [x]    |   [x]   |                                            |
-|    GIF    |   [x]    |   [x]   |                                            |
+| Format    | Reading  | Writing | Dependencies                               | Comment    |
+| --------- | -------- | ------- | ------------------------------------------ | ---------- |
+|   JPEG    |   [x]    |   [x]   |   libturbojpeg (optional, but recommended) |            |
+|  JPEG2000 |   [x]    |   [ ]   |   libopenjp2 (>= 2.3 recommended)          |            |
+|    TIFF   |   [x]    |   [x]   |                                            |            |
+|    PNG    |   [x]    |   [x]   |                                            | Due to possible transparency (alpha channel) in PNG it is not possible to use a PNG source file and deliver it as JPG. PNG delivered as PNG is possible. |
+|    BMP    |   [x]    |   [x]   |                                            |            |
+|    GIF    |   [x]    |   [x]   |                                            |            |
 
 
 ## Prerequisites
