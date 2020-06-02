@@ -47,8 +47,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       throw new ResolvingException("No annotation list for name " + annotationListName);
     }
     try {
-      return objectMapper.readValue(
-          fileResourceService.getAsString(resource, StandardCharsets.UTF_8), AnnotationList.class);
+      return objectMapper.readValue(getResourceJson(resource), AnnotationList.class);
     } catch (IOException ex) {
       LOGGER.error("Could not retrieve annotation list {}", annotationListName, ex);
       throw new InvalidDataException(
@@ -69,8 +68,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       throw new ResolvingException("No collection for name " + name);
     }
     try {
-      return objectMapper.readValue(
-          fileResourceService.getAsString(resource, StandardCharsets.UTF_8), Collection.class);
+      return objectMapper.readValue(getResourceJson(resource), Collection.class);
     } catch (IOException ex) {
       LOGGER.info("Could not retrieve collection {}", collectionName, ex);
       throw new InvalidDataException(
@@ -89,8 +87,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       throw new ResolvingException("No manifest for identifier " + identifier);
     }
     try {
-      return objectMapper.readValue(
-          fileResourceService.getAsString(resource, StandardCharsets.UTF_8), Manifest.class);
+      return objectMapper.readValue(getResourceJson(resource), Manifest.class);
     } catch (IOException ex) {
       LOGGER.error("Manifest {} can not be parsed", identifier, ex);
       throw new InvalidDataException("Manifest " + identifier + " can not be parsed", ex);
@@ -119,5 +116,10 @@ public class PresentationRepositoryImpl implements PresentationRepository {
           "Error getting resource for identifier '{}', message '{}'", identifier, ex.getMessage());
       throw new ResolvingException("No manifest for identifier " + identifier);
     }
+  }
+
+  protected String getResourceJson(FileResource resource)
+      throws ResourceIOException, ResourceNotFoundException {
+    return fileResourceService.getAsString(resource, StandardCharsets.UTF_8);
   }
 }
