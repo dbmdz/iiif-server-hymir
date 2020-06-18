@@ -17,7 +17,9 @@ import java.time.Instant;
 public interface PresentationService {
 
   /**
+   * @param identifier unique identifier of the corresponding manifest
    * @param name unique name of annotation list
+   * @param canvasId name of the corresponding canvas
    * @return AnnotationList specified by name
    * @throws ResolvingException if no annotation list found
    * @throws ResourceNotFoundException if annotation list with given name can not be found
