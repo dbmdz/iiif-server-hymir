@@ -518,6 +518,6 @@ $ mvn clean install -DskipTests=true
 
 To install `libturbojpeg` on Debian based systems:
 
-````bash
+```sh
 $ sudo apt install libturbojpeg
 ```
