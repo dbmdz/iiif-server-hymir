@@ -112,7 +112,7 @@
     <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
     <version.maven-surefire-plugin>3.0.0-M5</version.maven-surefire-plugin>
     <version.nexus-staging-maven-plugin>1.6.8</version.nexus-staging-maven-plugin>
-    <version.spotbugs-maven-plugin>4.0.0</version.spotbugs-maven-plugin>
+    <version.spotbugs-maven-plugin>4.0.4</version.spotbugs-maven-plugin>
   </properties>
 
   <dependencies>
