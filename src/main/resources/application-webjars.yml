@@ -1,0 +1,16 @@
+webjars:
+  versions:
+    bootstrap: '@version.webjar-bootstrap@'
+    html5shiv: '@version.webjar-html5shiv@'
+    ie10-viewport-bug-workaround: '@version.webjar-ie10-viewport-bug-workaround@'
+    jquery: '@version.webjar-jquery@'
+    mirador: '@version.webjar-mirador@'
+    mirador-canvaslink: '@version.webjar-mirador-canvaslink@'
+    mirador-downloadmenu: '@version.webjar-mirador-downloadmenu@'
+    mirador-imagecropper: '@version.webjar-mirador-imagecropper@'
+    mirador-keyboardnavigation: '@version.webjar-mirador-keyboardnavigation@'
+    mirador-physicalruler: '@version.webjar-mirador-physicalruler@'
+    mirador-sharebuttons: '@version.webjar-mirador-sharebuttons@'
+    mirador-viewfromurl: '@version.webjar-mirador-viewfromurl@'
+    openseadragon: '@version.webjar-openseadragon@'
+    respond: '@version.webjar-respond@'

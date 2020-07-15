@@ -376,10 +376,6 @@
       <artifactId>respond.js</artifactId>
       <version>${version.webjar-respond}</version>
     </dependency>
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-    </dependency>
   </dependencies>
 
   <build>
@@ -395,7 +391,7 @@
         <filtering>true</filtering>
         <includes>
           <include>application.yml</include>
-          <include>webjar-versions.yml</include>
+          <include>application-webjars.yml</include>
         </includes>
       </resource>
     </resources>
