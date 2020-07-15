@@ -82,6 +82,7 @@ spring:
     fallback-to-system-locale: false
   profiles:
     active: local
+    include: webjars
   security:
     user:
       name: admin

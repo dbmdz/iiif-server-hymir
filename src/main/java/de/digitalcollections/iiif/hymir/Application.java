@@ -4,9 +4,11 @@ import org.springframework.boot.Banner;
 import org.springframework.boot.ResourceBanner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+@ConfigurationPropertiesScan
 @SpringBootApplication
 public class Application {
 
