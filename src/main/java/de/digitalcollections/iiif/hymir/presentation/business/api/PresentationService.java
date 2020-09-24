@@ -1,5 +1,6 @@
 package de.digitalcollections.iiif.hymir.presentation.business.api;
 
+import de.digitalcollections.commons.springmvc.exceptions.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
@@ -9,7 +10,6 @@ import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.iiif.model.sharedcanvas.Range;
 import de.digitalcollections.iiif.model.sharedcanvas.Resource;
 import de.digitalcollections.iiif.model.sharedcanvas.Sequence;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
 import java.time.Instant;
 
@@ -102,7 +102,7 @@ public interface PresentationService {
         .orElseThrow(ResolvingException::new);
   }
 
-  default <T extends Resource> T copyAttributionInfo(Manifest manifest, T res) {
+  default <T extends Resource<?>> T copyAttributionInfo(Manifest manifest, T res) {
     res.setLogos(manifest.getLogos());
     res.setAttribution(manifest.getAttribution());
     res.setLicenses(manifest.getLicenses());

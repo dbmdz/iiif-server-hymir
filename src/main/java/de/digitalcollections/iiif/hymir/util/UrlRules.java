@@ -1,8 +1,5 @@
 package de.digitalcollections.iiif.hymir.util;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 public class UrlRules {
 
   /**
@@ -15,11 +12,8 @@ public class UrlRules {
     if (identifier == null) {
       return false;
     }
-    String decodedIdentifier = URLDecoder.decode(identifier, StandardCharsets.UTF_8);
     return identifier.contains("..")
-        || decodedIdentifier.contains("..")
-        || identifier.startsWith("/")
-        || decodedIdentifier.startsWith("/");
+        || identifier.startsWith("/");
   }
 
   /**

@@ -34,32 +34,25 @@ management:
   server:
     port: 9001
 
-resourceRepository:
-  resolved:
-    patterns:
-      # An image pattern resolving example:
-      - pattern: ^(\d{8})_(\d{5})$
-        substitutions:
-          - 'file:/var/local/iiif/images/$1/original/image_$1_$2.tif'
-          - 'file:/var/local/iiif/images/$1/300/image_$1_$2.jpg'
-          - 'file:/var/local/iiif/images/$1/150/image_$1_$2.jpg'
-      # An manifest pattern resolving example:
-      - pattern: ^(\d{8})$
-        substitutions:
-          - 'file:/var/local/iiif/presentation/manifests/manifest_$1.json'
-      # For the official IIIF Image API Validator
-      - pattern: 67352ccc-d1b0-11e1-89ae-279075081939
-        substitutions:
-          - 'classpath:validation.jp2'
-          - 'classpath:validation.png'
-      # Collection manifests ('collection-' pattern-prefix is statically added to requested collection name to disambigued from other patterns)
-      - pattern: ^collection-(.*)$
-        substitutions:
-          - 'file:/var/local/iiif/presentation/collections/$1.json'
-      # Annotation list of transcriptions
-      - pattern: ^transcription-(.*)$
-        substitutions:
-          - 'file:/var/local/iiif/presentation/annotations/$1.json'
+pathfinder:
+  patterns:
+    # An image pattern resolving example:
+    - pattern: ^img:(\d{8})_(\d{5})$
+      templates:
+        - '/var/local/iiif/images/%1s/original/image_%1s_%2s.tif'
+        - '/var/local/iiif/images/%1s/300/image_%1s_%2s.jpg'
+        - '/var/local/iiif/images/%1s/150/image_%1s_%2s.jpg'
+    # An manifest pattern resolving example:
+    - pattern: ^manifest:(\d{8})$
+      template: '/var/local/iiif/presentation/manifests/manifest_%1s.json'
+    # Collection manifests ('collection:' pattern-prefix is statically added to requested collection name to disambigued from other patterns)
+    - pattern: ^collection:(.*)$
+      templates:
+        - '/var/local/iiif/presentation/collections/%1s.json'
+    # Annotation list of transcriptions
+    - pattern: ^transcription:(.*)$
+      templates:
+        - '/var/local/iiif/presentation/annotations/%1s.json'
 
 server:
   error:

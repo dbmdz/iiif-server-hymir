@@ -1,9 +1,9 @@
 package de.digitalcollections.iiif.hymir.frontend;
 
+import de.digitalcollections.commons.springmvc.exceptions.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

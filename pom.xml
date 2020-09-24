@@ -85,6 +85,7 @@
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
     <version.json-simple>1.1.1</version.json-simple>
     <version.logstash-logback-encoder>6.3</version.logstash-logback-encoder>
+    <version.pathfinder>2.0.0-SNAPSHOT</version.pathfinder>
     <version.spotbugs>4.0.2</version.spotbugs>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.twelvemonkeys>3.5</version.twelvemonkeys>
@@ -134,6 +135,11 @@
       <artifactId>jackson-module-parameter-names</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.github.dbmdz.pathfinder</groupId>
+      <artifactId>spring-boot-pathfinder</artifactId>
+      <version>${version.pathfinder}</version>
+    </dependency>
+    <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
       <version>${version.spotbugs}</version>
@@ -179,11 +185,6 @@
       <groupId>commons-cli</groupId>
       <artifactId>commons-cli</artifactId>
       <version>${version.commons-cli}</version>
-    </dependency>
-    <dependency>
-      <groupId>de.digitalcollections.commons</groupId>
-      <artifactId>dc-commons-file</artifactId>
-      <version>${version.dc-commons}</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>

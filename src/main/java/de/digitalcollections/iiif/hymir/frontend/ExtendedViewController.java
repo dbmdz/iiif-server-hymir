@@ -1,11 +1,11 @@
 package de.digitalcollections.iiif.hymir.frontend;
 
 import de.digitalcollections.commons.server.HttpLoggingUtilities;
+import de.digitalcollections.commons.springmvc.exceptions.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
 import de.digitalcollections.iiif.hymir.presentation.frontend.IIIFPresentationApiController;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

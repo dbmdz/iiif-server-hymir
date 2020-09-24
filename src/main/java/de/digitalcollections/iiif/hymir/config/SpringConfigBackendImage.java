@@ -10,12 +10,10 @@ import javax.imageio.ImageWriter;
 import javax.imageio.spi.IIORegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /** Backend configuration. */
 @Configuration
-@ComponentScan(basePackages = {"de.digitalcollections.commons.file.config"})
 public class SpringConfigBackendImage {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SpringConfigBackendImage.class);
@@ -28,8 +26,8 @@ public class SpringConfigBackendImage {
     LOGGER.info("ImageIO supported formats (reader): {}", String.join(",", readerMimeTypes));
     for (String mimeType : readerMimeTypes) {
       Iterator<ImageReader> imageReaders = ImageIO.getImageReadersByMIMEType(mimeType);
-      for (Iterator iterator = imageReaders; iterator.hasNext(); ) {
-        ImageReader imageReader = (ImageReader) iterator.next();
+      while (imageReaders.hasNext()) {
+        ImageReader imageReader = imageReaders.next();
         if (imageReader != null) {
           LOGGER.info("ImageReader: {} {}", mimeType, imageReader.getClass().toString());
         }
@@ -40,8 +38,8 @@ public class SpringConfigBackendImage {
     LOGGER.info("ImageIO supported formats (writer): {}", String.join(",", writerMimeTypes));
     for (String writerMimeType : writerMimeTypes) {
       Iterator<ImageWriter> imageWriters = ImageIO.getImageWritersByMIMEType(writerMimeType);
-      for (Iterator iterator = imageWriters; iterator.hasNext(); ) {
-        ImageWriter imageWriter = (ImageWriter) iterator.next();
+      while (imageWriters.hasNext()) {
+        ImageWriter imageWriter = imageWriters.next();
         if (imageWriter != null) {
           LOGGER.info("ImageWriter: {} {}", writerMimeType, imageWriter.getClass().toString());
         }

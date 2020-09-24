@@ -1,11 +1,13 @@
 package de.digitalcollections.iiif.hymir.config;
 
+import com.github.dbmdz.pathfinder.spring.EnablePathfinder;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+@EnablePathfinder
 @ComponentScan(
     basePackages = {
       "de.digitalcollections.commons.springboot.actuator",

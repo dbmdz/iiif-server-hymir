@@ -51,29 +51,9 @@ management:
   server:
     port: 9001
 
-resourceRepository:
-  resolved:
-    patterns:
-      - pattern: file-zoom
-        substitutions: ['classpath\:/mockdata/mock-zoom.tif']
-      - pattern: http-google
-        substitutions: ['classpath\:/mockdata/mock-page-106245331.jpg']
-      - pattern: http-bsb
-        substitutions: ['classpath\:/mockdata/mock-page-00044843.jpg']
-      - pattern: png-file
-        substitutions: ['classpath\:mockdata/mock.png']
-      - pattern: spec:/ial\?file\#with\[special\]ch@arac%ters
-        substitutions: ['classpath\:mockdata/mock-page-106245331.jpg']
-      - pattern: square
-        substitutions: ['classpath\:mockdata/mock-square.jpg']
-      - pattern: square-width
-        substitutions: ['classpath\:mockdata/mock-square-width.jpg']
-      - pattern: square-height
-        substitutions: ['classpath\:mockdata/mock-square-height.jpg']
-      - pattern: manifest-invalid-data
-        substitutions: ['classpath\:mockdata/manifest-invalid-data.json']
-      - pattern: manifest-valid-data
-        substitutions: ['classpath\:mockdata/manifest.json']
+# Patterns are defined dynamically in TestConfiguration
+pathfinder:
+  patterns: []
 
 server:
   error:

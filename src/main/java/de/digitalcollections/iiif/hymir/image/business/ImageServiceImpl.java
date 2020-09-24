@@ -1,7 +1,8 @@
 package de.digitalcollections.iiif.hymir.image.business;
 
+import com.github.dbmdz.pathfinder.Pathfinder;
 import com.google.common.collect.Streams;
-import de.digitalcollections.commons.file.business.impl.resolved.ResolvedFileResourceServiceImpl;
+import de.digitalcollections.commons.springmvc.exceptions.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
@@ -11,10 +12,6 @@ import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.image.Size;
 import de.digitalcollections.iiif.model.image.TileInfo;
-import de.digitalcollections.model.api.identifiable.resource.FileResource;
-import de.digitalcollections.model.api.identifiable.resource.MimeType;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceIOException;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReadParam;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReader;
 import java.awt.Dimension;
@@ -24,8 +21,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
-import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Optional;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -41,9 +41,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+  private static final String VALIDATION_ID = "67352ccc-d1b0-11e1-89ae-279075081939";
+  private static final List<String> VALIDATION_FILES = List.of("validation.jp2", "validation.png");
 
   private final ImageSecurityService imageSecurityService;
-  private final ResolvedFileResourceServiceImpl fileResourceService;
+  private final Pathfinder pathfinder;
 
   @Value("${custom.iiif.logo:}")
   private String logoUrl;
@@ -81,9 +83,9 @@ public class ImageServiceImpl implements ImageService {
 
   public ImageServiceImpl(
       @Autowired(required = false) ImageSecurityService imageSecurityService,
-      @Autowired ResolvedFileResourceServiceImpl fileResourceService) {
+      @Autowired Pathfinder pathfinder) {
     this.imageSecurityService = imageSecurityService;
-    this.fileResourceService = fileResourceService;
+    this.pathfinder = pathfinder;
   }
 
   /** Update ImageService based on the image * */
@@ -152,29 +154,33 @@ public class ImageServiceImpl implements ImageService {
   }
 
   /** Try to obtain a {@link ImageReader} for a given identifier */
-  private ImageReader getReader(String identifier)
-      throws ResourceNotFoundException, UnsupportedFormatException, IOException {
+  private ImageReader getReader(String identifier) throws UnsupportedFormatException, IOException {
+    if (VALIDATION_ID.equals(identifier)) {
+      for (String fname : VALIDATION_FILES) {
+        ImageInputStream iis =
+            ImageIO.createImageInputStream(getClass().getResourceAsStream(fname));
+        ImageReader reader = Streams.stream(ImageIO.getImageReaders(iis)).findFirst().orElse(null);
+        if (reader == null) {
+          continue;
+        }
+        reader.setInput(iis);
+        return reader;
+      }
+    }
     if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
       throw new ResourceNotFoundException();
     }
-    FileResource fileResource;
-    try {
-      fileResource = fileResourceService.find(identifier, MimeType.MIME_IMAGE);
-    } catch (ResourceIOException e) {
+    Optional<Path> path = pathfinder.findExisting("img:" + identifier);
+    if (path.isEmpty()) {
       throw new ResourceNotFoundException();
     }
-    try {
-      ImageInputStream iis =
-          ImageIO.createImageInputStream(fileResourceService.getInputStream(fileResource));
-      ImageReader reader =
-          Streams.stream(ImageIO.getImageReaders(iis))
-              .findFirst()
-              .orElseThrow(UnsupportedFormatException::new);
-      reader.setInput(iis);
-      return reader;
-    } catch (ResourceIOException e) {
-      throw new ResourceNotFoundException();
-    }
+    ImageInputStream iis = ImageIO.createImageInputStream(Files.newInputStream(path.get()));
+    ImageReader reader =
+        Streams.stream(ImageIO.getImageReaders(iis))
+            .findFirst()
+            .orElseThrow(UnsupportedFormatException::new);
+    reader.setInput(iis);
+    return reader;
   }
 
   @Override
@@ -395,16 +401,14 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
-  public Instant getImageModificationDate(String identifier) throws ResourceNotFoundException {
+  public Instant getImageModificationDate(String identifier)
+      throws ResourceNotFoundException, IOException {
     if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
       throw new ResourceNotFoundException();
     }
-    try {
-      FileResource res = fileResourceService.find(identifier, MimeType.MIME_IMAGE);
-      return res.getLastModified().toInstant(ZoneOffset.UTC);
-    } catch (ResourceIOException e) {
-      throw new ResourceNotFoundException();
-    }
+    Path path =
+        pathfinder.findExisting("img:" + identifier).orElseThrow(ResourceNotFoundException::new);
+    return Files.getLastModifiedTime(path).toInstant();
   }
 
   public String getLogoUrl() {
