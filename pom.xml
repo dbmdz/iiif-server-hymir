@@ -87,7 +87,7 @@
     <version.imageio-jnr>0.4.4</version.imageio-jnr>
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
     <version.json-simple>1.1.1</version.json-simple>
-    <version.logstash-logback-encoder>6.5</version.logstash-logback-encoder>
+    <version.logstash-logback-encoder>6.6</version.logstash-logback-encoder>
     <version.spotbugs>4.2.0</version.spotbugs>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.twelvemonkeys>3.6.1</version.twelvemonkeys>
