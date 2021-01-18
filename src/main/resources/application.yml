@@ -100,6 +100,8 @@ server:
     include-stacktrace: 'never'
 
 spring:
-  profiles: PROD
+  config:
+    activate:
+      on-profile: PROD
   thymeleaf:
     cache: true
