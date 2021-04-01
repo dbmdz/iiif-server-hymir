@@ -1,6 +1,6 @@
 package de.digitalcollections.iiif.hymir.presentation.backend;
 
-import de.digitalcollections.commons.file.business.api.FileResourceService;
+import com.github.dbmdz.pathfinder.Pathfinder;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.presentation.backend.api.PresentationRepository;
@@ -8,17 +8,13 @@ import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
-import de.digitalcollections.model.api.identifiable.resource.FileResource;
-import de.digitalcollections.model.api.identifiable.resource.MimeType;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceIOException;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
-import java.time.ZoneOffset;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -31,23 +27,27 @@ public class PresentationRepositoryImpl implements PresentationRepository {
   private static final String COLLECTION_PREFIX = "collection-";
   private static final Logger LOGGER = LoggerFactory.getLogger(PresentationRepositoryImpl.class);
 
-  @Autowired private IiifObjectMapper objectMapper;
+  private final IiifObjectMapper objectMapper;
+  private final Pathfinder pathfinder;
 
-  @Autowired private FileResourceService fileResourceService;
+  public PresentationRepositoryImpl(
+      IiifObjectMapper objectMapper, Pathfinder pathfinder) {
+    this.objectMapper = objectMapper;
+    this.pathfinder = pathfinder;
+  }
+
 
   @Override
   public AnnotationList getAnnotationList(String identifier, String name, String canvasId)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException {
     String annotationListName = name + "-" + identifier + "_" + canvasId;
-    FileResource resource;
-    try {
-      resource = fileResourceService.find(annotationListName, MimeType.MIME_APPLICATION_JSON);
-    } catch (ResourceIOException ex) {
-      LOGGER.error("Error getting annotation list for name {}", annotationListName, ex);
+    Optional<Path> annoPath = pathfinder.find("anno:" + annotationListName);
+    if (annoPath.isEmpty()) {
+      LOGGER.error("Error getting annotation list for name {}", annotationListName);
       throw new ResolvingException("No annotation list for name " + annotationListName);
     }
     try {
-      return objectMapper.readValue(getResourceJson(resource), AnnotationList.class);
+      return objectMapper.readValue(annoPath.get().toFile(), AnnotationList.class);
     } catch (IOException ex) {
       LOGGER.error("Could not retrieve annotation list {}", annotationListName, ex);
       throw new InvalidDataException(
@@ -57,37 +57,31 @@ public class PresentationRepositoryImpl implements PresentationRepository {
 
   @Override
   public Collection getCollection(String name)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
-    // to get a regex resolvable pattern we add a static prefix for collections
-    String collectionName = COLLECTION_PREFIX + name;
-    FileResource resource;
-    try {
-      resource = fileResourceService.find(collectionName, MimeType.MIME_APPLICATION_JSON);
-    } catch (ResourceIOException ex) {
-      LOGGER.error("Error getting manifest for collection {}", name, ex);
+      throws ResolvingException, InvalidDataException {
+    Optional<Path> collectionPath = pathfinder.find("collection:" + name);
+    if (collectionPath.isEmpty()) {
+      LOGGER.error("Error getting manifest for collection {}", name);
       throw new ResolvingException("No collection for name " + name);
     }
     try {
-      return objectMapper.readValue(getResourceJson(resource), Collection.class);
+      return objectMapper.readValue(collectionPath.get().toFile(), Collection.class);
     } catch (IOException ex) {
-      LOGGER.info("Could not retrieve collection {}", collectionName, ex);
+      LOGGER.info("Could not retrieve collection {}", name, ex);
       throw new InvalidDataException(
-          "Collection for name " + collectionName + " can not be parsed", ex);
+          "Collection for name " + name + " can not be parsed", ex);
     }
   }
 
   @Override
   public Manifest getManifest(String identifier)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
-    FileResource resource;
-    try {
-      resource = fileResourceService.find(identifier, MimeType.MIME_APPLICATION_JSON);
-    } catch (ResourceIOException ex) {
-      LOGGER.error("Error getting manifest for identifier {}", identifier, ex);
+      throws ResolvingException, InvalidDataException {
+    Optional<Path> manifestPath = pathfinder.find("manifest:" + identifier);
+    if (manifestPath.isEmpty()) {
+      LOGGER.error("Error getting manifest for identifier {}", identifier);
       throw new ResolvingException("No manifest for identifier " + identifier);
     }
     try {
-      return objectMapper.readValue(getResourceJson(resource), Manifest.class);
+      return objectMapper.readValue(manifestPath.get().toFile(), Manifest.class);
     } catch (IOException ex) {
       LOGGER.error("Manifest {} can not be parsed", identifier, ex);
       throw new InvalidDataException("Manifest " + identifier + " can not be parsed", ex);
@@ -95,31 +89,27 @@ public class PresentationRepositoryImpl implements PresentationRepository {
   }
 
   @Override
-  public Instant getManifestModificationDate(String identifier)
-      throws ResolvingException, ResourceNotFoundException {
-    return getResourceModificationDate(identifier);
+  public Instant getManifestModificationDate(String identifier) throws ResolvingException {
+    return getResourceModificationDate("manifest:" + identifier);
   }
 
   @Override
-  public Instant getCollectionModificationDate(String identifier)
-      throws ResolvingException, ResourceNotFoundException {
-    return getResourceModificationDate(identifier);
+  public Instant getCollectionModificationDate(String identifier) throws ResolvingException {
+    return getResourceModificationDate("collection:" + identifier);
   }
 
   private Instant getResourceModificationDate(String identifier)
-      throws ResolvingException, ResourceNotFoundException {
-    try {
-      FileResource resource = fileResourceService.find(identifier, MimeType.MIME_APPLICATION_JSON);
-      return resource.getLastModified().toInstant(ZoneOffset.UTC);
-    } catch (ResourceIOException ex) {
-      LOGGER.error(
-          "Error getting resource for identifier '{}', message '{}'", identifier, ex.getMessage());
-      throw new ResolvingException("No manifest for identifier " + identifier);
+      throws ResolvingException {
+    Optional<Path> path = pathfinder.find(identifier);
+    if (path.isEmpty()) {
+      LOGGER.error("Could not find resource with identifier '{}'", identifier);
+      throw new ResolvingException("No resource for identifier " + identifier);
     }
-  }
-
-  protected String getResourceJson(FileResource resource)
-      throws ResourceIOException, ResourceNotFoundException {
-    return fileResourceService.getAsString(resource, StandardCharsets.UTF_8);
+    try {
+      return Files.getLastModifiedTime(path.get()).toInstant();
+    } catch (IOException e) {
+      LOGGER.error("Error getting resource for identifier '{}', message '{}'", identifier);
+      throw new ResolvingException("No resource for identifier " + identifier);
+    }
   }
 }

@@ -2,13 +2,13 @@ package de.digitalcollections.iiif.hymir.presentation.business;
 
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
+import de.digitalcollections.iiif.hymir.model.exception.SecurityException;
 import de.digitalcollections.iiif.hymir.presentation.backend.api.PresentationRepository;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationSecurityService;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
 import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,35 +30,41 @@ public class PresentationServiceImpl implements PresentationService {
 
   @Override
   public AnnotationList getAnnotationList(String identifier, String name, String canvasId)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException {
     return presentationRepository.getAnnotationList(identifier, name, canvasId);
   }
 
   @Override
   public Collection getCollection(String name)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException {
     return presentationRepository.getCollection(name);
   }
 
   @Override
   public Manifest getManifest(String identifier)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     if (presentationSecurityService != null
         && !presentationSecurityService.isAccessAllowed(identifier)) {
-      throw new ResolvingException(); // TODO maybe throw an explicitely access disallowed exception
+      throw new SecurityException(String.format(
+          "Access not allowed for manifest with identifier '%s'", identifier));
     }
     return presentationRepository.getManifest(identifier);
   }
 
   @Override
   public Instant getManifestModificationDate(String identifier)
-      throws ResolvingException, ResourceNotFoundException {
+      throws ResolvingException, SecurityException {
+    if (presentationSecurityService != null
+        && !presentationSecurityService.isAccessAllowed(identifier)) {
+      throw new SecurityException(String.format(
+          "Access not allowed for manifest with identifier '%s'", identifier));
+    }
     return presentationRepository.getManifestModificationDate(identifier);
   }
 
   @Override
   public Instant getCollectionModificationDate(String identifier)
-      throws ResolvingException, ResourceNotFoundException {
+      throws ResolvingException {
     return presentationRepository.getCollectionModificationDate(identifier);
   }
 }

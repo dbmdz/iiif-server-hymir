@@ -1,20 +1,18 @@
 package de.digitalcollections.iiif.hymir.image.business;
 
+import com.github.dbmdz.pathfinder.Pathfinder;
 import com.google.common.collect.Streams;
-import de.digitalcollections.commons.file.business.api.FileResourceService;
+import de.digitalcollections.commons.springmvc.exceptions.ResourceNotFoundException;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
+import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
+import de.digitalcollections.iiif.hymir.model.exception.SecurityException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
-import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.image.Size;
 import de.digitalcollections.iiif.model.image.TileInfo;
-import de.digitalcollections.model.api.identifiable.resource.FileResource;
-import de.digitalcollections.model.api.identifiable.resource.MimeType;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceIOException;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReadParam;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReader;
 import java.awt.Dimension;
@@ -24,8 +22,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
-import java.time.ZoneOffset;
+import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -36,10 +36,10 @@ import javax.imageio.stream.ImageOutputStream;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@SuppressWarnings("UnstableApiUsage")
 @Service
 public class ImageServiceImpl implements ImageService {
 
@@ -57,7 +57,7 @@ public class ImageServiceImpl implements ImageService {
   }
 
   private final ImageSecurityService imageSecurityService;
-  private final FileResourceService fileResourceService;
+  private final Pathfinder pathfinder;
 
   @Value("${custom.iiif.logo:}")
   private String logoUrl;
@@ -75,10 +75,10 @@ public class ImageServiceImpl implements ImageService {
   private int maxHeight;
 
   public ImageServiceImpl(
-      @Autowired(required = false) ImageSecurityService imageSecurityService,
-      @Autowired FileResourceService fileResourceService) {
-    this.imageSecurityService = imageSecurityService;
-    this.fileResourceService = fileResourceService;
+      Optional<ImageSecurityService> imageSecurityService,
+      Pathfinder pathfinder) {
+    this.imageSecurityService = imageSecurityService.orElse(null);
+    this.pathfinder = pathfinder;
   }
 
   /** Update ImageService based on the image * */
@@ -148,35 +148,30 @@ public class ImageServiceImpl implements ImageService {
 
   /** Try to obtain a {@link ImageReader} for a given identifier */
   private ImageReader getReader(String identifier)
-      throws ResourceNotFoundException, UnsupportedFormatException, IOException {
+      throws UnsupportedFormatException, IOException, SecurityException, ResolvingException {
     if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
-      throw new ResourceNotFoundException();
+      throw new SecurityException(
+          String.format("Access was denied for image with identifier '%s'", identifier));
     }
-    FileResource fileResource;
-    try {
-      fileResource = fileResourceService.find(identifier, MimeType.MIME_IMAGE);
-    } catch (ResourceIOException e) {
-      throw new ResourceNotFoundException();
+    Optional<Path> imgPath = pathfinder.find(String.format("img:%s", identifier));
+    if (imgPath.isEmpty()) {
+      throw new ResolvingException(String.format("Could not find image with id '%s'.", identifier));
     }
-    try {
-      ImageInputStream iis =
-          ImageIO.createImageInputStream(fileResourceService.getInputStream(fileResource));
+    try (ImageInputStream iis = ImageIO.createImageInputStream(imgPath.get().toFile())) {
       ImageReader reader =
           Streams.stream(ImageIO.getImageReaders(iis))
               .findFirst()
               .orElseThrow(UnsupportedFormatException::new);
       reader.setInput(iis);
       return reader;
-    } catch (ResourceIOException e) {
-      throw new ResourceNotFoundException();
     }
   }
 
   @Override
   public void readImageInfo(
       String identifier, de.digitalcollections.iiif.model.image.ImageService info)
-      throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException,
-          IOException {
+      throws UnsupportedFormatException, UnsupportedOperationException, IOException,
+      ResolvingException, SecurityException {
     ImageReader r = null;
     try {
       r = getReader(identifier);
@@ -213,7 +208,7 @@ public class ImageServiceImpl implements ImageService {
     Rectangle targetRegion;
     try {
       targetRegion = selector.getRegion().resolve(nativeDimensions);
-    } catch (ResolvingException e) {
+    } catch (de.digitalcollections.iiif.model.image.ResolvingException e) {
       throw new InvalidParametersException(e);
     }
     // IIIF regions are always relative to the native size, while ImageIO regions are always
@@ -238,7 +233,7 @@ public class ImageServiceImpl implements ImageService {
   private DecodedImage readImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile)
       throws IOException, ResourceNotFoundException, UnsupportedFormatException,
-          InvalidParametersException {
+      InvalidParametersException, SecurityException, ResolvingException {
     ImageReader reader = null;
     try {
       reader = getReader(identifier);
@@ -251,14 +246,14 @@ public class ImageServiceImpl implements ImageService {
       Rectangle targetRegion;
       try {
         targetRegion = selector.getRegion().resolve(nativeDimensions);
-      } catch (ResolvingException e) {
+      } catch (de.digitalcollections.iiif.model.image.ResolvingException e) {
         throw new InvalidParametersException(e);
       }
       Dimension croppedDimensions = new Dimension(targetRegion.width, targetRegion.height);
       Dimension targetSize;
       try {
         targetSize = selector.getSize().resolve(croppedDimensions, profile);
-      } catch (ResolvingException e) {
+      } catch (de.digitalcollections.iiif.model.image.ResolvingException e) {
         throw new InvalidParametersException(e);
       }
 
@@ -283,6 +278,7 @@ public class ImageServiceImpl implements ImageService {
           && ((TurboJpegImageReadParam) readParam).getRotationDegree() != 0) {
         if (rotation == 90 || rotation == 270) {
           int w = targetSize.width;
+          //noinspection SuspiciousNameCombination
           targetSize.width = targetSize.height;
           targetSize.height = w;
         }
@@ -332,7 +328,9 @@ public class ImageServiceImpl implements ImageService {
         default:
           rot = null;
       }
-      img = Scalr.rotate(img, rot);
+      if (rot != null) {
+        img = Scalr.rotate(img, rot);
+      }
     }
     if (mirror) {
       img = Scalr.rotate(img, Scalr.Rotation.FLIP_HORZ);
@@ -366,7 +364,7 @@ public class ImageServiceImpl implements ImageService {
   public void processImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
       throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
-          ResourceNotFoundException, IOException {
+      IOException, ResolvingException, SecurityException {
     DecodedImage decodedImage = readImage(identifier, selector, profile);
 
     boolean containsAlphaChannel = containsAlphaChannel(decodedImage.img);
@@ -411,16 +409,17 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
-  public Instant getImageModificationDate(String identifier) throws ResourceNotFoundException {
+  public Instant getImageModificationDate(String identifier)
+      throws SecurityException, ResolvingException, IOException {
     if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
-      throw new ResourceNotFoundException();
+      throw new SecurityException(
+          String.format("Access denied for image with identifier '%s'", identifier));
     }
-    try {
-      FileResource res = fileResourceService.find(identifier, MimeType.MIME_IMAGE);
-      return res.getLastModified().toInstant(ZoneOffset.UTC);
-    } catch (ResourceIOException e) {
-      throw new ResourceNotFoundException();
+    Optional<Path> imgPath =  pathfinder.find(String.format("img:%s", identifier));
+    if (imgPath.isEmpty()) {
+      throw new ResolvingException(String.format("Could not find image with id '%s'.", identifier));
     }
+    return Files.getLastModifiedTime(imgPath.get()).toInstant();
   }
 
   public String getLogoUrl() {

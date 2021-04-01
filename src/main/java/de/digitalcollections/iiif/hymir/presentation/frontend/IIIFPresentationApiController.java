@@ -4,6 +4,7 @@ import de.digitalcollections.commons.springboot.metrics.MetricsService;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
+import de.digitalcollections.iiif.hymir.model.exception.SecurityException;
 import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationService;
 import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
@@ -12,7 +13,6 @@ import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.iiif.model.sharedcanvas.Range;
 import de.digitalcollections.iiif.model.sharedcanvas.Sequence;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
 import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +52,7 @@ public class IIIFPresentationApiController {
   @ResponseBody
   public Manifest getManifest(
       @PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     if (UrlRules.isInsecure(identifier)) {
       resp.setStatus(400);
       return null;
@@ -84,7 +84,7 @@ public class IIIFPresentationApiController {
       value = {"{identifier}/manifest", "{identifier}"},
       method = RequestMethod.HEAD)
   public void checkManifest(@PathVariable String identifier, HttpServletResponse resp)
-      throws ResolvingException, ResourceNotFoundException {
+      throws ResolvingException, SecurityException {
     if (UrlRules.isInsecure(identifier)) {
       resp.setStatus(400);
       return;
@@ -111,7 +111,7 @@ public class IIIFPresentationApiController {
       @PathVariable String canvasId,
       HttpServletRequest req,
       HttpServletResponse resp)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     if (UrlRules.anyIsInsecure(manifestId, canvasId)) {
       resp.setStatus(400);
       return null;
@@ -136,7 +136,7 @@ public class IIIFPresentationApiController {
       @PathVariable String rangeId,
       HttpServletRequest req,
       HttpServletResponse resp)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     if (UrlRules.anyIsInsecure(manifestId, rangeId)) {
       resp.setStatus(400);
       return null;
@@ -161,7 +161,7 @@ public class IIIFPresentationApiController {
       @PathVariable String sequenceId,
       HttpServletRequest req,
       HttpServletResponse resp)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     if (UrlRules.anyIsInsecure(manifestId, sequenceId)) {
       resp.setStatus(400);
       return null;
@@ -184,7 +184,7 @@ public class IIIFPresentationApiController {
   @ResponseBody
   public Collection getCollection(
       @PathVariable String identifier, WebRequest request, HttpServletResponse resp)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException {
     if (UrlRules.isInsecure(identifier)) {
       resp.setStatus(400);
       return null;
@@ -215,7 +215,7 @@ public class IIIFPresentationApiController {
       @PathVariable String name,
       @PathVariable String canvasId,
       HttpServletResponse resp)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException {
     if (UrlRules.anyIsInsecure(identifier, name, canvasId)) {
       resp.setStatus(400);
       return null;

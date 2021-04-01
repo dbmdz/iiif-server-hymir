@@ -2,6 +2,7 @@ package de.digitalcollections.iiif.hymir.presentation.business.api;
 
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
+import de.digitalcollections.iiif.hymir.model.exception.SecurityException;
 import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Canvas;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
@@ -9,7 +10,6 @@ import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.iiif.model.sharedcanvas.Range;
 import de.digitalcollections.iiif.model.sharedcanvas.Resource;
 import de.digitalcollections.iiif.model.sharedcanvas.Sequence;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.net.URI;
 import java.time.Instant;
 
@@ -22,49 +22,46 @@ public interface PresentationService {
    * @param canvasId name of the corresponding canvas
    * @return AnnotationList specified by name
    * @throws ResolvingException if no annotation list found
-   * @throws ResourceNotFoundException if annotation list with given name can not be found
    * @throws InvalidDataException if data is corrupted
    */
   AnnotationList getAnnotationList(String identifier, String name, String canvasId)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException;
+      throws ResolvingException, InvalidDataException;
 
   /**
    * @param name unique name of collection
    * @return Collection specified by name
    * @throws ResolvingException if no collection found or access disallowed
-   * @throws ResourceNotFoundException if collection with given name can not be found
    * @throws InvalidDataException if data is corrupted
    */
   Collection getCollection(String name)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException;
+      throws ResolvingException, InvalidDataException;
 
   /**
    * @param identifier unique id for IIIF resource
    * @return Manifest specifying presentation for IIIF resource
    * @throws ResolvingException if no manifest found or access disallowed
-   * @throws ResourceNotFoundException if Manifest with given identifier can not be found
    * @throws InvalidDataException if data is corrupted
    */
   Manifest getManifest(String identifier)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException;
+      throws ResolvingException, InvalidDataException, SecurityException;
 
   default Instant getManifestModificationDate(String identifier)
-      throws ResolvingException, ResourceNotFoundException {
+      throws ResolvingException, SecurityException {
     return Instant.now();
   }
 
   default Instant getCollectionModificationDate(String identifier)
-      throws ResolvingException, ResourceNotFoundException {
+      throws ResolvingException {
     return Instant.now();
   }
 
   default Canvas getCanvas(String manifestId, String canvasUri)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     return getCanvas(manifestId, URI.create(canvasUri));
   }
 
   default Canvas getCanvas(String manifestId, URI canvasUri)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     Manifest manifest = getManifest(manifestId);
     return manifest.getSequences().stream()
         .flatMap(seq -> seq.getCanvases().stream())
@@ -75,12 +72,12 @@ public interface PresentationService {
   }
 
   default Range getRange(String manifestId, String rangeUri)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     return getRange(manifestId, URI.create(rangeUri));
   }
 
   default Range getRange(String manifestId, URI rangeUri)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     Manifest manifest = getManifest(manifestId);
     return manifest.getRanges().stream()
         .filter(r -> r.getIdentifier().equals(rangeUri))
@@ -90,12 +87,12 @@ public interface PresentationService {
   }
 
   default Sequence getSequence(String manifestId, String sequenceUri)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     return getSequence(manifestId, URI.create(sequenceUri));
   }
 
   default Sequence getSequence(String manifestId, URI sequenceUri)
-      throws ResolvingException, ResourceNotFoundException, InvalidDataException {
+      throws ResolvingException, InvalidDataException, SecurityException {
     Manifest manifest = getManifest(manifestId);
     return manifest.getSequences().stream()
         .filter(s -> s.getIdentifier().equals(sequenceUri))
@@ -104,7 +101,7 @@ public interface PresentationService {
         .orElseThrow(ResolvingException::new);
   }
 
-  default <T extends Resource> T copyAttributionInfo(Manifest manifest, T res) {
+  default <T extends Resource<?>> T copyAttributionInfo(Manifest manifest, T res) {
     res.setLogos(manifest.getLogos());
     res.setAttribution(manifest.getAttribution());
     res.setLicenses(manifest.getLicenses());

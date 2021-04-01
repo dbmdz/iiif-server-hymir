@@ -4,13 +4,13 @@ import de.digitalcollections.commons.springboot.metrics.MetricsService;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
+import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
+import de.digitalcollections.iiif.hymir.model.exception.SecurityException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
-import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -99,7 +99,7 @@ public class IIIFImageApiController {
       HttpServletResponse response,
       WebRequest webRequest)
       throws UnsupportedFormatException, UnsupportedOperationException, IOException,
-          InvalidParametersException, ResourceNotFoundException {
+      InvalidParametersException, ResolvingException, SecurityException {
     if (UrlRules.isInsecure(identifier)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new byte[] {});
     }
@@ -126,7 +126,7 @@ public class IIIFImageApiController {
       }
       selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
       selector.setFormat(ImageApiProfile.Format.valueOf(format.toUpperCase()));
-    } catch (ResolvingException e) {
+    } catch (de.digitalcollections.iiif.model.image.ResolvingException e) {
       throw new InvalidParametersException(e);
     }
     var info =
@@ -140,7 +140,7 @@ public class IIIFImageApiController {
               new Dimension(info.getWidth(), info.getHeight()),
               profile,
               ImageApiProfile.Quality.COLOR); // TODO: Make this variable on the actual image
-    } catch (ResolvingException e) {
+    } catch (de.digitalcollections.iiif.model.image.ResolvingException e) {
       throw new InvalidParametersException(e);
     }
     String canonicalUrl =
