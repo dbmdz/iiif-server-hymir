@@ -49,7 +49,10 @@ public class ExceptionAdvice {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler(Exception.class)
   public void handleAllOther(Exception exception) {
-    LOGGER.error("exception stack trace", exception);
+    if (exception.getMessage() != null) {
+      LOGGER.error(exception.getMessage(), exception);
+    } else {
+      LOGGER.error("exception stack trace", exception);
+    }
   }
-  // NOP
 }
