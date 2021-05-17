@@ -12,9 +12,10 @@ class CurrentUrlHandlerInterceptorTest {
 
   @ParameterizedTest
   @CsvSource({
-      "language=de,http://host",
-      "a=b&language=de,http://host?a=b",
-      "language=de&a=b,http://host?a=b"})
+    "language=de,http://host",
+    "a=b&language=de,http://host?a=b",
+    "language=de&a=b,http://host?a=b"
+  })
   void shouldDeleteLanguageParam(String queryString, String expected) {
     CurrentUrlHandlerInterceptor interceptor = new CurrentUrlHandlerInterceptor();
 

@@ -2,7 +2,6 @@ package de.digitalcollections.iiif.hymir.frontend;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
 import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,10 +33,12 @@ public class CurrentUrlHandlerInterceptor implements HandlerInterceptor {
     }
 
     String language = request.getParameter("language");
-    String queryString = request.getQueryString()
-        .replaceAll("&language=" + language, "")
-        .replaceAll("language=" + language + "&", "")
-        .replaceAll("language=" + language, "");
+    String queryString =
+        request
+            .getQueryString()
+            .replaceAll("&language=" + language, "")
+            .replaceAll("language=" + language + "&", "")
+            .replaceAll("language=" + language, "");
 
     if (queryString.length() == 0) {
       return currentUrl;
@@ -45,5 +46,4 @@ public class CurrentUrlHandlerInterceptor implements HandlerInterceptor {
 
     return currentUrl + "?" + queryString;
   }
-
 }
