@@ -4,6 +4,7 @@ import de.digitalcollections.commons.springboot.metrics.MetricsService;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
+import de.digitalcollections.iiif.hymir.model.exception.ScalingException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.hymir.util.UrlRules;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
@@ -99,7 +100,7 @@ public class IIIFImageApiController {
       HttpServletResponse response,
       WebRequest webRequest)
       throws UnsupportedFormatException, UnsupportedOperationException, IOException,
-          InvalidParametersException, ResourceNotFoundException {
+      InvalidParametersException, ResourceNotFoundException, ScalingException {
     if (UrlRules.isInsecure(identifier)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new byte[] {});
     }

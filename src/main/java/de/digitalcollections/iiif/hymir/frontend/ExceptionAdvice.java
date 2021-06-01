@@ -2,14 +2,19 @@ package de.digitalcollections.iiif.hymir.frontend;
 
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
+import de.digitalcollections.iiif.hymir.model.exception.ScalingException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.actuate.trace.http.HttpTrace.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionAdvice {
@@ -32,6 +37,18 @@ public class ExceptionAdvice {
   @ExceptionHandler(ResourceNotFoundException.class)
   public void handleResourceNotFoundException(Exception exception) {
     // NOP
+  }
+
+  /**
+   * Sometimes scaling an image can lead to broken dimensions (usually because of rounding to 0).
+   * @param exception The exception to handle
+   * @return An error description for the client
+   */
+  @ExceptionHandler(ScalingException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseBody
+  protected ApiError handleSolrException(ScalingException exception) {
+    return new ApiError(exception);
   }
 
   @ResponseStatus(value = HttpStatus.UNSUPPORTED_MEDIA_TYPE)

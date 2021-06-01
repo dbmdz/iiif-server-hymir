@@ -5,6 +5,7 @@ import de.digitalcollections.commons.file.business.api.FileResourceService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
+import de.digitalcollections.iiif.hymir.model.exception.ScalingException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
@@ -238,7 +239,7 @@ public class ImageServiceImpl implements ImageService {
   private DecodedImage readImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile)
       throws IOException, ResourceNotFoundException, UnsupportedFormatException,
-          InvalidParametersException {
+      InvalidParametersException, ScalingException {
     ImageReader reader = null;
     try {
       reader = getReader(identifier);
@@ -288,6 +289,11 @@ public class ImageServiceImpl implements ImageService {
         }
         rotation = 0;
       }
+
+      if (targetSize.width <= 0 || targetSize.height <= 0) {
+        throw new ScalingException("Scaling resulted in width or height ≤ 0): " + targetSize);
+      }
+
       return new DecodedImage(reader.read(imageIndex, readParam), targetSize, rotation);
     } finally {
       if (reader != null) {
@@ -366,7 +372,7 @@ public class ImageServiceImpl implements ImageService {
   public void processImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
       throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
-          ResourceNotFoundException, IOException {
+      ResourceNotFoundException, IOException, ScalingException {
     DecodedImage decodedImage = readImage(identifier, selector, profile);
 
     boolean containsAlphaChannel = containsAlphaChannel(decodedImage.img);

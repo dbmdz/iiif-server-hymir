@@ -1,6 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.business.api;
 
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
+import de.digitalcollections.iiif.hymir.model.exception.ScalingException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
@@ -23,5 +24,5 @@ public interface ImageService {
   void processImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
       throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
-          ResourceNotFoundException, IOException;
+      ResourceNotFoundException, IOException, ScalingException;
 }
