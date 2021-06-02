@@ -47,7 +47,7 @@ public class ExceptionAdvice {
   @ExceptionHandler(ScalingException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
-  protected ApiError handleSolrException(ScalingException exception) {
+  protected ApiError handleScalingException(ScalingException exception) {
     return new ApiError(exception);
   }
 
