@@ -206,7 +206,7 @@ public class ImageServiceImpl implements ImageService {
   /**
    * Determine parameters for image reading based on the IIIF selector and a given scaling factor *
    */
-  private ImageReadParam getReadParam(
+  static ImageReadParam getReadParam(
       ImageReader reader, ImageApiSelector selector, double decodeScaleFactor)
       throws IOException, InvalidParametersException {
     ImageReadParam readParam = reader.getDefaultReadParam();
@@ -222,10 +222,10 @@ public class ImageServiceImpl implements ImageService {
     // image size, hence the conversion
     Rectangle decodeRegion =
         new Rectangle(
-            (int) Math.ceil(targetRegion.getX() * decodeScaleFactor),
-            (int) Math.ceil(targetRegion.getY() * decodeScaleFactor),
-            (int) Math.ceil(targetRegion.getWidth() * decodeScaleFactor),
-            (int) Math.ceil(targetRegion.getHeight() * decodeScaleFactor));
+            (int) Math.round(targetRegion.getX() * decodeScaleFactor),
+            (int) Math.round(targetRegion.getY() * decodeScaleFactor),
+            (int) Math.round(targetRegion.getWidth() * decodeScaleFactor),
+            (int) Math.round(targetRegion.getHeight() * decodeScaleFactor));
     readParam.setSourceRegion(decodeRegion);
     // TurboJpegImageReader can rotate during decoding
     if (selector.getRotation().getRotation() != 0 && reader instanceof TurboJpegImageReader) {
