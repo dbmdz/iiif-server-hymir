@@ -100,7 +100,7 @@ public class IIIFImageApiController {
       HttpServletResponse response,
       WebRequest webRequest)
       throws UnsupportedFormatException, UnsupportedOperationException, IOException,
-      InvalidParametersException, ResourceNotFoundException, ScalingException {
+          InvalidParametersException, ResourceNotFoundException, ScalingException {
     if (UrlRules.isInsecure(identifier)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new byte[] {});
     }

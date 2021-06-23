@@ -61,6 +61,4 @@ public class ImageServiceImplTest {
     ImageReadParam actual = ImageServiceImpl.getReadParam(reader, selector, 0.12508909479686386);
     assertThat(actual.getSourceRegion()).isEqualTo(new Rectangle(0, 0, 351, 494));
   }
-
-
 }

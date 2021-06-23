@@ -7,14 +7,11 @@ import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatExcepti
 import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.trace.http.HttpTrace.Response;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionAdvice {
@@ -41,6 +38,7 @@ public class ExceptionAdvice {
 
   /**
    * Sometimes scaling an image can lead to broken dimensions (usually because of rounding to 0).
+   *
    * @param exception The exception to handle
    * @return An error description for the client
    */

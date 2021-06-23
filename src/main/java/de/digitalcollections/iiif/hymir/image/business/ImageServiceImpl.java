@@ -239,7 +239,7 @@ public class ImageServiceImpl implements ImageService {
   private DecodedImage readImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile)
       throws IOException, ResourceNotFoundException, UnsupportedFormatException,
-      InvalidParametersException, ScalingException {
+          InvalidParametersException, ScalingException {
     ImageReader reader = null;
     try {
       reader = getReader(identifier);
@@ -372,7 +372,7 @@ public class ImageServiceImpl implements ImageService {
   public void processImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
       throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
-      ResourceNotFoundException, IOException, ScalingException {
+          ResourceNotFoundException, IOException, ScalingException {
     DecodedImage decodedImage = readImage(identifier, selector, profile);
 
     boolean containsAlphaChannel = containsAlphaChannel(decodedImage.img);

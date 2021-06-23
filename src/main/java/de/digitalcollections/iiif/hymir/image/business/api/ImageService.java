@@ -24,5 +24,5 @@ public interface ImageService {
   void processImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
       throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
-      ResourceNotFoundException, IOException, ScalingException;
+          ResourceNotFoundException, IOException, ScalingException;
 }
