@@ -117,19 +117,27 @@ public class IIIFImageApiController {
     headers.setDate("Last-Modified", modified);
 
     ImageApiSelector selector = new ImageApiSelector();
+    selector.setIdentifier(identifier);
+
     try {
-      selector.setIdentifier(identifier);
       selector.setRegion(region);
       selector.setSize(size);
       selector.setRotation(rotation);
       if (quality.equals("native")) {
         quality = "default";
       }
-      selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
-      selector.setFormat(ImageApiProfile.Format.valueOf(format.toUpperCase()));
     } catch (ResolvingException e) {
       throw new InvalidParametersException(e);
     }
+
+    selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
+
+    try {
+      selector.setFormat(ImageApiProfile.Format.valueOf(format.toUpperCase()));
+    } catch (IllegalArgumentException e) {
+      throw new UnsupportedFormatException("Format not supported: " + format);
+    }
+
     var info =
         new de.digitalcollections.iiif.model.image.ImageService("http://foo.org/" + identifier);
     imageService.readImageInfo(identifier, info);
