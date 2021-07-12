@@ -88,7 +88,7 @@
     <version.imgscalr-lib>4.2</version.imgscalr-lib>
     <version.json-simple>1.1.1</version.json-simple>
     <version.logstash-logback-encoder>6.6</version.logstash-logback-encoder>
-    <version.spotbugs>4.2.3</version.spotbugs>
+    <version.spotbugs>4.3.0</version.spotbugs>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
     <version.twelvemonkeys>3.7.0</version.twelvemonkeys>
     <version.webjar-bootstrap>4.6.0</version.webjar-bootstrap>
