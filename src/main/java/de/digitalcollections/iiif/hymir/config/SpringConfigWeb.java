@@ -1,6 +1,6 @@
 package de.digitalcollections.iiif.hymir.config;
 
-import de.digitalcollections.commons.springmvc.interceptors.CurrentUrlAsModelAttributeHandlerInterceptor;
+import de.digitalcollections.iiif.hymir.frontend.CurrentUrlHandlerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -20,9 +20,8 @@ public class SpringConfigWeb implements WebMvcConfigurer {
     localeChangeInterceptor.setParamName("language");
     registry.addInterceptor(localeChangeInterceptor);
 
-    CurrentUrlAsModelAttributeHandlerInterceptor currentUrlAsModelAttributeHandlerInterceptor =
-        new CurrentUrlAsModelAttributeHandlerInterceptor();
-    currentUrlAsModelAttributeHandlerInterceptor.deleteParams("language");
+    CurrentUrlHandlerInterceptor currentUrlAsModelAttributeHandlerInterceptor =
+        new CurrentUrlHandlerInterceptor();
     registry.addInterceptor(currentUrlAsModelAttributeHandlerInterceptor);
   }
 
