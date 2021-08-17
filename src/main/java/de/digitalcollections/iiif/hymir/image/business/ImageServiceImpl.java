@@ -323,6 +323,9 @@ public class ImageServiceImpl implements ImageService {
               targetSize.height);
     }
 
+    if (mirror) {
+      img = Scalr.rotate(img, Scalr.Rotation.FLIP_HORZ);
+    }
     if (rotation != 0) {
       Scalr.Rotation rot;
       switch (rotation) {
@@ -339,9 +342,6 @@ public class ImageServiceImpl implements ImageService {
           rot = null;
       }
       img = Scalr.rotate(img, rot);
-    }
-    if (mirror) {
-      img = Scalr.rotate(img, Scalr.Rotation.FLIP_HORZ);
     }
     // Quality
     int outType;
