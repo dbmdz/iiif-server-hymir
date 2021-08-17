@@ -8,6 +8,7 @@ import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersExcepti
 import de.digitalcollections.iiif.hymir.model.exception.ScalingException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
 import de.digitalcollections.iiif.model.image.ImageApiProfile;
+import de.digitalcollections.iiif.model.image.ImageApiProfile.Format;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.image.Size;
@@ -94,7 +95,9 @@ public class ImageServiceImpl implements ImageService {
         ImageApiProfile.Feature.ROTATION_BY_90S,
         ImageApiProfile.Feature.MIRRORING,
         ImageApiProfile.Feature.SIZE_ABOVE_FULL);
-    profile.addFormat(ImageApiProfile.Format.GIF);
+
+    // Add supported Formats
+    profile.addFormat(Format.GIF, Format.JPG, Format.PNG, Format.TIF, Format.WEBP);
 
     // Indicate to the client if we cannot deliver full resolution versions of the image
     if (reader.getHeight(0) > maxHeight || reader.getWidth(0) > maxWidth) {
