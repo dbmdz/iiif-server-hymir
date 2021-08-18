@@ -126,7 +126,7 @@ public class IIIFImageApiController {
       if (quality.equals("native")) {
         quality = "default";
       }
-    } catch (ResolvingException e) {
+    } catch (ResolvingException | NumberFormatException e) {
       throw new InvalidParametersException(e);
     }
 
