@@ -1,0 +1,4 @@
+webjars:
+  versions:
+    bootstrap: '1.2.3'
+    html5shiv: '4.5.6'
