@@ -1,16 +1,18 @@
 package de.digitalcollections.iiif.hymir.config;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.concurrent.Immutable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 @ConfigurationProperties(prefix = "custom.iiif.headers")
 @ConstructorBinding
-@Immutable
+// False positive: All response header lists <em>are immutable</em>, but Spotbugs does not recognize
+// this.
+@SuppressFBWarnings("EI_EXPOSE_REP")
 public class CustomResponseHeaders {
 
   private final List<ResponseHeader> imageTile;
@@ -61,7 +63,7 @@ public class CustomResponseHeaders {
   }
 
   public List<ResponseHeader> forImageTile() {
-    return imageTile;
+    return List.copyOf(imageTile);
   }
 
   public List<ResponseHeader> forImageInfo() {
