@@ -4,7 +4,7 @@ import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersExcepti
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.hymir.model.exception.ScalingException;
 import de.digitalcollections.iiif.hymir.model.exception.UnsupportedFormatException;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
+import de.digitalcollections.model.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

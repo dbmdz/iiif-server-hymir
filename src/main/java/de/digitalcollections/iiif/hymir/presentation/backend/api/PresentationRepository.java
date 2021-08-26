@@ -5,7 +5,7 @@ import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
 import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
+import de.digitalcollections.model.exception.ResourceNotFoundException;
 import java.time.Instant;
 
 /** Interface to be implemented by project/user of this library. */

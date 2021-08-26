@@ -8,7 +8,7 @@ import de.digitalcollections.iiif.hymir.presentation.business.api.PresentationSe
 import de.digitalcollections.iiif.model.sharedcanvas.AnnotationList;
 import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
+import de.digitalcollections.model.exception.ResourceNotFoundException;
 import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

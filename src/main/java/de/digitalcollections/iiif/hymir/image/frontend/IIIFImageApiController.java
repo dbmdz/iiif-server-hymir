@@ -11,7 +11,7 @@ import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
-import de.digitalcollections.model.api.identifiable.resource.exceptions.ResourceNotFoundException;
+import de.digitalcollections.model.exception.ResourceNotFoundException;
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
