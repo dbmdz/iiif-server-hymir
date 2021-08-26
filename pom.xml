@@ -82,6 +82,7 @@
     <version.dc-commons-server>4.1.1</version.dc-commons-server>
     <version.dc-commons-springboot>4.1.1</version.dc-commons-springboot>
     <version.dc-commons-springmvc>4.1.2</version.dc-commons-springmvc>
+    <version.dc-model>9.0.0</version.dc-model>
     <version.guava>30.1.1-jre</version.guava>
     <version.iiif-apis>0.3.9</version.iiif-apis>
     <version.imageio-jnr>0.6.0</version.imageio-jnr>
@@ -217,6 +218,11 @@
       <groupId>de.digitalcollections.iiif</groupId>
       <artifactId>iiif-apis</artifactId>
       <version>${version.iiif-apis}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.digitalcollections.model</groupId>
+      <artifactId>dc-model</artifactId>
+      <version>${version.dc-model}</version>
     </dependency>
     <dependency>
       <groupId>io.micrometer</groupId>
