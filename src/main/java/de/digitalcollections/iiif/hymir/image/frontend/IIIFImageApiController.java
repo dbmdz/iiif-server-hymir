@@ -130,7 +130,11 @@ public class IIIFImageApiController {
       throw new InvalidParametersException(e);
     }
 
-    selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
+    try {
+      selector.setQuality(ImageApiProfile.Quality.valueOf(quality.toUpperCase()));
+    } catch (IllegalArgumentException e) {
+      throw new InvalidParametersException(e);
+    }
 
     try {
       selector.setFormat(ImageApiProfile.Format.valueOf(format.toUpperCase()));
