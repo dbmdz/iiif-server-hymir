@@ -294,7 +294,7 @@ public class ImageServiceImpl implements ImageService {
       }
 
       if (targetSize.width <= 0 || targetSize.height <= 0) {
-        throw new ScalingException("Scaling resulted in width or height ≤ 0): " + targetSize);
+        throw new ScalingException("Scaling resulted in width or height ≤ 0: " + targetSize);
       }
 
       return new DecodedImage(reader.read(imageIndex, readParam), targetSize, rotation);
