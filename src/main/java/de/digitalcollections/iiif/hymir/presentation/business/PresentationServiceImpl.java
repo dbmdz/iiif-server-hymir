@@ -10,6 +10,7 @@ import de.digitalcollections.iiif.model.sharedcanvas.Collection;
 import de.digitalcollections.iiif.model.sharedcanvas.Manifest;
 import de.digitalcollections.model.exception.ResourceNotFoundException;
 import java.time.Instant;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,13 @@ public class PresentationServiceImpl implements PresentationService {
   private final PresentationRepository presentationRepository;
 
   private final PresentationSecurityService presentationSecurityService;
+
+  // FIXME: Yes, this is incredibly nasty and violates "separation of concerns", but it's the
+  //        only way to implement ACL based on user-supplied data without refactoring a significant
+  //        part of the API and breaking implementers left and right.
+  //        This should be done properly with the next major release that introduces API breakage
+  //        anyway
+  @Autowired private HttpServletRequest currentRequest;
 
   @Autowired
   public PresentationServiceImpl(
@@ -44,8 +52,8 @@ public class PresentationServiceImpl implements PresentationService {
   public Manifest getManifest(String identifier)
       throws ResolvingException, ResourceNotFoundException, InvalidDataException {
     if (presentationSecurityService != null
-        && !presentationSecurityService.isAccessAllowed(identifier)) {
-      throw new ResolvingException(); // TODO maybe throw an explicitely access disallowed exception
+        && !presentationSecurityService.isAccessAllowed(identifier, currentRequest)) {
+      throw new ResolvingException(); // TODO maybe throw an explicit 'access disallowed' exception
     }
     return presentationRepository.getManifest(identifier);
   }
