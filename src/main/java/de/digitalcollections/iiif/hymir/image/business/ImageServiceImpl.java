@@ -35,6 +35,7 @@ import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,13 @@ import org.springframework.stereotype.Service;
 public class ImageServiceImpl implements ImageService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
+
+  // FIXME: Yes, this is incredibly nasty and violates "separation of concerns", but it's the
+  //        only way to implement ACL based on user-supplied data without refactoring a significant
+  //        part of the API and breaking implementers left and right.
+  //        This should be done properly with the next major release that introduces API breakage
+  //        anyway
+  @Autowired private HttpServletRequest currentRequest;
 
   /**
    * @param image buffered image to check for alpha channel
@@ -153,7 +161,7 @@ public class ImageServiceImpl implements ImageService {
   /** Try to obtain a {@link ImageReader} for a given identifier */
   private ImageReader getReader(String identifier)
       throws ResourceNotFoundException, UnsupportedFormatException, IOException {
-    if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
+    if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier, currentRequest)) {
       throw new ResourceNotFoundException();
     }
     FileResource fileResource;
