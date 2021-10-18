@@ -161,7 +161,8 @@ public class ImageServiceImpl implements ImageService {
   /** Try to obtain a {@link ImageReader} for a given identifier */
   private ImageReader getReader(String identifier)
       throws ResourceNotFoundException, UnsupportedFormatException, IOException {
-    if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier, currentRequest)) {
+    if (imageSecurityService != null
+        && !imageSecurityService.isAccessAllowed(identifier, currentRequest)) {
       throw new ResourceNotFoundException();
     }
     FileResource fileResource;
@@ -429,7 +430,8 @@ public class ImageServiceImpl implements ImageService {
 
   @Override
   public Instant getImageModificationDate(String identifier) throws ResourceNotFoundException {
-    if (imageSecurityService != null && !imageSecurityService.isAccessAllowed(identifier)) {
+    if (imageSecurityService != null
+        && !imageSecurityService.isAccessAllowed(identifier, currentRequest)) {
       throw new ResourceNotFoundException();
     }
     try {
