@@ -438,7 +438,7 @@ custom:
 
 ### Monitoring
 
-Monitoring endpoints under http://localhost:9001/monitoring (HAL-Browser-GUI), authentication by default: admin/secret (configurable in application.yml)
+Monitoring endpoints under http://localhost:9001/monitoring, authentication by default: `admin/secret` (configurable in `application.yml`)
 
 To change monitoring port, e.g. to `8081` use `management.server.port` option:
 
