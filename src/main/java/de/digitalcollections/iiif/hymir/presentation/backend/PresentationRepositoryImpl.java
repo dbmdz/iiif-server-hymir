@@ -1,5 +1,6 @@
 package de.digitalcollections.iiif.hymir.presentation.backend;
 
+import de.digitalcollections.commons.file.backend.FileSystemResourceIOException;
 import de.digitalcollections.commons.file.business.api.FileResourceService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
@@ -42,12 +43,19 @@ public class PresentationRepositoryImpl implements PresentationRepository {
     FileResource resource;
     try {
       resource = fileResourceService.find(annotationListName, MimeType.MIME_APPLICATION_JSON);
+    } catch (FileSystemResourceIOException e) {
+      // We have to throw a RTE since we don't want to break with the API, but still
+      // have a different error handling path than Resolving/InvalidData.
+      throw new RuntimeException(e);
     } catch (ResourceIOException ex) {
       LOGGER.error("Error getting annotation list for name {}", annotationListName, ex);
       throw new ResolvingException("No annotation list for name " + annotationListName);
     }
     try {
       return objectMapper.readValue(getResourceJson(resource), AnnotationList.class);
+    } catch (FileSystemResourceIOException e) {
+      // See comment above
+      throw new RuntimeException(e);
     } catch (IOException ex) {
       LOGGER.error("Could not retrieve annotation list {}", annotationListName, ex);
       throw new InvalidDataException(
@@ -63,12 +71,20 @@ public class PresentationRepositoryImpl implements PresentationRepository {
     FileResource resource;
     try {
       resource = fileResourceService.find(collectionName, MimeType.MIME_APPLICATION_JSON);
+    } catch (FileSystemResourceIOException e) {
+      // We have to throw a RTE since we don't want to break with the API, but still
+      // have a different error handling path than Resolving/InvalidData.
+      throw new RuntimeException(e);
     } catch (ResourceIOException ex) {
       LOGGER.error("Error getting manifest for collection {}", name, ex);
       throw new ResolvingException("No collection for name " + name);
     }
     try {
       return objectMapper.readValue(getResourceJson(resource), Collection.class);
+    } catch (FileSystemResourceIOException e) {
+      // We have to throw a RTE since we don't want to break with the API, but still
+      // have a different error handling path than Resolving/InvalidData.
+      throw new RuntimeException(e);
     } catch (IOException ex) {
       LOGGER.info("Could not retrieve collection {}", collectionName, ex);
       throw new InvalidDataException(
@@ -82,12 +98,20 @@ public class PresentationRepositoryImpl implements PresentationRepository {
     FileResource resource;
     try {
       resource = fileResourceService.find(identifier, MimeType.MIME_APPLICATION_JSON);
+    } catch (FileSystemResourceIOException e) {
+      // We have to throw a RTE since we don't want to break with the API, but still
+      // have a different error handling path than Resolving/InvalidData.
+      throw new RuntimeException(e);
     } catch (ResourceIOException ex) {
       LOGGER.error("Error getting manifest for identifier {}", identifier, ex);
       throw new ResolvingException("No manifest for identifier " + identifier);
     }
     try {
       return objectMapper.readValue(getResourceJson(resource), Manifest.class);
+    } catch (FileSystemResourceIOException e) {
+      // We have to throw a RTE since we don't want to break with the API, but still
+      // have a different error handling path than Resolving/InvalidData.
+      throw new RuntimeException(e);
     } catch (IOException ex) {
       LOGGER.error("Manifest {} can not be parsed", identifier, ex);
       throw new InvalidDataException("Manifest " + identifier + " can not be parsed", ex);
@@ -111,6 +135,10 @@ public class PresentationRepositoryImpl implements PresentationRepository {
     try {
       FileResource resource = fileResourceService.find(identifier, MimeType.MIME_APPLICATION_JSON);
       return resource.getLastModified().toInstant(ZoneOffset.UTC);
+    } catch (FileSystemResourceIOException e) {
+      // We have to throw a RTE since we don't want to break with the API, but still
+      // have a different error handling path than Resolving/InvalidData.
+      throw new RuntimeException(e);
     } catch (ResourceIOException ex) {
       LOGGER.error(
           "Error getting resource for identifier '{}', message '{}'", identifier, ex.getMessage());
