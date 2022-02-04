@@ -1,12 +1,16 @@
 package de.digitalcollections.iiif.hymir.image.business;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import de.digitalcollections.commons.file.business.api.FileResourceService;
+import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
+import de.digitalcollections.iiif.model.image.ImageApiProfile;
 import de.digitalcollections.iiif.model.image.ImageApiProfile.Format;
 import de.digitalcollections.iiif.model.image.ImageApiProfile.Quality;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
@@ -17,13 +21,26 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.util.ResourceUtils;
 
 public class ImageServiceImplTest {
+
+  private ImageServiceImpl imageService;
+
+  @BeforeEach
+  void setUp() {
+    ImageSecurityService imageSecurityService = mock(ImageSecurityService.class);
+    FileResourceService fileResourceService = mock(FileResourceService.class);
+    imageService = new ImageServiceImpl(imageSecurityService, fileResourceService);
+  }
 
   @Test
   public void testContainsAlphaChannel() throws IOException {
@@ -60,5 +77,41 @@ public class ImageServiceImplTest {
 
     ImageReadParam actual = ImageServiceImpl.getReadParam(reader, selector, 0.12508909479686386);
     assertThat(actual.getSourceRegion()).isEqualTo(new Rectangle(0, 0, 351, 494));
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+      value = {
+        "/bsb12345678/full/0,0/0/default.jpg|0,0",
+        "/bsb12345678/full/1,0/0/default.jpg|1,0",
+        "/bsb12345678/full/0,1/0/default.jpg|0,1"
+      },
+      delimiter = '|')
+  void shouldThrowOnInvalidSize(String request, String size) throws ResolvingException {
+    ImageApiSelector selector = ImageApiSelector.fromString(request);
+    ImageApiProfile imageApiProfile = mock(ImageApiProfile.class);
+    OutputStream out = mock(OutputStream.class);
+    assertThatExceptionOfType(InvalidParametersException.class)
+        .isThrownBy(() -> imageService.processImage("bsb12345678", selector, imageApiProfile, out))
+        .withMessageContaining("requested size has to be at least one pixel, but was")
+        .withMessageContaining(size);
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+      value = {
+        "/bsb12345678/0,0,0,0/full/0/default.jpg|width=0.00, height=0.00",
+        "/bsb12345678/0,0,1,0/full/0/default.jpg|width=1.00, height=0.00",
+        "/bsb12345678/0,0,0,1/full/0/default.jpg|width=0.00, height=1.00"
+      },
+      delimiter = '|')
+  void shouldThrowOnInvalidRegion(String request, String size) throws ResolvingException {
+    ImageApiSelector selector = ImageApiSelector.fromString(request);
+    ImageApiProfile imageApiProfile = mock(ImageApiProfile.class);
+    OutputStream out = mock(OutputStream.class);
+    assertThatExceptionOfType(InvalidParametersException.class)
+        .isThrownBy(() -> imageService.processImage("bsb12345678", selector, imageApiProfile, out))
+        .withMessageContaining("requested region has to have at least one pixel, but was")
+        .withMessageContaining(size);
   }
 }
