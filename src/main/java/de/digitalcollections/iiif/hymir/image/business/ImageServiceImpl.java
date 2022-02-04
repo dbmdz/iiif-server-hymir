@@ -393,7 +393,7 @@ public class ImageServiceImpl implements ImageService {
     if (region != null && (region.getWidth() < 1 || region.getHeight() < 1)) {
       String message =
           String.format(
-              Locale.ENGLISH,
+              Locale.ROOT,
               "requested region has to have at least one pixel, but was [x=%.2f, y=%.2f, width=%.2f, height=%.2f]",
               region.getX(),
               region.getY(),
