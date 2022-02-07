@@ -12,6 +12,7 @@ import de.digitalcollections.iiif.model.image.ImageApiProfile.Format;
 import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.image.Size;
+import de.digitalcollections.iiif.model.image.SizeRequest;
 import de.digitalcollections.iiif.model.image.TileInfo;
 import de.digitalcollections.model.exception.ResourceIOException;
 import de.digitalcollections.model.exception.ResourceNotFoundException;
@@ -22,12 +23,14 @@ import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReader;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -385,6 +388,27 @@ public class ImageServiceImpl implements ImageService {
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
       throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
           ResourceNotFoundException, IOException, ScalingException {
+
+    Rectangle2D region = selector.getRegion().getRegion();
+    if (region != null && (region.getWidth() < 1 || region.getHeight() < 1)) {
+      String message =
+          String.format(
+              Locale.ROOT,
+              "requested region has to have at least one pixel, but was [x=%.2f, y=%.2f, width=%.2f, height=%.2f]",
+              region.getX(),
+              region.getY(),
+              region.getWidth(),
+              region.getHeight());
+      throw new InvalidParametersException(message);
+    }
+
+    SizeRequest size = selector.getSize();
+    if ((size.getWidth() != null && size.getWidth() < 1)
+        || (size.getHeight() != null && size.getHeight() < 1)) {
+      throw new InvalidParametersException(
+          "requested size has to be at least one pixel, but was " + size);
+    }
+
     DecodedImage decodedImage = readImage(identifier, selector, profile);
 
     boolean containsAlphaChannel = containsAlphaChannel(decodedImage.img);
