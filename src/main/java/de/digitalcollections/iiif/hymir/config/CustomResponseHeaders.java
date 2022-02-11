@@ -1,101 +1,139 @@
 package de.digitalcollections.iiif.hymir.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
-@Configuration
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
+
 @ConfigurationProperties(prefix = "custom.iiif.headers")
+@ConstructorBinding
 public class CustomResponseHeaders {
 
-  private List<ResponseHeader> all = new ArrayList<>();
-  private HashMap<String, List<ResponseHeader>> image = new HashMap<>();
-  private HashMap<String, List<ResponseHeader>> presentation = new HashMap<>();
+  private final List<ResponseHeader> imageTile;
+  private final List<ResponseHeader> imageInfo;
+  private final List<ResponseHeader> presentationManifest;
+  private final List<ResponseHeader> presentationAnnotationList;
+  private final List<ResponseHeader> presentationCollection;
 
-  // custom.iiif.headers.all
-  public void setAll(List<ResponseHeader> all) {
-    this.all = all;
+  // custom.iiif.headers
+  public CustomResponseHeaders(
+      List<ResponseHeader> all,
+      ImageResponseHeaders image,
+      PresentationResponseHeaders presentation) {
+    all = Objects.requireNonNullElseGet(all, Collections::emptyList);
+    image = Objects.requireNonNullElseGet(image, ImageResponseHeaders::empty);
+    presentation = Objects.requireNonNullElseGet(presentation, PresentationResponseHeaders::empty);
+    this.imageTile = concatenate(all, image.image);
+    this.imageInfo = concatenate(all, image.info);
+    this.presentationManifest = concatenate(all, presentation.manifest);
+    this.presentationAnnotationList = concatenate(all, presentation.annotationList);
+    this.presentationCollection = concatenate(all, presentation.collection);
   }
 
-  public List<ResponseHeader> getAll() {
-    return this.all;
-  }
-
-  // custom.iiif.headers.image
-  public HashMap<String, List<ResponseHeader>> getImage() {
-    return image;
-  }
-
-  public void setImage(HashMap<String, List<ResponseHeader>> image) {
-    this.image = image;
-  }
-
-  // custom.iiif.headers.presentation
-  public void setPresentation(HashMap<String, List<ResponseHeader>> presentation) {
-    this.presentation = presentation;
-  }
-
-  public HashMap<String, List<ResponseHeader>> getPresentation() {
-    return presentation;
+  private List<ResponseHeader> concatenate(
+      List<ResponseHeader> first, List<ResponseHeader> second) {
+    List<ResponseHeader> result = new ArrayList<>(first);
+    result.addAll(second);
+    return result;
   }
 
   public List<ResponseHeader> forImageTile() {
-    List<ResponseHeader> result = new ArrayList<>();
-    Optional.ofNullable(all).ifPresent(result::addAll);
-    Optional.ofNullable(image.get("image")).ifPresent(result::addAll);
-    return result;
+    return unmodifiableList(imageTile);
   }
 
   public List<ResponseHeader> forImageInfo() {
-    List<ResponseHeader> result = new ArrayList<>();
-    Optional.ofNullable(all).ifPresent(result::addAll);
-    Optional.ofNullable(image.get("info")).ifPresent(result::addAll);
-    return result;
+    return unmodifiableList(imageInfo);
   }
 
   public List<ResponseHeader> forPresentationManifest() {
-    List<ResponseHeader> result = new ArrayList<>();
-    Optional.ofNullable(all).ifPresent(result::addAll);
-    Optional.ofNullable(presentation.get("manifest")).ifPresent(result::addAll);
-    return result;
+    return unmodifiableList(presentationManifest);
   }
 
   public List<ResponseHeader> forPresentationCollection() {
-    List<ResponseHeader> result = new ArrayList<>();
-    Optional.ofNullable(all).ifPresent(result::addAll);
-    Optional.ofNullable(presentation.get("collection")).ifPresent(result::addAll);
-    return result;
+    return unmodifiableList(presentationCollection);
   }
 
   public List<ResponseHeader> forPresentationAnnotationList() {
-    List<ResponseHeader> result = new ArrayList<>();
-    Optional.ofNullable(all).ifPresent(result::addAll);
-    Optional.ofNullable(presentation.get("annotationList")).ifPresent(result::addAll);
-    return result;
+    return unmodifiableList(presentationAnnotationList);
+  }
+
+  protected static class ImageResponseHeaders {
+
+    private final List<ResponseHeader> image;
+    private final List<ResponseHeader> info;
+
+    public ImageResponseHeaders(List<ResponseHeader> image, List<ResponseHeader> info) {
+      this.image = unmodifiableList(Objects.requireNonNullElseGet(image, Collections::emptyList));
+      this.info = unmodifiableList(Objects.requireNonNullElseGet(info, Collections::emptyList));
+    }
+
+    public List<ResponseHeader> getImage() {
+      return unmodifiableList(image);
+    }
+
+    public List<ResponseHeader> getInfo() {
+      return unmodifiableList(info);
+    }
+
+    public static ImageResponseHeaders empty() {
+      return new ImageResponseHeaders(emptyList(), emptyList());
+    }
+  }
+
+  @ConstructorBinding
+  protected static class PresentationResponseHeaders {
+
+    private final List<ResponseHeader> manifest;
+    private final List<ResponseHeader> collection;
+    private final List<ResponseHeader> annotationList;
+
+    public PresentationResponseHeaders(
+        List<ResponseHeader> manifest,
+        List<ResponseHeader> collection,
+        List<ResponseHeader> annotationList) {
+      this.manifest = Objects.requireNonNullElseGet(manifest, Collections::emptyList);
+      this.collection = Objects.requireNonNullElseGet(collection, Collections::emptyList);
+      this.annotationList = Objects.requireNonNullElseGet(annotationList, Collections::emptyList);
+    }
+
+    public List<ResponseHeader> getManifest() {
+      return unmodifiableList(manifest);
+    }
+
+    public List<ResponseHeader> getCollection() {
+      return unmodifiableList(collection);
+    }
+
+    public List<ResponseHeader> getAnnotationList() {
+      return unmodifiableList(annotationList);
+    }
+
+    public static PresentationResponseHeaders empty() {
+      return new PresentationResponseHeaders(emptyList(), emptyList(), emptyList());
+    }
   }
 
   public static class ResponseHeader {
 
-    private String name;
-    private String value;
+    private final String name;
+    private final String value;
+
+    public ResponseHeader(String name, String value) {
+      this.name = name;
+      this.value = value;
+    }
 
     public String getName() {
       return name;
     }
 
-    public void setName(String name) {
-      this.name = name;
-    }
-
     public String getValue() {
       return value;
-    }
-
-    public void setValue(String value) {
-      this.value = value;
     }
   }
 }

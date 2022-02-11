@@ -1,5 +1,7 @@
 package de.digitalcollections.iiif.hymir.config;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -10,9 +12,12 @@ public class WebjarProperties {
   private final Map<String, String> versions;
 
   public WebjarProperties(Map<String, String> versions) {
-    this.versions = versions;
+    this.versions = new HashMap<>(versions);
   }
 
+  @SuppressFBWarnings(
+      value = {"EI_EXPOSE_REP", "EI_EXPOSE_REP2"},
+      justification = "Value is only used by the Spring framework")
   public Map<String, String> getVersions() {
     return versions;
   }
