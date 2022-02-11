@@ -12,6 +12,7 @@ import de.digitalcollections.iiif.model.image.ImageApiSelector;
 import de.digitalcollections.iiif.model.image.ResolvingException;
 import de.digitalcollections.iiif.model.jackson.IiifObjectMapper;
 import de.digitalcollections.model.exception.ResourceNotFoundException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,6 +48,11 @@ public class IIIFImageApiController {
 
   private final MetricsService metricsService;
 
+  @SuppressFBWarnings(
+      value = "EI_EXPOSE_REP2",
+      justification =
+          "Metrics service is used to collect metrics and therefore mutable."
+              + " IIIFObjectMapper can't be immutable and is guaranteed not to be changed.")
   @Autowired
   public IIIFImageApiController(
       ImageService imageService,

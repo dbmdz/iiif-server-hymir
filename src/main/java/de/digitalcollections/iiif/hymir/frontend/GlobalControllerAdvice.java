@@ -1,6 +1,7 @@
 package de.digitalcollections.iiif.hymir.frontend;
 
 import de.digitalcollections.iiif.hymir.config.WebjarProperties;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Map;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +15,9 @@ public class GlobalControllerAdvice {
     this.webjarVersions = webjarProperties.getVersions();
   }
 
+  @SuppressFBWarnings(
+      value = "EI_EXPOSE_REP",
+      justification = "Value is only used by the Spring framework")
   /** Adds the webjar versions read from yaml files as global model attribute. */
   @ModelAttribute("webjarVersions")
   public Map<String, String> getWebjarVersions() {
