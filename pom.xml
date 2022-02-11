@@ -14,7 +14,7 @@
 
   <groupId>de.digitalcollections</groupId>
   <artifactId>iiif-server-hymir</artifactId>
-  <version>5.1.2-SNAPSHOT</version>
+  <version>5.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <url>https://github.com/dbmdz/iiif-server-hymir</url>
@@ -78,7 +78,7 @@
 
     <version.assertj-json>1.2.0</version.assertj-json>
     <version.commons-cli>1.4</version.commons-cli>
-    <version.dc-commons-file>5.1.0</version.dc-commons-file>
+    <version.dc-commons-file>5.2.0-SNAPSHOT</version.dc-commons-file>
     <version.dc-commons-server>4.1.1</version.dc-commons-server>
     <version.dc-commons-springboot>4.1.1</version.dc-commons-springboot>
     <version.dc-commons-springmvc>4.1.2</version.dc-commons-springmvc>

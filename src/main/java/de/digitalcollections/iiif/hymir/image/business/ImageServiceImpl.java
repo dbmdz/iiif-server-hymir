@@ -1,6 +1,7 @@
 package de.digitalcollections.iiif.hymir.image.business;
 
 import com.google.common.collect.Streams;
+import de.digitalcollections.commons.file.backend.FileSystemResourceIOException;
 import de.digitalcollections.commons.file.business.api.FileResourceService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
@@ -168,13 +169,8 @@ public class ImageServiceImpl implements ImageService {
         && !imageSecurityService.isAccessAllowed(identifier, currentRequest)) {
       throw new ResourceNotFoundException();
     }
-    FileResource fileResource;
     try {
-      fileResource = fileResourceService.find(identifier, MimeType.MIME_IMAGE);
-    } catch (ResourceIOException e) {
-      throw new ResourceNotFoundException();
-    }
-    try {
+      FileResource fileResource = fileResourceService.find(identifier, MimeType.MIME_IMAGE);
       ImageInputStream iis =
           ImageIO.createImageInputStream(fileResourceService.getInputStream(fileResource));
       ImageReader reader =
@@ -183,6 +179,8 @@ public class ImageServiceImpl implements ImageService {
               .orElseThrow(UnsupportedFormatException::new);
       reader.setInput(iis);
       return reader;
+    } catch (FileSystemResourceIOException e) {
+      throw new IOException(e);
     } catch (ResourceIOException e) {
       throw new ResourceNotFoundException();
     }
