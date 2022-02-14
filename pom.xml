@@ -112,7 +112,7 @@
     <version.maven-fmt-plugin>2.13</version.maven-fmt-plugin>
     <version.maven-gpg-plugin>3.0.1</version.maven-gpg-plugin>
     <version.maven-surefire-plugin>3.0.0-M5</version.maven-surefire-plugin>
-    <version.nexus-staging-maven-plugin>1.6.8</version.nexus-staging-maven-plugin>
+    <version.nexus-staging-maven-plugin>1.6.10</version.nexus-staging-maven-plugin>
     <version.spotbugs-maven-plugin>4.5.3.0</version.spotbugs-maven-plugin>
   </properties>
 
