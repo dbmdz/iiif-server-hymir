@@ -217,13 +217,15 @@ public class ImageServiceImpl implements ImageService {
   }
 
   /**
-   * Determine parameters for image reading based on the IIIF selector and a given scaling factor *
+   * Determine parameters for image reading based on the IIIF selector the image index to be decoded
    */
-  static ImageReadParam getReadParam(
-      ImageReader reader, ImageApiSelector selector, double decodeScaleFactor)
+  static ImageReadParam getReadParam(ImageReader reader, ImageApiSelector selector, int decodeIdx)
       throws IOException, InvalidParametersException {
     ImageReadParam readParam = reader.getDefaultReadParam();
     Dimension nativeDimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
+    Dimension decodeDimensions =
+        new Dimension(reader.getWidth(decodeIdx), reader.getHeight(decodeIdx));
+    double decodeScaleFactor = decodeDimensions.getWidth() / nativeDimensions.getWidth();
     Rectangle targetRegion;
     try {
       targetRegion = selector.getRegion().resolve(nativeDimensions);
@@ -235,10 +237,16 @@ public class ImageServiceImpl implements ImageService {
     // image size, hence the conversion
     Rectangle decodeRegion =
         new Rectangle(
-            (int) Math.round(targetRegion.getX() * decodeScaleFactor),
-            (int) Math.round(targetRegion.getY() * decodeScaleFactor),
-            (int) Math.round(targetRegion.getWidth() * decodeScaleFactor),
-            (int) Math.round(targetRegion.getHeight() * decodeScaleFactor));
+            Math.min(
+                (int) Math.round(targetRegion.getX() * decodeScaleFactor), decodeDimensions.width),
+            Math.min(
+                (int) Math.round(targetRegion.getY() * decodeScaleFactor), decodeDimensions.height),
+            Math.min(
+                (int) Math.round(targetRegion.getWidth() * decodeScaleFactor),
+                decodeDimensions.width),
+            Math.min(
+                (int) Math.round(targetRegion.getHeight() * decodeScaleFactor),
+                decodeDimensions.height));
     readParam.setSourceRegion(decodeRegion);
     // TurboJpegImageReader can rotate during decoding
     if (selector.getRotation().getRotation() != 0 && reader instanceof TurboJpegImageReader) {
@@ -291,7 +299,7 @@ public class ImageServiceImpl implements ImageService {
           imageIndex = idx;
         }
       }
-      ImageReadParam readParam = getReadParam(reader, selector, decodeScaleFactor);
+      ImageReadParam readParam = getReadParam(reader, selector, imageIndex);
       int rotation = (int) selector.getRotation().getRotation();
       if (readParam instanceof TurboJpegImageReadParam
           && ((TurboJpegImageReadParam) readParam).getRotationDegree() != 0) {
