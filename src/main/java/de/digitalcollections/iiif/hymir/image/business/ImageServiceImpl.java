@@ -217,7 +217,7 @@ public class ImageServiceImpl implements ImageService {
   }
 
   /**
-   * Determine parameters for image reading based on the IIIF selector and a given scaling factor *
+   * Determine parameters for image reading based on the IIIF selector the image index to be decoded
    */
   static ImageReadParam getReadParam(ImageReader reader, ImageApiSelector selector, int decodeIdx)
       throws IOException, InvalidParametersException {
