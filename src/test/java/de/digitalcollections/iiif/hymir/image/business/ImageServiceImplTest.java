@@ -65,6 +65,9 @@ public class ImageServiceImplTest {
     Dimension nativeDimensions = new Dimension(2806, 3952);
     when(reader.getWidth(eq(0))).thenReturn(nativeDimensions.width);
     when(reader.getHeight(eq(0))).thenReturn(nativeDimensions.height);
+    double decodeScaleFactor = 0.12508909479686386;
+    when(reader.getWidth(eq(13))).thenReturn((int) (decodeScaleFactor * nativeDimensions.width));
+    when(reader.getHeight(eq(13))).thenReturn((int) (decodeScaleFactor * nativeDimensions.height));
 
     String identifier = "bsb00041016_00002";
     ImageApiSelector selector = new ImageApiSelector();
@@ -75,7 +78,7 @@ public class ImageServiceImplTest {
     selector.setQuality(Quality.DEFAULT);
     selector.setFormat(Format.JPG);
 
-    ImageReadParam actual = ImageServiceImpl.getReadParam(reader, selector, 0.12508909479686386);
+    ImageReadParam actual = ImageServiceImpl.getReadParam(reader, selector, 13);
     assertThat(actual.getSourceRegion()).isEqualTo(new Rectangle(0, 0, 351, 494));
   }
 
