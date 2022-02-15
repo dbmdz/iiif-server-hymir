@@ -238,14 +238,14 @@ public class ImageServiceImpl implements ImageService {
     Rectangle decodeRegion =
         new Rectangle(
             Math.min(
-                (int) Math.round(targetRegion.getX() * decodeScaleFactor), decodeDimensions.width),
+                (int) Math.floor(targetRegion.getX() * decodeScaleFactor), decodeDimensions.width),
             Math.min(
-                (int) Math.round(targetRegion.getY() * decodeScaleFactor), decodeDimensions.height),
+                (int) Math.floor(targetRegion.getY() * decodeScaleFactor), decodeDimensions.height),
             Math.min(
-                (int) Math.round(targetRegion.getWidth() * decodeScaleFactor),
+                (int) Math.ceil(targetRegion.getWidth() * decodeScaleFactor),
                 decodeDimensions.width),
             Math.min(
-                (int) Math.round(targetRegion.getHeight() * decodeScaleFactor),
+                (int) Math.ceil(targetRegion.getHeight() * decodeScaleFactor),
                 decodeDimensions.height));
     readParam.setSourceRegion(decodeRegion);
     // TurboJpegImageReader can rotate during decoding
