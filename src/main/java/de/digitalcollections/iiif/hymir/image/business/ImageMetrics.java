@@ -36,6 +36,7 @@ public class ImageMetrics {
 
   private static final String DATA_OP_TIMER = "hymir.image.data.op.duration.seconds";
   private static final String DATA_OP_PIX_COUNTER = "hymir.image.data.op.pixels.total";
+  private static final Random rng = new Random();
 
   @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "We need the registry ")
   private final MeterRegistry registry;
@@ -89,7 +90,7 @@ public class ImageMetrics {
    * @return Key to stop the measurement with.
    */
   public int startImageOp() {
-    int key = new Random().nextInt();
+    int key = rng.nextInt();
     this.runningTimers.put(key, System.nanoTime());
     return key;
   }
