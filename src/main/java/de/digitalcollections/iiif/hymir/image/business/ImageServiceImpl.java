@@ -41,16 +41,12 @@ import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import org.imgscalr.Scalr;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
 
   // FIXME: Yes, this is incredibly nasty and violates "separation of concerns", but it's the
   //        only way to implement ACL based on user-supplied data without refactoring a significant
@@ -418,10 +414,8 @@ public class ImageServiceImpl implements ImageService {
     DecodedImage decodedImage = readImage(identifier, selector, profile);
 
     boolean containsAlphaChannel = containsAlphaChannel(decodedImage.img);
-    LOGGER.debug("image contains alpha channel: " + containsAlphaChannel);
     if (containsAlphaChannel) {
       int type = decodedImage.img.getType();
-      LOGGER.debug("image is of type: " + type);
       if (BufferedImage.TYPE_INT_ARGB != type) {
         // make sure to preserve transparency (e.g. of PNGs)
         // see https://github.com/rkalla/imgscalr section "Working with GIFs"
