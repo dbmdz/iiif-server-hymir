@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionAdvice {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionAdvice.class);
+  private static final Logger log = LoggerFactory.getLogger(ExceptionAdvice.class);
 
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(InvalidParametersException.class)
@@ -65,9 +65,9 @@ public class ExceptionAdvice {
   @ExceptionHandler(Exception.class)
   public void handleAllOther(Exception exception) {
     if (exception.getMessage() != null) {
-      LOGGER.error(exception.getMessage(), exception);
+      log.error(exception.getMessage(), exception);
     } else {
-      LOGGER.error("exception stack trace", exception);
+      log.error("Unhandled exception during request handling", exception);
     }
   }
 }

@@ -27,10 +27,12 @@ import org.springframework.stereotype.Repository;
  * Manifest instance.
  */
 @Repository
+@Deprecated(forRemoval = true)  // Will be gone with the next major version
 public class PresentationRepositoryImpl implements PresentationRepository {
 
   private static final String COLLECTION_PREFIX = "collection-";
-  private static final Logger LOGGER = LoggerFactory.getLogger(PresentationRepositoryImpl.class);
+
+  private static final Logger log = LoggerFactory.getLogger(PresentationRepositoryImpl.class);
 
   @Autowired private IiifObjectMapper objectMapper;
 
@@ -48,7 +50,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       // have a different error handling path than Resolving/InvalidData.
       throw new RuntimeException(e);
     } catch (ResourceIOException ex) {
-      LOGGER.error("Error getting annotation list for name {}", annotationListName, ex);
+      log.error("Error getting annotation list for name {}", annotationListName, ex);
       throw new ResolvingException("No annotation list for name " + annotationListName);
     }
     try {
@@ -57,7 +59,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       // See comment above
       throw new RuntimeException(e);
     } catch (IOException ex) {
-      LOGGER.error("Could not retrieve annotation list {}", annotationListName, ex);
+      log.error("Could not retrieve annotation list {}", annotationListName, ex);
       throw new InvalidDataException(
           "Annotation list " + annotationListName + " can not be parsed", ex);
     }
@@ -76,7 +78,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       // have a different error handling path than Resolving/InvalidData.
       throw new RuntimeException(e);
     } catch (ResourceIOException ex) {
-      LOGGER.error("Error getting manifest for collection {}", name, ex);
+      log.error("Error getting manifest for collection {}", name, ex);
       throw new ResolvingException("No collection for name " + name);
     }
     try {
@@ -86,7 +88,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       // have a different error handling path than Resolving/InvalidData.
       throw new RuntimeException(e);
     } catch (IOException ex) {
-      LOGGER.info("Could not retrieve collection {}", collectionName, ex);
+      log.info("Could not retrieve collection {}", collectionName, ex);
       throw new InvalidDataException(
           "Collection for name " + collectionName + " can not be parsed", ex);
     }
@@ -103,7 +105,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       // have a different error handling path than Resolving/InvalidData.
       throw new RuntimeException(e);
     } catch (ResourceIOException ex) {
-      LOGGER.error("Error getting manifest for identifier {}", identifier, ex);
+      log.error("Error getting manifest for identifier {}", identifier, ex);
       throw new ResolvingException("No manifest for identifier " + identifier);
     }
     try {
@@ -113,7 +115,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       // have a different error handling path than Resolving/InvalidData.
       throw new RuntimeException(e);
     } catch (IOException ex) {
-      LOGGER.error("Manifest {} can not be parsed", identifier, ex);
+      log.error("Manifest {} can not be parsed", identifier, ex);
       throw new InvalidDataException("Manifest " + identifier + " can not be parsed", ex);
     }
   }
@@ -140,7 +142,7 @@ public class PresentationRepositoryImpl implements PresentationRepository {
       // have a different error handling path than Resolving/InvalidData.
       throw new RuntimeException(e);
     } catch (ResourceIOException ex) {
-      LOGGER.error(
+      log.error(
           "Error getting resource for identifier '{}', message '{}'", identifier, ex.getMessage());
       throw new ResolvingException("No manifest for identifier " + identifier);
     }

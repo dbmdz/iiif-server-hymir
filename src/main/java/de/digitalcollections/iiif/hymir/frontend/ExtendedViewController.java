@@ -23,10 +23,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * <p>Provides direct access to viewer for external call. Can be overwritten with custom behaviour.
  */
+@Deprecated(forRemoval = true)  // Will be gone with the next major version
 @Controller
 public class ExtendedViewController {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ExtendedViewController.class);
+  private static final Logger log = LoggerFactory.getLogger(ExtendedViewController.class);
 
   @Autowired private PresentationService presentationService;
 
@@ -72,16 +73,16 @@ public class ExtendedViewController {
 
     try {
       presentationService.getCanvas(objectIdentifier, canvasId);
-      LOGGER.info("Serving Canvas for {}", canvasId);
+      log.info("Serving Canvas for {}", canvasId);
 
       model.addAttribute("manifestId", manifestId);
       model.addAttribute("canvasId", canvasId);
 
     } catch (ResolvingException e) {
-      LOGGER.info("Did not find canvas for {}", canvasId);
+      log.info("Did not find canvas for {}", canvasId);
       throw e;
     } catch (InvalidDataException e) {
-      LOGGER.error("Bad data for {}", objectIdentifier);
+      log.error("Bad data for {}", objectIdentifier);
       throw e;
     } finally {
       MDC.clear();

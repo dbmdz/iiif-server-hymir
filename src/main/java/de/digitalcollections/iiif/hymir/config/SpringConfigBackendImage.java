@@ -19,32 +19,32 @@ import org.springframework.context.annotation.Import;
 @Import(SpringConfigCommonsFile.class)
 public class SpringConfigBackendImage {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SpringConfigBackendImage.class);
+  private static final Logger log = LoggerFactory.getLogger(SpringConfigBackendImage.class);
 
   static {
     ImageIO.setUseCache(false); // Use Heap memory for caching instead of disk
 
     deregisterSunImageSpis();
     String[] readerMimeTypes = ImageIO.getReaderMIMETypes();
-    LOGGER.info("ImageIO supported formats (reader): {}", String.join(",", readerMimeTypes));
+    log.debug("ImageIO supported formats (reader): {}", String.join(",", readerMimeTypes));
     for (String mimeType : readerMimeTypes) {
       Iterator<ImageReader> imageReaders = ImageIO.getImageReadersByMIMEType(mimeType);
-      for (Iterator iterator = imageReaders; iterator.hasNext(); ) {
-        ImageReader imageReader = (ImageReader) iterator.next();
+      while (imageReaders.hasNext()) {
+        ImageReader imageReader = imageReaders.next();
         if (imageReader != null) {
-          LOGGER.info("ImageReader: {} {}", mimeType, imageReader.getClass().toString());
+          log.debug("ImageReader: {} {}", mimeType, imageReader.getClass().toString());
         }
       }
     }
 
     String[] writerMimeTypes = ImageIO.getWriterMIMETypes();
-    LOGGER.info("ImageIO supported formats (writer): {}", String.join(",", writerMimeTypes));
+    log.debug("ImageIO supported formats (writer): {}", String.join(",", writerMimeTypes));
     for (String writerMimeType : writerMimeTypes) {
       Iterator<ImageWriter> imageWriters = ImageIO.getImageWritersByMIMEType(writerMimeType);
-      for (Iterator iterator = imageWriters; iterator.hasNext(); ) {
-        ImageWriter imageWriter = (ImageWriter) iterator.next();
+      while (imageWriters.hasNext()) {
+        ImageWriter imageWriter = imageWriters.next();
         if (imageWriter != null) {
-          LOGGER.info("ImageWriter: {} {}", writerMimeType, imageWriter.getClass().toString());
+          log.debug("ImageWriter: {} {}", writerMimeType, imageWriter.getClass().toString());
         }
       }
     }
@@ -54,13 +54,11 @@ public class SpringConfigBackendImage {
   private static void deregisterSunImageSpis() {
     IIORegistry registry = IIORegistry.getDefaultInstance();
 
-    // We need to disable using the com.sun.imageio.* classes for tiff and jpeg due to strange
-    // runtime bugs.
-    // But we can just rely on the TwelveMonkeys imageio packages 🎉
-    // gif and png support is not provided by TwelveMonkeys
-    // (https://github.com/haraldk/TwelveMonkeys/issues/137)
-    // so we do not need to disable PNGImage{Reader,Writer}Spi and GIFImage{Reader, Writer}Spi for
-    // the com.sun.imageio.* classes here.
+    // We need to disable usage of the com.sun.imageio.* classes for TIFF, JPEG and BMP due to
+    // strange runtime bugs. Fortunately, the TwelveMonkeys imageio packages for those formats
+    // work 🎉
+    // We can't block all com.sun.imageio.* SPIs, since GIF and PNG support is not provided by
+    // TwelveMonkeys (https://github.com/haraldk/TwelveMonkeys/issues/137).
     Set<String> spis =
         new HashSet<>(
             Arrays.asList(
@@ -75,7 +73,7 @@ public class SpringConfigBackendImage {
         Object spiProvider = registry.getServiceProviderByClass(Class.forName(spi));
         registry.deregisterServiceProvider(spiProvider);
       } catch (ClassNotFoundException e) {
-        LOGGER.debug(e.getMessage());
+        log.debug(e.getMessage());
       }
     }
   }
