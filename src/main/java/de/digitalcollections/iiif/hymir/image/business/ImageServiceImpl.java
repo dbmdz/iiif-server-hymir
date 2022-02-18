@@ -3,6 +3,7 @@ package de.digitalcollections.iiif.hymir.image.business;
 import com.google.common.collect.Streams;
 import de.digitalcollections.commons.file.backend.FileSystemResourceIOException;
 import de.digitalcollections.commons.file.business.api.FileResourceService;
+import de.digitalcollections.iiif.hymir.image.business.ImageMetrics.ImageDataOp;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageSecurityService;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
@@ -72,6 +73,7 @@ public class ImageServiceImpl implements ImageService {
 
   private final ImageSecurityService imageSecurityService;
   private final FileResourceService fileResourceService;
+  private final ImageMetrics metrics;
 
   @Value("${custom.iiif.logo:}")
   private String logoUrl;
@@ -90,9 +92,11 @@ public class ImageServiceImpl implements ImageService {
 
   public ImageServiceImpl(
       @Autowired(required = false) ImageSecurityService imageSecurityService,
-      @Autowired FileResourceService fileResourceService) {
+      @Autowired FileResourceService fileResourceService,
+      @Autowired ImageMetrics metrics) {
     this.imageSecurityService = imageSecurityService;
     this.fileResourceService = fileResourceService;
+    this.metrics = metrics;
   }
 
   /** Update ImageService based on the image * */
@@ -192,9 +196,15 @@ public class ImageServiceImpl implements ImageService {
       throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException,
           IOException {
     ImageReader r = null;
+    int metricKey = metrics.startImageOp();
     try {
       r = getReader(identifier);
       enrichInfo(r, info);
+      metrics.endImageOp(
+          metricKey,
+          ImageDataOp.GET_INFO,
+          r.getFormatName().toLowerCase(Locale.ROOT),
+          info.getWidth() * info.getHeight());
       if (!this.logoUrl.isEmpty()) {
         info.addLogo(this.logoUrl);
       }
@@ -210,6 +220,7 @@ public class ImageServiceImpl implements ImageService {
         }
       }
     } finally {
+      metrics.clearTimer(metricKey);
       if (r != null) {
         r.dispose();
       }
@@ -261,6 +272,7 @@ public class ImageServiceImpl implements ImageService {
       String identifier, ImageApiSelector selector, ImageApiProfile profile)
       throws IOException, ResourceNotFoundException, UnsupportedFormatException,
           InvalidParametersException, ScalingException {
+    int metricKey = metrics.startImageOp();
     ImageReader reader = null;
     try {
       reader = getReader(identifier);
@@ -315,8 +327,16 @@ public class ImageServiceImpl implements ImageService {
         throw new ScalingException("Scaling resulted in width or height ≤ 0: " + targetSize);
       }
 
-      return new DecodedImage(reader.read(imageIndex, readParam), targetSize, rotation);
+      DecodedImage decoded =
+          new DecodedImage(reader.read(imageIndex, readParam), targetSize, rotation);
+      metrics.endImageOp(
+          metricKey,
+          ImageDataOp.DECODE,
+          reader.getFormatName().toLowerCase(Locale.ROOT),
+          decoded.targetSize.width * decoded.targetSize.height);
+      return decoded;
     } finally {
+      metrics.clearTimer(metricKey);
       if (reader != null) {
         reader.dispose();
       }
@@ -334,6 +354,7 @@ public class ImageServiceImpl implements ImageService {
     final int inType = img.getType();
     boolean needsAdditionalScaling =
         !new Dimension(img.getWidth(), img.getHeight()).equals(targetSize);
+    int metricKey = metrics.startImageOp();
     if (needsAdditionalScaling) {
       img =
           Scalr.resize(
@@ -386,9 +407,12 @@ public class ImageServiceImpl implements ImageService {
       img = newImg;
       g2d.dispose();
     }
+    metrics.endImageOp(
+        metricKey, ImageDataOp.TRANSFORM, inputImage.getWidth() * inputImage.getHeight());
     return img;
   }
 
+  @SuppressWarnings("UnstableApiUsage")
   @Override
   public void processImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
@@ -420,6 +444,7 @@ public class ImageServiceImpl implements ImageService {
     boolean containsAlphaChannel = containsAlphaChannel(decodedImage.img);
     LOGGER.debug("image contains alpha channel: " + containsAlphaChannel);
     if (containsAlphaChannel) {
+      int alphaMetricKey = metrics.startImageOp();
       int type = decodedImage.img.getType();
       LOGGER.debug("image is of type: " + type);
       if (BufferedImage.TYPE_INT_ARGB != type) {
@@ -434,6 +459,7 @@ public class ImageServiceImpl implements ImageService {
         convertedImage.getGraphics().dispose();
         decodedImage =
             new DecodedImage(convertedImage, decodedImage.targetSize, decodedImage.rotation);
+        metrics.endImageOp(alphaMetricKey, ImageDataOp.ALPHACONVERT, decodedImage.getPixelSize());
       }
     }
 
@@ -445,6 +471,7 @@ public class ImageServiceImpl implements ImageService {
             selector.getRotation().isMirror(),
             selector.getQuality());
 
+    int encodeMetricKey = metrics.startImageOp();
     ImageWriter writer =
         Streams.stream(
                 ImageIO.getImageWriters(
@@ -454,6 +481,7 @@ public class ImageServiceImpl implements ImageService {
     ImageOutputStream ios = ImageIO.createImageOutputStream(os);
     writer.setOutput(ios);
     writer.write(outImg);
+    metrics.endImageOp(encodeMetricKey, ImageDataOp.ENCODE, decodedImage.getPixelSize());
     writer.dispose();
     ios.flush();
   }
@@ -528,6 +556,10 @@ public class ImageServiceImpl implements ImageService {
       this.img = img;
       this.targetSize = targetSize;
       this.rotation = rotation;
+    }
+
+    public int getPixelSize() {
+      return this.img.getWidth() * this.img.getHeight();
     }
   }
 }

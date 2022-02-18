@@ -1,6 +1,5 @@
 package de.digitalcollections.iiif.hymir.image.frontend;
 
-import de.digitalcollections.commons.springboot.metrics.MetricsService;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.image.business.api.ImageService;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidParametersException;
@@ -46,8 +45,6 @@ public class IIIFImageApiController {
   private final ImageService imageService;
   private final IiifObjectMapper objectMapper;
 
-  private final MetricsService metricsService;
-
   @SuppressFBWarnings(
       value = "EI_EXPOSE_REP2",
       justification =
@@ -57,12 +54,10 @@ public class IIIFImageApiController {
   public IIIFImageApiController(
       ImageService imageService,
       IiifObjectMapper objectMapper,
-      CustomResponseHeaders customResponseHeaders,
-      MetricsService metricsService) {
+      CustomResponseHeaders customResponseHeaders) {
     this.imageService = imageService;
     this.objectMapper = objectMapper;
     this.customResponseHeaders = customResponseHeaders;
-    this.metricsService = metricsService;
   }
 
   void setCanonicalRedirectEnabled(boolean canonicalRedirectEnabled) {
@@ -179,10 +174,7 @@ public class IIIFImageApiController {
               "<%s>;rel=\"profile\"", info.getProfiles().get(0).getIdentifier().toString()));
 
       ByteArrayOutputStream os = new ByteArrayOutputStream();
-      long duration = System.currentTimeMillis();
       imageService.processImage(identifier, selector, profile, os);
-      duration = System.currentTimeMillis() - duration;
-      metricsService.increaseCounterWithDurationAndPercentiles("image", "process", duration);
 
       customResponseHeaders
           .forImageTile()
@@ -205,7 +197,6 @@ public class IIIFImageApiController {
     if (UrlRules.isInsecure(identifier)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
     }
-    long duration = System.currentTimeMillis();
     long modified = imageService.getImageModificationDate(identifier).toEpochMilli();
     webRequest.checkNotModified(modified);
     String path;
@@ -221,8 +212,6 @@ public class IIIFImageApiController {
                 .replace(identifier, URLEncoder.encode(identifier, StandardCharsets.UTF_8));
     var info = new de.digitalcollections.iiif.model.image.ImageService(imageIdentifier);
     imageService.readImageInfo(identifier, info);
-    duration = System.currentTimeMillis() - duration;
-    metricsService.increaseCounterWithDurationAndPercentiles("generations", "infojson", duration);
     HttpHeaders headers = new HttpHeaders();
     headers.setDate("Last-Modified", modified);
     String contentType = req.getHeader("Accept");
