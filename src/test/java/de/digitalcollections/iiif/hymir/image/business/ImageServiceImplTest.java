@@ -39,7 +39,8 @@ public class ImageServiceImplTest {
   void setUp() {
     ImageSecurityService imageSecurityService = mock(ImageSecurityService.class);
     FileResourceService fileResourceService = mock(FileResourceService.class);
-    imageService = new ImageServiceImpl(imageSecurityService, fileResourceService);
+    imageService =
+        new ImageServiceImpl(imageSecurityService, fileResourceService, mock(ImageMetrics.class));
   }
 
   @Test

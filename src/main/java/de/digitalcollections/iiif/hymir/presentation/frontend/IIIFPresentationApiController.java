@@ -1,6 +1,5 @@
 package de.digitalcollections.iiif.hymir.presentation.frontend;
 
-import de.digitalcollections.commons.springboot.metrics.MetricsService;
 import de.digitalcollections.iiif.hymir.config.CustomResponseHeaders;
 import de.digitalcollections.iiif.hymir.model.exception.InvalidDataException;
 import de.digitalcollections.iiif.hymir.model.exception.ResolvingException;
@@ -37,8 +36,6 @@ public class IIIFPresentationApiController {
 
   @Autowired private PresentationService presentationService;
 
-  @Autowired private MetricsService metricsService;
-
   // We set the header ourselves, since using @CrossOrigin doesn't expose "*", but always sets the
   // requesting domain
   // @CrossOrigin(allowedHeaders = {"*"}, origins = {"*"})
@@ -59,11 +56,7 @@ public class IIIFPresentationApiController {
     if (request.checkNotModified(modified)) {
       return null;
     }
-    long generationDuration = System.currentTimeMillis();
     Manifest manifest = presentationService.getManifest(identifier);
-    generationDuration = System.currentTimeMillis() - generationDuration;
-    metricsService.increaseCounterWithDurationAndPercentiles(
-        "generations", "manifest", generationDuration);
     resp.setDateHeader("Last-Modified", modified);
     resp.addHeader("Access-Control-Allow-Origin", "*");
 
