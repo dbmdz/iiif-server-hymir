@@ -22,6 +22,7 @@ import de.digitalcollections.model.file.MimeType;
 import de.digitalcollections.model.identifiable.resource.FileResource;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReadParam;
 import de.digitalcollections.turbojpeg.imageio.TurboJpegImageReader;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -90,6 +91,9 @@ public class ImageServiceImpl implements ImageService {
   @Value("${custom.iiif.image.maxHeight:65500}")
   private int maxHeight;
 
+  @SuppressFBWarnings(
+      value = "EI_EXPOSE_REP2",
+      justification = "This is intended for the metrics component ")
   public ImageServiceImpl(
       @Autowired(required = false) ImageSecurityService imageSecurityService,
       @Autowired FileResourceService fileResourceService,
