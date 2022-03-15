@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.1.3] - 2022-03-15
+### Fixed
+- Fix off-by-one errors when decoding scaled down full-area image (#280, #281)
+- Bump imageio-jnr version to fix bug in cropping of JPEG2000 images
+
+## [5.1.2] - 2022-02-14
+### Fixed
+- Fix error handling for image requests with size or region of 0 (#277)
+- Ensure a HTTP 500 is returned in case of low-level I/O errors instead of a 404 (#276)
+
 ## [5.1.1] - 2021-10-18
 ### Fixed
 - Fixed ACL check in `ImageServiceImpl` that did not pass the HTTP request to the security backend
