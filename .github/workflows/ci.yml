@@ -56,7 +56,7 @@ jobs:
       - name: Install TurboJPEG library
         run: sudo apt install libturbojpeg
       - name: Install XML utils
-        run: sudo apt install libxml2-utils
+        run: sudo apt update && sudo apt install libxml2-utils
       - name: Set project version
         run: echo "PROJECT_VERSION=$(xmllint --xpath '/*[local-name()="project"]/*[local-name()="version"]/text()' pom.xml)" >> $GITHUB_ENV
       - name: Publish to the Maven Central Repository
