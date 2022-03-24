@@ -479,7 +479,11 @@ public class ImageServiceImpl implements ImageService {
     ImageOutputStream ios = ImageIO.createImageOutputStream(os);
     writer.setOutput(ios);
     writer.write(outImg);
-    metrics.endImageOp(encodeMetricKey, ImageDataOp.ENCODE, decodedImage.getPixelSize());
+    metrics.endImageOp(
+        encodeMetricKey,
+        ImageDataOp.ENCODE,
+        writer.getOriginatingProvider().getFormatNames()[0].toLowerCase(Locale.ROOT),
+        decodedImage.getPixelSize());
     writer.dispose();
     ios.flush();
   }
