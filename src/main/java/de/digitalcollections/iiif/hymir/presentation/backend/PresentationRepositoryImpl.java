@@ -27,7 +27,7 @@ import org.springframework.stereotype.Repository;
  * Manifest instance.
  */
 @Repository
-@Deprecated(forRemoval = true)  // Will be gone with the next major version
+@Deprecated(forRemoval = true) // Will be gone with the next major version
 public class PresentationRepositoryImpl implements PresentationRepository {
 
   private static final String COLLECTION_PREFIX = "collection-";

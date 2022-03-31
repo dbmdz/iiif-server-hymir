@@ -14,9 +14,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/**
- * Small component to allow for convenient measurements of image data operations.
- */
+/** Small component to allow for convenient measurements of image data operations. */
 @Component
 public class ImageMetrics {
   public enum ImageDataOp {

@@ -27,7 +27,7 @@ import org.springframework.web.context.request.WebRequest;
 
 @Controller
 @RequestMapping("${custom.iiif.presentation.urlPrefix:/presentation/v2}")
-@Deprecated(forRemoval = true)  // Will be gone with the next major version
+@Deprecated(forRemoval = true) // Will be gone with the next major version
 public class IIIFPresentationApiController {
 
   public static final String VERSION = "v2";

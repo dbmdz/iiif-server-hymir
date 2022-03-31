@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * <p>Provides direct access to viewer for external call. Can be overwritten with custom behaviour.
  */
-@Deprecated(forRemoval = true)  // Will be gone with the next major version
+@Deprecated(forRemoval = true) // Will be gone with the next major version
 @Controller
 public class ExtendedViewController {
 

@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@Deprecated(forRemoval = true)  // Will be gone with the next major version
+@Deprecated(forRemoval = true) // Will be gone with the next major version
 public class PresentationServiceImpl implements PresentationService {
 
   private final PresentationRepository presentationRepository;

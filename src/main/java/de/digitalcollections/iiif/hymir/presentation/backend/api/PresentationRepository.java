@@ -9,7 +9,7 @@ import de.digitalcollections.model.exception.ResourceNotFoundException;
 import java.time.Instant;
 
 /** Interface to be implemented by project/user of this library. */
-@Deprecated(forRemoval = true)  // Will be gone with the next major version
+@Deprecated(forRemoval = true) // Will be gone with the next major version
 public interface PresentationRepository {
 
   /**

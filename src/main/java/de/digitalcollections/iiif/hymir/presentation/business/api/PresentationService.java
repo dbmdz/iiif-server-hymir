@@ -14,7 +14,7 @@ import java.net.URI;
 import java.time.Instant;
 
 /** Service for IIIF Presentation API functionality. */
-@Deprecated(forRemoval = true)  // Will be gone with the next major version
+@Deprecated(forRemoval = true) // Will be gone with the next major version
 public interface PresentationService {
 
   /**
