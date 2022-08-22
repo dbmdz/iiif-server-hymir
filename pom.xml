@@ -90,7 +90,7 @@
     <version.logstash-logback-encoder>7.2</version.logstash-logback-encoder>
     <version.spotbugs>4.7.1</version.spotbugs>
     <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
-    <version.twelvemonkeys>3.8.2</version.twelvemonkeys>
+    <version.twelvemonkeys>3.8.3</version.twelvemonkeys>
     <version.webjar-bootstrap>4.6.0</version.webjar-bootstrap>
     <version.webjar-html5shiv>3.7.3-1</version.webjar-html5shiv>
     <version.webjar-ie10-viewport-bug-workaround>1.0.3</version.webjar-ie10-viewport-bug-workaround>
