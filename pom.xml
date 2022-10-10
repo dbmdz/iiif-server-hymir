@@ -80,7 +80,7 @@
     <version.dc-commons-file>6.0.0</version.dc-commons-file>
     <version.dc-commons-server>4.1.2</version.dc-commons-server>
     <version.dc-commons-springboot>4.1.3</version.dc-commons-springboot>
-    <version.dc-commons-springmvc>4.2.0</version.dc-commons-springmvc>
+    <version.dc-commons-springmvc>6.0.0</version.dc-commons-springmvc>
     <version.dc-model>11.0.1</version.dc-model>
     <version.guava>31.1-jre</version.guava>
     <version.iiif-apis>0.3.9</version.iiif-apis>
