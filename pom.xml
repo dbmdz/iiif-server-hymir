@@ -394,9 +394,9 @@
 
     <plugins>
       <plugin>
-        <groupId>com.coveo</groupId>
+        <groupId>com.spotify.fmt</groupId>
         <artifactId>fmt-maven-plugin</artifactId>
-        <version>${version.maven-fmt-plugin}</version>
+        <version>2.18</version>
         <executions>
           <execution>
             <goals>
