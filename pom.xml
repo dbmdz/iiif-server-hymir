@@ -75,44 +75,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <timestamp>${maven.build.timestamp}</timestamp>
     <versionName>${project.version} manually built by ${user.name} at ${maven.build.timestamp}</versionName>
-
-    <version.assertj-json>1.2.0</version.assertj-json>
-    <version.dc-commons-file>6.0.0</version.dc-commons-file>
-    <version.dc-commons-server>4.1.2</version.dc-commons-server>
-    <version.dc-commons-springboot>4.1.3</version.dc-commons-springboot>
-    <version.dc-commons-springmvc>6.0.0</version.dc-commons-springmvc>
-    <version.dc-model>11.0.1</version.dc-model>
-    <version.guava>31.1-jre</version.guava>
-    <version.iiif-apis>0.3.9</version.iiif-apis>
-    <version.imageio-jnr>0.6.2</version.imageio-jnr>
-    <version.imgscalr-lib>4.2</version.imgscalr-lib>
-    <version.json-simple>1.1.1</version.json-simple>
-    <version.logstash-logback-encoder>7.2</version.logstash-logback-encoder>
-    <version.spotbugs>4.7.2</version.spotbugs>
-    <version.thymeleaf-extras-conditionalcomments>2.1.2.RELEASE</version.thymeleaf-extras-conditionalcomments>
-    <version.twelvemonkeys>3.8.3</version.twelvemonkeys>
-    <version.webjar-bootstrap>4.6.0</version.webjar-bootstrap>
-    <version.webjar-html5shiv>3.7.3-1</version.webjar-html5shiv>
-    <version.webjar-ie10-viewport-bug-workaround>1.0.3</version.webjar-ie10-viewport-bug-workaround>
-    <version.webjar-jquery>3.6.3</version.webjar-jquery>
-    <version.webjar-mirador>2.7.0</version.webjar-mirador>
-    <version.webjar-mirador-canvaslink>1.2.4</version.webjar-mirador-canvaslink>
-    <version.webjar-mirador-downloadmenu>1.0.6</version.webjar-mirador-downloadmenu>
-    <version.webjar-mirador-imagecropper>2.4.6</version.webjar-mirador-imagecropper>
-    <version.webjar-mirador-keyboardnavigation>1.1.0</version.webjar-mirador-keyboardnavigation>
-    <version.webjar-mirador-physicalruler>1.3.4</version.webjar-mirador-physicalruler>
-    <version.webjar-mirador-sharebuttons>1.0.2</version.webjar-mirador-sharebuttons>
-    <version.webjar-mirador-viewfromurl>1.2.0</version.webjar-mirador-viewfromurl>
-    <version.webjar-openseadragon>2.4.2</version.webjar-openseadragon>
-    <version.webjar-respond>1.4.2</version.webjar-respond>
-
-    <!-- plugins -->
-    <version.jacoco-maven-plugin>0.8.8</version.jacoco-maven-plugin>
-    <version.maven-fmt-plugin>2.13</version.maven-fmt-plugin>
-    <version.maven-gpg-plugin>3.0.1</version.maven-gpg-plugin>
-    <version.maven-surefire-plugin>3.0.0-M8</version.maven-surefire-plugin>
-    <version.nexus-staging-maven-plugin>1.6.13</version.nexus-staging-maven-plugin>
-    <version.spotbugs-maven-plugin>4.7.2.1</version.spotbugs-maven-plugin>
   </properties>
 
   <dependencies>
@@ -139,17 +101,17 @@
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
-      <version>${version.spotbugs}</version>
+      <version>4.7.2</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>${version.guava}</version>
+      <version>31.1-jre</version>
     </dependency>
     <dependency>
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
-      <version>${version.json-simple}</version>
+      <version>1.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>junit</groupId>
@@ -160,63 +122,63 @@
     <dependency>
       <groupId>com.revinate</groupId>
       <artifactId>assertj-json</artifactId>
-      <version>${version.assertj-json}</version>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-bmp</artifactId>
-      <version>${version.twelvemonkeys}</version>
+      <version>3.8.3</version>
     </dependency>
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-jpeg</artifactId>
-      <version>${version.twelvemonkeys}</version>
+      <version>3.8.3</version>
     </dependency>
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-tiff</artifactId>
-      <version>${version.twelvemonkeys}</version>
+      <version>3.8.3</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-file</artifactId>
-      <version>${version.dc-commons-file}</version>
+      <version>6.0.0</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-server</artifactId>
-      <version>${version.dc-commons-server}</version>
+      <version>4.1.2</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-springboot</artifactId>
-      <version>${version.dc-commons-springboot}</version>
+      <version>4.1.3</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.commons</groupId>
       <artifactId>dc-commons-springmvc</artifactId>
-      <version>${version.dc-commons-springmvc}</version>
+      <version>6.0.0</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
       <artifactId>imageio-turbojpeg</artifactId>
-      <version>${version.imageio-jnr}</version>
+      <version>0.6.2</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
       <artifactId>imageio-openjpeg</artifactId>
-      <version>${version.imageio-jnr}</version>
+      <version>0.6.2</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.iiif</groupId>
       <artifactId>iiif-apis</artifactId>
-      <version>${version.iiif-apis}</version>
+      <version>0.3.9</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.model</groupId>
       <artifactId>dc-model</artifactId>
-      <version>${version.dc-model}</version>
+      <version>11.0.1</version>
     </dependency>
     <dependency>
       <groupId>io.micrometer</groupId>
@@ -229,7 +191,7 @@
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
-      <version>${version.logstash-logback-encoder}</version>
+      <version>7.2</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -248,7 +210,7 @@
     <dependency>
       <groupId>org.imgscalr</groupId>
       <artifactId>imgscalr-lib</artifactId>
-      <version>${version.imgscalr-lib}</version>
+      <version>4.2</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -294,27 +256,27 @@
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
       <artifactId>thymeleaf-extras-conditionalcomments</artifactId>
-      <version>${version.thymeleaf-extras-conditionalcomments}</version>
+      <version>2.1.2.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>html5shiv</artifactId>
-      <version>${version.webjar-html5shiv}</version>
+      <version>3.7.3-1</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>mirador</artifactId>
-      <version>${version.webjar-mirador}</version>
+      <version>2.7.0</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.bower</groupId>
       <artifactId>ie10-viewport-bug-workaround</artifactId>
-      <version>${version.webjar-ie10-viewport-bug-workaround}</version>
+      <version>1.0.3</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>bootstrap</artifactId>
-      <version>${version.webjar-bootstrap}</version>
+      <version>4.6.0</version>
       <exclusions>
         <exclusion>
           <groupId>org.webjars</groupId>
@@ -325,52 +287,52 @@
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-canvaslink</artifactId>
-      <version>${version.webjar-mirador-canvaslink}</version>
+      <version>1.2.4</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-downloadmenu</artifactId>
-      <version>${version.webjar-mirador-downloadmenu}</version>
+      <version>1.0.6</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-imagecropper</artifactId>
-      <version>${version.webjar-mirador-imagecropper}</version>
+      <version>2.4.6</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-keyboardnavigation</artifactId>
-      <version>${version.webjar-mirador-keyboardnavigation}</version>
+      <version>1.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-physicalruler</artifactId>
-      <version>${version.webjar-mirador-physicalruler}</version>
+      <version>1.3.4</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-sharebuttons</artifactId>
-      <version>${version.webjar-mirador-sharebuttons}</version>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-viewfromurl</artifactId>
-      <version>${version.webjar-mirador-viewfromurl}</version>
+      <version>1.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>jquery</artifactId>
-      <version>${version.webjar-jquery}</version>
+      <version>3.6.1</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>openseadragon</artifactId>
-      <version>${version.webjar-openseadragon}</version>
+      <version>2.4.2</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>respond.js</artifactId>
-      <version>${version.webjar-respond}</version>
+      <version>1.4.2</version>
     </dependency>
   </dependencies>
 
@@ -408,13 +370,13 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>${version.spotbugs-maven-plugin}</version>
+        <version>4.7.2.1</version>
         <dependencies>
           <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>${version.spotbugs}</version>
+            <version>4.7.2</version>
           </dependency>
         </dependencies>
         <executions>
@@ -477,7 +439,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>${version.maven-surefire-plugin}</version>
+        <version>3.0.0-M7</version>
         <configuration>
           <excludedGroups>${excludeTags}</excludedGroups>
         </configuration>
@@ -489,7 +451,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${version.jacoco-maven-plugin}</version>
+        <version>0.8.8</version>
         <executions>
           <execution>
             <id>pre-unit-test</id>
@@ -513,7 +475,7 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>${version.nexus-staging-maven-plugin}</version>
+        <version>1.6.13</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>ossrh</serverId>
@@ -588,7 +550,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${version.jacoco-maven-plugin}</version>
+        <version>0.8.8</version>
       </plugin>
     </plugins>
   </reporting>
@@ -601,7 +563,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>${version.maven-gpg-plugin}</version>
+            <version>3.0.1</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
