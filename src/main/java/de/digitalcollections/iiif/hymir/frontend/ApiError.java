@@ -14,7 +14,9 @@ public class ApiError {
     this.reason = exception.getMessage();
   }
 
-  /** @return The reason why the request failed. */
+  /**
+   * @return The reason why the request failed.
+   */
   public String getReason() {
     return reason;
   }
