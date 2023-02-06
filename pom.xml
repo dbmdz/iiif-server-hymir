@@ -127,11 +127,6 @@
     </dependency>
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
-      <artifactId>imageio-bmp</artifactId>
-      <version>3.8.3</version>
-    </dependency>
-    <dependency>
-      <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-jpeg</artifactId>
       <version>3.8.3</version>
     </dependency>
