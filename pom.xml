@@ -158,12 +158,12 @@
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
       <artifactId>imageio-turbojpeg</artifactId>
-      <version>0.6.4-SNAPSHOT</version>
+      <version>0.6.4</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
       <artifactId>imageio-openjpeg</artifactId>
-      <version>0.6.4-SNAPSHOT</version>
+      <version>0.6.4</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.iiif</groupId>
