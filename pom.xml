@@ -14,7 +14,7 @@
 
   <groupId>de.digitalcollections</groupId>
   <artifactId>iiif-server-hymir</artifactId>
-  <version>5.1.9-SNAPSHOT</version>
+  <version>6.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <url>https://github.com/dbmdz/iiif-server-hymir</url>
@@ -190,10 +190,6 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>nz.net.ultraq.thymeleaf</groupId>
-      <artifactId>thymeleaf-layout-dialect</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
     </dependency>
@@ -247,87 +243,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.thymeleaf.extras</groupId>
-      <artifactId>thymeleaf-extras-conditionalcomments</artifactId>
-      <version>2.1.2.RELEASE</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>html5shiv</artifactId>
-      <version>3.7.3-1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>mirador</artifactId>
-      <version>2.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.bower</groupId>
-      <artifactId>ie10-viewport-bug-workaround</artifactId>
-      <version>1.0.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>bootstrap</artifactId>
-      <version>4.6.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.webjars</groupId>
-          <artifactId>jquery</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>dbmdz__mirador-canvaslink</artifactId>
-      <version>1.2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>dbmdz__mirador-downloadmenu</artifactId>
-      <version>1.0.6</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>dbmdz__mirador-imagecropper</artifactId>
-      <version>2.4.6</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>dbmdz__mirador-keyboardnavigation</artifactId>
-      <version>1.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>dbmdz__mirador-physicalruler</artifactId>
-      <version>1.3.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>dbmdz__mirador-sharebuttons</artifactId>
-      <version>1.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>dbmdz__mirador-viewfromurl</artifactId>
-      <version>1.2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>jquery</artifactId>
-      <version>3.6.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>openseadragon</artifactId>
-      <version>2.4.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>respond.js</artifactId>
-      <version>1.4.2</version>
     </dependency>
   </dependencies>
 
