@@ -18,9 +18,7 @@ public class CustomResponseHeaders {
   private final List<ResponseHeader> imageInfo;
 
   // custom.iiif.headers
-  public CustomResponseHeaders(
-      List<ResponseHeader> all,
-      ImageResponseHeaders image) {
+  public CustomResponseHeaders(List<ResponseHeader> all, ImageResponseHeaders image) {
     all = Objects.requireNonNullElseGet(all, Collections::emptyList);
     image = Objects.requireNonNullElseGet(image, ImageResponseHeaders::empty);
     this.imageTile = concatenate(all, image.image);
