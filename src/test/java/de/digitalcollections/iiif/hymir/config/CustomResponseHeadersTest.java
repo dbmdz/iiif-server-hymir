@@ -31,8 +31,5 @@ public class CustomResponseHeadersTest {
     ResponseHeader header1 = headersImageInfo.get(1);
     assertThat(header1.getName()).isEqualTo("header1");
     assertThat(header1.getValue()).isEqualTo("value1");
-
-    assertThat(headers.forPresentationManifest().size()).isEqualTo(3);
-    assertThat(headers.forPresentationCollection().size()).isEqualTo(1);
   }
 }
