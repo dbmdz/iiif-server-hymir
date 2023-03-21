@@ -16,23 +16,13 @@ public class CustomResponseHeaders {
 
   private final List<ResponseHeader> imageTile;
   private final List<ResponseHeader> imageInfo;
-  private final List<ResponseHeader> presentationManifest;
-  private final List<ResponseHeader> presentationAnnotationList;
-  private final List<ResponseHeader> presentationCollection;
 
   // custom.iiif.headers
-  public CustomResponseHeaders(
-      List<ResponseHeader> all,
-      ImageResponseHeaders image,
-      PresentationResponseHeaders presentation) {
+  public CustomResponseHeaders(List<ResponseHeader> all, ImageResponseHeaders image) {
     all = Objects.requireNonNullElseGet(all, Collections::emptyList);
     image = Objects.requireNonNullElseGet(image, ImageResponseHeaders::empty);
-    presentation = Objects.requireNonNullElseGet(presentation, PresentationResponseHeaders::empty);
     this.imageTile = concatenate(all, image.image);
     this.imageInfo = concatenate(all, image.info);
-    this.presentationManifest = concatenate(all, presentation.manifest);
-    this.presentationAnnotationList = concatenate(all, presentation.annotationList);
-    this.presentationCollection = concatenate(all, presentation.collection);
   }
 
   private List<ResponseHeader> concatenate(
@@ -48,18 +38,6 @@ public class CustomResponseHeaders {
 
   public List<ResponseHeader> forImageInfo() {
     return unmodifiableList(imageInfo);
-  }
-
-  public List<ResponseHeader> forPresentationManifest() {
-    return unmodifiableList(presentationManifest);
-  }
-
-  public List<ResponseHeader> forPresentationCollection() {
-    return unmodifiableList(presentationCollection);
-  }
-
-  public List<ResponseHeader> forPresentationAnnotationList() {
-    return unmodifiableList(presentationAnnotationList);
   }
 
   protected static class ImageResponseHeaders {
@@ -82,39 +60,6 @@ public class CustomResponseHeaders {
 
     public static ImageResponseHeaders empty() {
       return new ImageResponseHeaders(emptyList(), emptyList());
-    }
-  }
-
-  @ConstructorBinding
-  protected static class PresentationResponseHeaders {
-
-    private final List<ResponseHeader> manifest;
-    private final List<ResponseHeader> collection;
-    private final List<ResponseHeader> annotationList;
-
-    public PresentationResponseHeaders(
-        List<ResponseHeader> manifest,
-        List<ResponseHeader> collection,
-        List<ResponseHeader> annotationList) {
-      this.manifest = Objects.requireNonNullElseGet(manifest, Collections::emptyList);
-      this.collection = Objects.requireNonNullElseGet(collection, Collections::emptyList);
-      this.annotationList = Objects.requireNonNullElseGet(annotationList, Collections::emptyList);
-    }
-
-    public List<ResponseHeader> getManifest() {
-      return unmodifiableList(manifest);
-    }
-
-    public List<ResponseHeader> getCollection() {
-      return unmodifiableList(collection);
-    }
-
-    public List<ResponseHeader> getAnnotationList() {
-      return unmodifiableList(annotationList);
-    }
-
-    public static PresentationResponseHeaders empty() {
-      return new PresentationResponseHeaders(emptyList(), emptyList(), emptyList());
     }
   }
 

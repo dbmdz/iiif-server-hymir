@@ -11,13 +11,6 @@ custom:
         info:
           - name: 'header1'
             value: 'value1'
-      presentation:
-        manifest:
-          - name: 'mani1'
-            value: 'mani-value1'
-          - name: 'mani2'
-            value: 'mani-value2'
-        collection: null
     image:
       maxWidth: 65500
       maxHeight: 65500
@@ -70,10 +63,6 @@ resourceRepository:
         substitutions: ['classpath\:mockdata/mock-square-width.jpg']
       - pattern: square-height
         substitutions: ['classpath\:mockdata/mock-square-height.jpg']
-      - pattern: manifest-invalid-data
-        substitutions: ['classpath\:mockdata/manifest-invalid-data.json']
-      - pattern: manifest-valid-data
-        substitutions: ['classpath\:mockdata/manifest.json']
 
 server:
   error:
@@ -93,6 +82,4 @@ spring:
       name: admin
       password: secret
       roles: ACTUATOR
-  thymeleaf:
-    cache: false
-    mode: HTML
+
