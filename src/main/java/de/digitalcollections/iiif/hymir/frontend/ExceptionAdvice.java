@@ -8,6 +8,7 @@ import de.digitalcollections.model.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -58,6 +59,12 @@ public class ExceptionAdvice {
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(UnsupportedOperationException.class)
   public void handleUnsupportedOperationException(Exception exception) {
+    // NOP
+  }
+
+  @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+  @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+  public void handleHttpMediaTypeNotAcceptableException(Exception exception) {
     // NOP
   }
 
