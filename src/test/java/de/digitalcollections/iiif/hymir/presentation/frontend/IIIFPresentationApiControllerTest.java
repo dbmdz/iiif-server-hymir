@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -58,5 +57,22 @@ public class IIIFPresentationApiControllerTest {
             String.class);
     assertThat(response.getHeaders().get("mani1")).containsExactly("mani-value1");
     assertThat(response.getHeaders().get("mani2")).containsExactly("mani-value2");
+  }
+
+  @Test
+  public void testManifestNotAcceptableHeader() {
+    HttpHeaders requestHeaders = new HttpHeaders();
+    requestHeaders.add("Host", "localhost");
+    requestHeaders.add("Accept", "application/something-strange");
+
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            "/presentation/"
+                + IIIFPresentationApiController.VERSION
+                + "/manifest-valid-data/manifest",
+            HttpMethod.GET,
+            new HttpEntity<>(requestHeaders),
+            String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
   }
 }
