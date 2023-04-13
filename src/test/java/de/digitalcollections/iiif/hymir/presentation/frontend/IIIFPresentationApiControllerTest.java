@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import de.digitalcollections.iiif.hymir.Application;
 import de.digitalcollections.iiif.hymir.TestConfiguration;
-import de.digitalcollections.iiif.hymir.image.frontend.IIIFImageApiController;
 import de.digitalcollections.iiif.hymir.presentation.business.PresentationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -67,13 +66,13 @@ public class IIIFPresentationApiControllerTest {
     requestHeaders.add("Accept", "application/something-strange");
 
     ResponseEntity<String> response =
-            restTemplate.exchange(
-                    "/presentation/"
-                            + IIIFPresentationApiController.VERSION
-                            + "/manifest-valid-data/manifest",
-                    HttpMethod.GET,
-                    new HttpEntity<>(requestHeaders),
-                    String.class);
+        restTemplate.exchange(
+            "/presentation/"
+                + IIIFPresentationApiController.VERSION
+                + "/manifest-valid-data/manifest",
+            HttpMethod.GET,
+            new HttpEntity<>(requestHeaders),
+            String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
   }
 }
