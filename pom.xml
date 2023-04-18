@@ -526,6 +526,20 @@
     </snapshotRepository>
   </distributionManagement>
 
+  <repositories>
+    <repository>
+      <id>ossrh-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
   <reporting>
     <plugins>
       <plugin>
