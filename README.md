@@ -513,16 +513,6 @@ To build without tests, execute:
 $ mvn clean install -DskipTests=true
 ```
 
-On newer Java versions `fmt-maven-plugin` will fail:
-
-```sh
-[ERROR] Failed to execute goal com.coveo:fmt-maven-plugin:2.13:format (default) on project iiif-apis: Execution default of goal com.coveo:fmt-maven-plugin:2.13:format failed: An API incompatibility was encountered while executing com.coveo:fmt-maven-plugin:2.13:format: java.lang.IllegalAccessError: null
-```
-
-If you get the error message above (on newer Java versions), consider skipping the `fmt-maven-plugin` by passing `-Dfmt.skip`, like in `mvn package -Dfmt.skip`. Note that additional Maven arguments (`-D`) an be chained, to ignore multiple problems at once (like in `mvn package -Dfmt.skip -DskipTests`).
-
-Sometimes the tests won't pass, especially when you're using a development version, just pass `-DskipTests` to Maven, like in `mvn package -DskipTests`.
-
 To install `libturbojpeg` on Debian based systems:
 
 ```sh
