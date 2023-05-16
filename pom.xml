@@ -14,7 +14,7 @@
 
   <groupId>de.digitalcollections</groupId>
   <artifactId>iiif-server-hymir</artifactId>
-  <version>5.1.11-SNAPSHOT</version>
+  <version>5.1.11</version>
   <packaging>jar</packaging>
 
   <url>https://github.com/dbmdz/iiif-server-hymir</url>
@@ -174,12 +174,12 @@
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
       <artifactId>imageio-turbojpeg</artifactId>
-      <version>0.6.7-SNAPSHOT</version>
+      <version>0.6.7</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.imageio</groupId>
       <artifactId>imageio-openjpeg</artifactId>
-      <version>0.6.7-SNAPSHOT</version>
+      <version>0.6.7</version>
     </dependency>
     <dependency>
       <groupId>de.digitalcollections.iiif</groupId>
