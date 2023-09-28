@@ -193,7 +193,9 @@ public class ImageServiceImpl implements ImageService {
   @Override
   public void readImageInfo(
       String identifier, de.digitalcollections.iiif.model.image.ImageService info)
-      throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException,
+      throws UnsupportedFormatException,
+          UnsupportedOperationException,
+          ResourceNotFoundException,
           IOException {
     ImageReader r = null;
     int metricKey = metrics.startImageOp();
@@ -270,8 +272,11 @@ public class ImageServiceImpl implements ImageService {
   /** Decode an image * */
   private DecodedImage readImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile)
-      throws IOException, ResourceNotFoundException, UnsupportedFormatException,
-          InvalidParametersException, ScalingException {
+      throws IOException,
+          ResourceNotFoundException,
+          UnsupportedFormatException,
+          InvalidParametersException,
+          ScalingException {
     int metricKey = metrics.startImageOp();
     ImageReader reader = null;
     try {
@@ -416,8 +421,12 @@ public class ImageServiceImpl implements ImageService {
   @Override
   public void processImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
-      throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
-          ResourceNotFoundException, IOException, ScalingException {
+      throws InvalidParametersException,
+          UnsupportedOperationException,
+          UnsupportedFormatException,
+          ResourceNotFoundException,
+          IOException,
+          ScalingException {
 
     Rectangle2D region = selector.getRegion().getRegion();
     if (region != null && (region.getWidth() < 1 || region.getHeight() < 1)) {

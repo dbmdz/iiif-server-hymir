@@ -18,11 +18,17 @@ public interface ImageService {
   }
 
   void readImageInfo(String identifier, de.digitalcollections.iiif.model.image.ImageService info)
-      throws UnsupportedFormatException, UnsupportedOperationException, ResourceNotFoundException,
+      throws UnsupportedFormatException,
+          UnsupportedOperationException,
+          ResourceNotFoundException,
           IOException;
 
   void processImage(
       String identifier, ImageApiSelector selector, ImageApiProfile profile, OutputStream os)
-      throws InvalidParametersException, UnsupportedOperationException, UnsupportedFormatException,
-          ResourceNotFoundException, IOException, ScalingException;
+      throws InvalidParametersException,
+          UnsupportedOperationException,
+          UnsupportedFormatException,
+          ResourceNotFoundException,
+          IOException,
+          ScalingException;
 }
