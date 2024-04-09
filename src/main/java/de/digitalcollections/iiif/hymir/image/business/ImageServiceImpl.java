@@ -348,7 +348,7 @@ public class ImageServiceImpl implements ImageService {
     }
   }
 
-  /** Apply transformations to an decoded image * */
+  /** Apply transformations to a decoded image * */
   private BufferedImage transformImage(
       BufferedImage inputImage,
       Dimension targetSize,
@@ -403,7 +403,7 @@ public class ImageServiceImpl implements ImageService {
         outType = BufferedImage.TYPE_3BYTE_BGR;
         break;
       default:
-        outType = inType;
+        outType = inType == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_3BYTE_BGR : inType;
     }
     if (outType != img.getType()) {
       BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), outType);
