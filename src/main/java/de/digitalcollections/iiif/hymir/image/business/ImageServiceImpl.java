@@ -343,6 +343,9 @@ public class ImageServiceImpl implements ImageService {
     } finally {
       metrics.clearTimer(metricKey);
       if (reader != null) {
+        if (reader.getInput() instanceof ImageInputStream) {
+          ((ImageInputStream) reader.getInput()).close();
+        }
         reader.dispose();
       }
     }
