@@ -224,6 +224,9 @@ public class ImageServiceImpl implements ImageService {
     } finally {
       metrics.clearTimer(metricKey);
       if (r != null) {
+        if (r.getInput() instanceof ImageInputStream) {
+          ((ImageInputStream) r.getInput()).close();
+        }
         r.dispose();
       }
     }
