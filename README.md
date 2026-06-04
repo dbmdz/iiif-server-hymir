@@ -5,6 +5,9 @@
 [![GitHub release](https://img.shields.io/github/release/dbmdz/iiif-server-hymir.svg)](https://github.com/dbmdz/iiif-server-hymir/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/de.digitalcollections/iiif-server-hymir.svg)](https://search.maven.org/search?q=a:iiif-server-hymir)
 
+> [!CAUTION]
+> Hymir is going to be retired soon in favour of our new, highly-extensible and easy to use [IIIF image server Wolpi](https://github.com/dbmdz/wolpi).
+
 Hymir is a Java based IIIF Server. It is based on our [IIIF API Java Libraries](https://github.com/dbmdz/iiif-apis) (Java implementations of the [IIIF specifications](http://iiif.io/technical-details/)). It can be used to serve images, presentation manifests, presentation collections and presentation annotation lists.
 
 ## Features
