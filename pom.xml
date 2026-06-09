@@ -202,7 +202,7 @@
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
-      <version>7.4</version>
+      <version>8.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -272,22 +272,22 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>html5shiv</artifactId>
-      <version>${version.webjar-html5shiv}</version>
+      <version>3.7.3-1</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>mirador</artifactId>
-      <version>${version.webjar-mirador}</version>
+      <version>2.7.0</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.bower</groupId>
       <artifactId>ie10-viewport-bug-workaround</artifactId>
-      <version>${version.webjar-ie10-viewport-bug-workaround}</version>
+      <version>1.0.3</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>bootstrap</artifactId>
-      <version>${version.webjar-bootstrap}</version>
+      <version>5.0.0</version>
       <exclusions>
         <exclusion>
           <groupId>org.webjars</groupId>
@@ -298,52 +298,52 @@
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-canvaslink</artifactId>
-      <version>${version.webjar-mirador-canvaslink}</version>
+      <version>3.7.1</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-downloadmenu</artifactId>
-      <version>${version.webjar-mirador-downloadmenu}</version>
+      <version>1.0.6</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-imagecropper</artifactId>
-      <version>${version.webjar-mirador-imagecropper}</version>
+      <version>2.4.6</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-keyboardnavigation</artifactId>
-      <version>${version.webjar-mirador-keyboardnavigation}</version>
+      <version>1.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-physicalruler</artifactId>
-      <version>${version.webjar-mirador-physicalruler}</version>
+      <version>1.3.4</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-sharebuttons</artifactId>
-      <version>${version.webjar-mirador-sharebuttons}</version>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>dbmdz__mirador-viewfromurl</artifactId>
-      <version>${version.webjar-mirador-viewfromurl}</version>
+      <version>1.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>jquery</artifactId>
-      <version>${version.webjar-jquery}</version>
+      <version>3.7.1</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>openseadragon</artifactId>
-      <version>${version.webjar-openseadragon}</version>
+      <version>2.4.2</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
       <artifactId>respond.js</artifactId>
-      <version>${version.webjar-respond}</version>
+      <version>1.4.2</version>
     </dependency>
   </dependencies>
 
