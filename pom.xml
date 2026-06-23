@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.18</version>
+    <version>4.1.0</version>
   </parent>
 
   <name>DigitalCollections: Hymir IIIF Server</name>
@@ -77,10 +77,10 @@
     <versionName>${project.version} manually built by ${user.name} at ${maven.build.timestamp}</versionName>
 
     <!-- versions are referenced in application-webjars.yml -->
-    <version.webjar-bootstrap>4.6.0</version.webjar-bootstrap>
+    <version.webjar-bootstrap>5.3.8</version.webjar-bootstrap>
     <version.webjar-html5shiv>3.7.3-1</version.webjar-html5shiv>
     <version.webjar-ie10-viewport-bug-workaround>1.0.3</version.webjar-ie10-viewport-bug-workaround>
-    <version.webjar-jquery>3.7.1</version.webjar-jquery>
+    <version.webjar-jquery>4.0.0</version.webjar-jquery>
     <version.webjar-mirador>2.7.0</version.webjar-mirador>
     <version.webjar-mirador-canvaslink>1.2.4</version.webjar-mirador-canvaslink>
     <version.webjar-mirador-downloadmenu>1.0.6</version.webjar-mirador-downloadmenu>
@@ -202,7 +202,7 @@
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
-      <version>7.4</version>
+      <version>9.0</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
